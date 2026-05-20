@@ -102,16 +102,15 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const DNAMES=["Su","Mo","Tu","We","Th","Fr","Sa"];
 
-// ── Schedule constants ────────────────────────────────────
-// Standard (green) path
-const STD_LD       = 7;   // LiDAR → Deliverable (calendar days)
-const STD_DtoI     = 21;  // Design start → Install
-const STD_DES_DtoI = 14;  // Design due → Install
+// Standard buffers
+const STD_LD       = 7;   // LiDAR → Deliverable
+const STD_DtoI     = 21;  // Install - 21d = Design start
+const STD_DES_DtoI = 14;  // Install - 14d = Design due
 
-// Flex (yellow) path
-const MIN_LD       = 3;   // LiDAR → Deliverable minimum
-const MIN_DUE_GAP  = 2;   // Deliverable → Design due minimum
-const MIN_DtoI     = 7;   // Design due → Install minimum (must end on Friday)
+// Flex minimums
+const MIN_LD       = 3;   // LiDAR → Deliverable (flex deliverable)
+const MIN_DUE_GAP  = 2;   // Deliverable → Design due (flex design)
+const MIN_DtoI     = 7;   // Design due → Install (flex design, Friday)
 
 const S={lidar:null,install:null};
 const CS={lidar:{},install:{}};
@@ -129,11 +128,7 @@ function snapWeekday(d,dir){
 }
 function nextWeekday(d){return snapWeekday(d,"fwd")}
 function prevWeekday(d){return snapWeekday(d,"back")}
-function prevFriday(d){
-  const r=new Date(d);
-  while(r.getDay()!==5)r.setDate(r.getDate()-1);
-  return r;
-}
+function prevFriday(d){const r=new Date(d);while(r.getDay()!==5)r.setDate(r.getDate()-1);return r}
 
 function buildCal(id,sel,cs,cb){
   const el=document.getElementById(id);
@@ -153,6 +148,9 @@ function buildCal(id,sel,cs,cb){
     h+=`<div class="${c}" data-ts="${d.getTime()}">${i}</div>`;
   }
   h+="</div>";
+  el.querySelector(`#${id}-p`).onclick=e=>{e.stopPropagation();if(--cs.month<0){cs.month=11;cs.year--}buildCal(id,sel,cs,cb)};
+  el.querySelector(`#${id}-n`).onclick=e=>{e.stopPropagation();if(++cs.month>11){cs.month=0;cs.year++}buildCal(id,sel,cs,cb)};
+  el.querySelectorAll(".cal-d:not(.emp)").forEach(c=>{c.onclick=e=>{e.stopPropagation();cb(new Date(+c.dataset.ts));el.classList.add("hidden")}});
   el.innerHTML=h;
   el.querySelector(`#${id}-p`).onclick=e=>{e.stopPropagation();if(--cs.month<0){cs.month=11;cs.year--}buildCal(id,sel,cs,cb)};
   el.querySelector(`#${id}-n`).onclick=e=>{e.stopPropagation();if(++cs.month>11){cs.month=0;cs.year++}buildCal(id,sel,cs,cb)};
@@ -181,54 +179,48 @@ function compute(){
 
   let status,delivDate,designStart,designDue,callouts=[];
 
-  // ── Standard path ─────────────────────────────────────
-  // Design due  = install - 14 days (weekday)
-  // Design start= install - 21 days (weekday)
-  // Deliverable = lidar + 7 days (weekday)
-  // Green if deliverable lands before design start
+  // Standard dates — these never move unless forced
+  const stdDesignStart = prevWeekday(addD(install, -STD_DtoI));
+  const stdDesignDue   = prevWeekday(addD(install, -STD_DES_DtoI));
+  const stdDeliv       = nextWeekday(addD(lidar,    STD_LD));
 
-  const stdDesignDue  = prevWeekday(addD(install, -STD_DES_DtoI));
-  const stdDesignStart= prevWeekday(addD(install, -STD_DtoI));
-  const stdDeliv      = nextWeekday(addD(lidar,    STD_LD));
-
+  // GREEN: standard deliverable lands before standard design start
   if(stdDeliv < stdDesignStart){
-    status     = "green";
-    delivDate  = stdDeliv;
-    designStart= stdDesignStart;
-    designDue  = stdDesignDue;
+    status="green"; delivDate=stdDeliv; designStart=stdDesignStart; designDue=stdDesignDue;
+
   } else {
-    // ── Flex path ──────────────────────────────────────
-    // Design due  = Friday on or before (install - MIN_DtoI)
-    // Deliverable = design due - MIN_DUE_GAP days (weekday)
-    // Valid only if deliverable >= lidar + MIN_LD
+    const minDeliv = nextWeekday(addD(lidar, MIN_LD));
 
-    const flexDesignDue = prevFriday(addD(install, -MIN_DtoI));
-    const flexDeliv     = prevWeekday(addD(flexDesignDue, -MIN_DUE_GAP));
-    const minDeliv      = nextWeekday(addD(lidar, MIN_LD));
+    // YELLOW L1: push deliverable earlier — design dates stay standard
+    if(minDeliv < stdDesignStart){
+      status="yellow"; delivDate=minDeliv; designStart=stdDesignStart; designDue=stdDesignDue;
+      const ldGap=diff(lidar,delivDate);
+      callouts.push(`Deliverable moved ${STD_LD-ldGap} day${STD_LD-ldGap!==1?"s":""} earlier than standard (${ldGap}d after LiDAR, standard is ${STD_LD}d). Design dates unchanged.`);
 
-    if(flexDeliv < minDeliv){
-      status = "red";
-      const totalDays = diff(lidar, install);
-      callouts.push(`No valid schedule exists. Install is only ${totalDays} day${totalDays!==1?"s":""} after LiDAR. Need at least ${MIN_LD + MIN_DUE_GAP + MIN_DtoI} days minimum.`);
     } else {
-      status    = "yellow";
-      delivDate = flexDeliv;
-      designDue = flexDesignDue;
-      designStart = null;
+      // YELLOW L2: flex both — design due = prev Friday before install-7, deliverable = design due - 2
+      const flexDesignDue = prevFriday(addD(install, -MIN_DtoI));
+      const flexDeliv     = prevWeekday(addD(flexDesignDue, -MIN_DUE_GAP));
 
-      const ldGap = diff(lidar,    delivDate);
-      const ddGap = diff(delivDate, designDue);
-      const diGap = diff(designDue, install);
+      if(flexDeliv < minDeliv){
+        // RED
+        status="red";
+        const totalDays=diff(lidar,install);
+        callouts.push(`No valid schedule. Install is only ${totalDays} day${totalDays!==1?"s":""} after LiDAR. Minimum needed: ${MIN_LD+MIN_DUE_GAP+MIN_DtoI} days.`);
 
-      if(ldGap < STD_LD)
-        callouts.push(`LiDAR → Deliverable buffer shortened by ${STD_LD - ldGap} day${STD_LD-ldGap!==1?"s":""} (${ldGap}d used, ${STD_LD}d standard).`);
-      callouts.push(`Flex rule applied: Deliverable → Design due is ${ddGap} day${ddGap!==1?"s":""} (standard is 7d before design start).`);
-      if(diGap < STD_DES_DtoI)
-        callouts.push(`Design due → Install buffer shortened by ${STD_DES_DtoI - diGap} day${STD_DES_DtoI-diGap!==1?"s":""} (${diGap}d used, ${STD_DES_DtoI}d standard).`);
+      } else {
+        status="yellow"; delivDate=flexDeliv; designStart=null; designDue=flexDesignDue;
+        const ldGap=diff(lidar,delivDate);
+        const ddGap=diff(delivDate,designDue);
+        const diGap=diff(designDue,install);
+        if(ldGap<STD_LD) callouts.push(`Deliverable moved ${STD_LD-ldGap} day${STD_LD-ldGap!==1?"s":""} earlier than standard (${ldGap}d after LiDAR, standard is ${STD_LD}d).`);
+        callouts.push(`Design flex applied: deliverable is ${ddGap} day${ddGap!==1?"s":""} before design due (standard is 7d before design start).`);
+        if(diGap<STD_DES_DtoI) callouts.push(`Design due moved ${STD_DES_DtoI-diGap} day${STD_DES_DtoI-diGap!==1?"s":""} later than standard (${diGap}d before install, standard is ${STD_DES_DtoI}d).`);
+      }
     }
   }
 
-  const icons ={green:"ti-circle-check",yellow:"ti-alert-triangle",red:"ti-circle-x"};
+  const icons={green:"ti-circle-check",yellow:"ti-alert-triangle",red:"ti-circle-x"};
   const labels={green:"On schedule — no flexibility needed",yellow:"Feasible with reduced buffers",red:"Impossible — schedule conflict"};
 
   let h=`<div class="result-card ${status}"><div class="r-status ${status}"><i class="ti ${icons[status]}" style="font-size:15px" aria-hidden="true"></i>${labels[status]}</div>`;
@@ -240,12 +232,11 @@ function compute(){
 
   if(status!=="red"){
     const tl=[];
-    tl.push({lbl:"LiDAR survey",   date:lidar,       ico:"ti-scan"});
-    tl.push({lbl:"Deliverable due", date:delivDate,   ico:"ti-file-check"});
+    tl.push({lbl:"LiDAR survey",   date:lidar,      ico:"ti-scan"});
+    tl.push({lbl:"Deliverable due", date:delivDate,  ico:"ti-file-check"});
     if(designStart) tl.push({lbl:"Design start", date:designStart, ico:"ti-pencil"});
-    tl.push({lbl:"Design due",      date:designDue,   ico:"ti-pencil-off"});
-    tl.push({lbl:"Install",         date:install,     ico:"ti-tool"});
-
+    tl.push({lbl:"Design due",      date:designDue,  ico:"ti-pencil-off"});
+    tl.push({lbl:"Install",         date:install,    ico:"ti-tool"});
     h+=`<div class="tl-section"><div class="tl-head">Full schedule</div>`;
     tl.forEach((r,i)=>{
       const g=i>0?`<span class="tl-gap">${diff(tl[i-1].date,r.date)}d later</span>`:"";
