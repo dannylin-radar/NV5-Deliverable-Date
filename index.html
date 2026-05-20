@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Date Deliverable Calculator</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fff;--bg2:#f8f8f6;--bg3:#f1efe8;
+  --t1:#1a1a18;--t2:#5f5e5a;--t3:#888780;
+  --bd:#e0dfd8;--bd2:#ccc;
+  --green:#1D9E75;--green-dk:#0F6E56;--green-bg:rgba(29,158,117,.06);
+  --amber:#BA7517;--amber-dk:#854F0B;--amber-bg:rgba(186,117,23,.06);
+  --red:#A32D2D;--red-dk:#791F1F;--red-bg:rgba(163,45,45,.06);
+  --rad:8px;--rad-lg:12px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1e1e1c;--bg2:#2a2a28;--bg3:#252523;
+    --t1:#f0ede8;--t2:#b4b2a9;--t3:#888780;
+    --bd:#3a3a38;--bd2:#4a4a48;
+    --green:#5DCAA5;--green-dk:#9FE1CB;--green-bg:rgba(29,158,117,.12);
+    --amber:#EF9F27;--amber-dk:#FAC775;--amber-bg:rgba(186,117,23,.12);
+    --red:#F09595;--red-dk:#F7C1C1;--red-bg:rgba(163,45,45,.12);
+  }
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg3);color:var(--t1);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem}
+.card{background:var(--bg);border-radius:var(--rad-lg);border:0.5px solid var(--bd);padding:2rem;width:100%;max-width:600px}
+h1{font-size:20px;font-weight:500;margin-bottom:4px}
+.sub{font-size:13px;color:var(--t3);margin-bottom:1.75rem}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:480px){.grid{grid-template-columns:1fr}}
+.field{position:relative}
+.field label{font-size:11px;font-weight:500;color:var(--t2);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:6px}
+.field input{width:100%;padding:9px 12px;font-size:14px;background:var(--bg);color:var(--t1);border:0.5px solid var(--bd2);border-radius:var(--rad);cursor:pointer;caret-color:transparent;outline:none}
+.field input:hover{border-color:var(--t3)}
+.field input:focus{box-shadow:0 0 0 2px rgba(29,158,117,.3);border-color:var(--green)}
+.cal-popup{position:absolute;top:calc(100% + 4px);left:0;z-index:200;background:var(--bg);border:0.5px solid var(--bd2);border-radius:var(--rad-lg);padding:12px;width:252px;box-shadow:0 8px 24px rgba(0,0,0,.1)}
+.cal-popup.hidden{display:none}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-nav{background:none;border:none;cursor:pointer;font-size:17px;color:var(--t2);padding:3px 8px;border-radius:var(--rad)}
+.cal-nav:hover{background:var(--bg2)}
+.cal-mlbl{font-size:13px;font-weight:500;color:var(--t1)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-dn{font-size:10px;color:var(--t3);text-align:center;padding:4px 0;font-weight:500}
+.cal-d{font-size:12px;text-align:center;padding:5px 2px;border-radius:6px;cursor:pointer;color:var(--t1)}
+.cal-d:hover{background:var(--bg2)}
+.cal-d.sel{background:var(--green);color:#fff;font-weight:500}
+.cal-d.tod{color:var(--green);font-weight:700}
+.cal-d.emp{cursor:default;pointer-events:none}
+.result-card{border-radius:var(--rad-lg);border:0.5px solid var(--bd);padding:1.25rem;margin-bottom:16px;background:var(--bg)}
+.result-card.green{border-color:var(--green);background:var(--green-bg)}
+.result-card.yellow{border-color:var(--amber);background:var(--amber-bg)}
+.result-card.red{border-color:var(--red);background:var(--red-bg)}
+.r-status{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;margin-bottom:6px}
+.r-status.green{color:var(--green-dk)}
+.r-status.yellow{color:var(--amber-dk)}
+.r-status.red{color:var(--red-dk)}
+.r-date{font-size:22px;font-weight:500;margin:4px 0 2px}
+.r-date.green{color:var(--green)}
+.r-date.yellow{color:var(--amber)}
+.r-date.red{color:var(--red)}
+.r-sublabel{font-size:12px;color:var(--t3)}
+.callout{font-size:12px;padding:7px 10px;border-radius:var(--rad);margin-top:8px;line-height:1.5;display:flex;align-items:flex-start;gap:6px}
+.callout i{margin-top:1px;flex-shrink:0}
+.callout.yellow{background:rgba(186,117,23,.12);color:#633806}
+.callout.red{background:rgba(163,45,45,.12);color:#791F1F}
+.tl-section{margin-top:20px}
+.tl-head{font-size:10px;font-weight:500;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px}
+.tl-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--bd)}
+.tl-row:last-child{border-bottom:none}
+.tl-ico{font-size:14px;color:var(--t3);width:18px;flex-shrink:0}
+.tl-lbl{font-size:12px;color:var(--t2);width:140px;flex-shrink:0}
+.tl-dt{font-size:13px;font-weight:500;color:var(--t1);flex:1}
+.tl-gap{font-size:11px;color:var(--t3)}
+.empty-state{font-size:13px;color:var(--t3);text-align:center;padding:2rem;border:0.5px dashed var(--bd);border-radius:var(--rad-lg)}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1><i class="ti ti-calendar-check" style="font-size:20px;vertical-align:-2px;margin-right:6px;color:#1D9E75" aria-hidden="true"></i>Deliverable Date Calculator</h1>
+  <p class="sub">Enter your LiDAR survey and install dates to get a recommended deliverable date.</p>
+  <div class="grid">
+    <div class="field">
+      <label><i class="ti ti-scan" style="font-size:12px" aria-hidden="true"></i> LiDAR survey date</label>
+      <input type="text" id="inp-lidar" placeholder="Select date…" readonly>
+      <div class="cal-popup hidden" id="cal-lidar"></div>
+    </div>
+    <div class="field">
+      <label><i class="ti ti-tool" style="font-size:12px" aria-hidden="true"></i> Install date</label>
+      <input type="text" id="inp-install" placeholder="Select date…" readonly>
+      <div class="cal-popup hidden" id="cal-install"></div>
+    </div>
+  </div>
+  <div id="result-area">
+    <div class="empty-state">Select both dates above to see your deliverable recommendation.</div>
+  </div>
+</div>
+<script>
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DNAMES=["Su","Mo","Tu","We","Th","Fr","Sa"];
+
+// ── Schedule constants ────────────────────────────────────
+// Standard (green) path
+const STD_LD       = 7;   // LiDAR → Deliverable (calendar days)
+const STD_DtoI     = 21;  // Design start → Install
+const STD_DES_DtoI = 14;  // Design due → Install
+
+// Flex (yellow) path
+const MIN_LD       = 3;   // LiDAR → Deliverable minimum
+const MIN_DUE_GAP  = 2;   // Deliverable → Design due minimum
+const MIN_DtoI     = 7;   // Design due → Install minimum (must end on Friday)
+
+const S={lidar:null,install:null};
+const CS={lidar:{},install:{}};
+
+function fmt(d){return d?d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"}):""}
+function addD(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
+function diff(a,b){return Math.round((b-a)/864e5)}
+
+function snapWeekday(d,dir){
+  const r=new Date(d);
+  const dow=r.getDay();
+  if(dow===6)dir==="fwd"?r.setDate(r.getDate()+2):r.setDate(r.getDate()-1);
+  else if(dow===0)dir==="fwd"?r.setDate(r.getDate()+1):r.setDate(r.getDate()-2);
+  return r;
+}
+function nextWeekday(d){return snapWeekday(d,"fwd")}
+function prevWeekday(d){return snapWeekday(d,"back")}
+function prevFriday(d){
+  const r=new Date(d);
+  while(r.getDay()!==5)r.setDate(r.getDate()-1);
+  return r;
+}
+
+function buildCal(id,sel,cs,cb){
+  const el=document.getElementById(id);
+  const today=new Date();today.setHours(0,0,0,0);
+  if(!cs.year){cs.year=today.getFullYear();cs.month=today.getMonth()}
+  const{year:y,month:m}=cs;
+  const first=new Date(y,m,1).getDay();
+  const dim=new Date(y,m+1,0).getDate();
+  let h=`<div class="cal-header"><button class="cal-nav" id="${id}-p">&#8592;</button><span class="cal-mlbl">${MONTHS[m]} ${y}</span><button class="cal-nav" id="${id}-n">&#8594;</button></div><div class="cal-grid">`;
+  DNAMES.forEach(d=>{h+=`<div class="cal-dn">${d}</div>`});
+  for(let i=0;i<first;i++)h+=`<div class="cal-d emp"></div>`;
+  for(let i=1;i<=dim;i++){
+    const d=new Date(y,m,i);d.setHours(0,0,0,0);
+    let c="cal-d";
+    if(sel&&d.getTime()===sel.getTime())c+=" sel";
+    if(d.getTime()===today.getTime())c+=" tod";
+    h+=`<div class="${c}" data-ts="${d.getTime()}">${i}</div>`;
+  }
+  h+="</div>";
+  el.innerHTML=h;
+  el.querySelector(`#${id}-p`).onclick=e=>{e.stopPropagation();if(--cs.month<0){cs.month=11;cs.year--}buildCal(id,sel,cs,cb)};
+  el.querySelector(`#${id}-n`).onclick=e=>{e.stopPropagation();if(++cs.month>11){cs.month=0;cs.year++}buildCal(id,sel,cs,cb)};
+  el.querySelectorAll(".cal-d:not(.emp)").forEach(c=>{c.onclick=e=>{e.stopPropagation();cb(new Date(+c.dataset.ts));el.classList.add("hidden")}});
+}
+
+function setup(inpId,calId,key){
+  const inp=document.getElementById(inpId),pop=document.getElementById(calId);
+  inp.onclick=e=>{
+    e.stopPropagation();
+    document.querySelectorAll(".cal-popup").forEach(p=>p.classList.add("hidden"));
+    buildCal(calId,S[key],CS[key],d=>{S[key]=d;inp.value=fmt(d);compute()});
+    pop.classList.remove("hidden");
+  };
+}
+setup("inp-lidar","cal-lidar","lidar");
+setup("inp-install","cal-install","install");
+document.addEventListener("click",()=>document.querySelectorAll(".cal-popup").forEach(p=>p.classList.add("hidden")));
+
+function compute(){
+  const ra=document.getElementById("result-area");
+  if(!S.lidar||!S.install){ra.innerHTML='<div class="empty-state">Select both dates above to see your deliverable recommendation.</div>';return}
+  const lidar=new Date(S.lidar);lidar.setHours(0,0,0,0);
+  const install=new Date(S.install);install.setHours(0,0,0,0);
+  if(install<=lidar){ra.innerHTML='<div class="empty-state" style="border-color:var(--red);color:var(--red)">Install date must be after LiDAR survey date.</div>';return}
+
+  let status,delivDate,designStart,designDue,callouts=[];
+
+  // ── Standard path ─────────────────────────────────────
+  // Design due  = install - 14 days (weekday)
+  // Design start= install - 21 days (weekday)
+  // Deliverable = lidar + 7 days (weekday)
+  // Green if deliverable lands before design start
+
+  const stdDesignDue  = prevWeekday(addD(install, -STD_DES_DtoI));
+  const stdDesignStart= prevWeekday(addD(install, -STD_DtoI));
+  const stdDeliv      = nextWeekday(addD(lidar,    STD_LD));
+
+  if(stdDeliv < stdDesignStart){
+    status     = "green";
+    delivDate  = stdDeliv;
+    designStart= stdDesignStart;
+    designDue  = stdDesignDue;
+  } else {
+    // ── Flex path ──────────────────────────────────────
+    // Design due  = Friday on or before (install - MIN_DtoI)
+    // Deliverable = design due - MIN_DUE_GAP days (weekday)
+    // Valid only if deliverable >= lidar + MIN_LD
+
+    const flexDesignDue = prevFriday(addD(install, -MIN_DtoI));
+    const flexDeliv     = prevWeekday(addD(flexDesignDue, -MIN_DUE_GAP));
+    const minDeliv      = nextWeekday(addD(lidar, MIN_LD));
+
+    if(flexDeliv < minDeliv){
+      status = "red";
+      const totalDays = diff(lidar, install);
+      callouts.push(`No valid schedule exists. Install is only ${totalDays} day${totalDays!==1?"s":""} after LiDAR. Need at least ${MIN_LD + MIN_DUE_GAP + MIN_DtoI} days minimum.`);
+    } else {
+      status    = "yellow";
+      delivDate = flexDeliv;
+      designDue = flexDesignDue;
+      designStart = null;
+
+      const ldGap = diff(lidar,    delivDate);
+      const ddGap = diff(delivDate, designDue);
+      const diGap = diff(designDue, install);
+
+      if(ldGap < STD_LD)
+        callouts.push(`LiDAR → Deliverable buffer shortened by ${STD_LD - ldGap} day${STD_LD-ldGap!==1?"s":""} (${ldGap}d used, ${STD_LD}d standard).`);
+      callouts.push(`Flex rule applied: Deliverable → Design due is ${ddGap} day${ddGap!==1?"s":""} (standard is 7d before design start).`);
+      if(diGap < STD_DES_DtoI)
+        callouts.push(`Design due → Install buffer shortened by ${STD_DES_DtoI - diGap} day${STD_DES_DtoI-diGap!==1?"s":""} (${diGap}d used, ${STD_DES_DtoI}d standard).`);
+    }
+  }
+
+  const icons ={green:"ti-circle-check",yellow:"ti-alert-triangle",red:"ti-circle-x"};
+  const labels={green:"On schedule — no flexibility needed",yellow:"Feasible with reduced buffers",red:"Impossible — schedule conflict"};
+
+  let h=`<div class="result-card ${status}"><div class="r-status ${status}"><i class="ti ${icons[status]}" style="font-size:15px" aria-hidden="true"></i>${labels[status]}</div>`;
+  if(status!=="red"){
+    h+=`<div class="r-date ${status}">${fmt(delivDate)}</div><div class="r-sublabel">Recommended deliverable completion date</div>`;
+  }
+  callouts.forEach(c=>{h+=`<div class="callout ${status}"><i class="ti ti-info-circle"></i><span>${c}</span></div>`});
+  h+="</div>";
+
+  if(status!=="red"){
+    const tl=[];
+    tl.push({lbl:"LiDAR survey",   date:lidar,       ico:"ti-scan"});
+    tl.push({lbl:"Deliverable due", date:delivDate,   ico:"ti-file-check"});
+    if(designStart) tl.push({lbl:"Design start", date:designStart, ico:"ti-pencil"});
+    tl.push({lbl:"Design due",      date:designDue,   ico:"ti-pencil-off"});
+    tl.push({lbl:"Install",         date:install,     ico:"ti-tool"});
+
+    h+=`<div class="tl-section"><div class="tl-head">Full schedule</div>`;
+    tl.forEach((r,i)=>{
+      const g=i>0?`<span class="tl-gap">${diff(tl[i-1].date,r.date)}d later</span>`:"";
+      h+=`<div class="tl-row"><i class="ti ${r.ico} tl-ico" aria-hidden="true"></i><span class="tl-lbl">${r.lbl}</span><span class="tl-dt">${fmt(r.date)}</span>${g}</div>`;
+    });
+    h+="</div>";
+  }
+  ra.innerHTML=h;
+}
+</script>
+</body>
+</html>
