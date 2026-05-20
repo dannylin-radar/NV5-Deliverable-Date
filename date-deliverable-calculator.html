@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Date Deliverable Calculator</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --color-bg:#ffffff;
+    --color-bg-secondary:#f8f8f6;
+    --color-bg-tertiary:#f1efe8;
+    --color-text-primary:#1a1a18;
+    --color-text-secondary:#5f5e5a;
+    --color-text-tertiary:#888780;
+    --color-border:#e0dfd8;
+    --color-border-secondary:#ccc;
+    --color-green:#1D9E75;
+    --color-green-dark:#0F6E56;
+    --color-green-bg:rgba(29,158,117,.06);
+    --color-yellow:#BA7517;
+    --color-yellow-dark:#854F0B;
+    --color-yellow-bg:rgba(186,117,23,.06);
+    --color-red:#A32D2D;
+    --color-red-dark:#791F1F;
+    --color-red-bg:rgba(163,45,45,.06);
+    --radius-md:8px;
+    --radius-lg:12px;
+  }
+  @media(prefers-color-scheme:dark){
+    :root{
+      --color-bg:#1e1e1c;
+      --color-bg-secondary:#2a2a28;
+      --color-bg-tertiary:#252523;
+      --color-text-primary:#f0ede8;
+      --color-text-secondary:#b4b2a9;
+      --color-text-tertiary:#888780;
+      --color-border:#3a3a38;
+      --color-border-secondary:#4a4a48;
+      --color-green:#5DCAA5;
+      --color-green-dark:#9FE1CB;
+      --color-green-bg:rgba(29,158,117,.12);
+      --color-yellow:#EF9F27;
+      --color-yellow-dark:#FAC775;
+      --color-yellow-bg:rgba(186,117,23,.12);
+      --color-red:#F09595;
+      --color-red-dark:#F7C1C1;
+      --color-red-bg:rgba(163,45,45,.12);
+    }
+  }
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:var(--color-bg-tertiary);
+    color:var(--color-text-primary);
+    min-height:100vh;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:2rem 1rem;
+  }
+  .card{
+    background:var(--color-bg);
+    border-radius:var(--radius-lg);
+    border:0.5px solid var(--color-border);
+    padding:2rem;
+    width:100%;
+    max-width:600px;
+  }
+  h1{font-size:20px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+  .subtitle{font-size:13px;color:var(--color-text-tertiary);margin-bottom:1.75rem}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+  @media(max-width:480px){.grid{grid-template-columns:1fr}}
+  .field label{font-size:11px;font-weight:500;color:var(--color-text-secondary);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:6px}
+  .field{position:relative}
+  .field input[type=text]{
+    width:100%;padding:9px 12px;font-size:14px;
+    background:var(--color-bg);color:var(--color-text-primary);
+    border:0.5px solid var(--color-border-secondary);
+    border-radius:var(--radius-md);cursor:pointer;
+    caret-color:transparent;outline:none;
+  }
+  .field input:hover{border-color:var(--color-text-tertiary)}
+  .field input:focus{box-shadow:0 0 0 2px rgba(29,158,117,.3);border-color:var(--color-green)}
+  .cal-popup{
+    position:absolute;top:calc(100% + 4px);left:0;z-index:200;
+    background:var(--color-bg);border:0.5px solid var(--color-border-secondary);
+    border-radius:var(--radius-lg);padding:12px;width:248px;
+    box-shadow:0 8px 24px rgba(0,0,0,.12);
+  }
+  .cal-popup.hidden{display:none}
+  .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .cal-nav{background:none;border:none;cursor:pointer;font-size:18px;color:var(--color-text-secondary);padding:3px 8px;border-radius:var(--radius-md)}
+  .cal-nav:hover{background:var(--color-bg-secondary)}
+  .cal-month-label{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+  .cal-day-name{font-size:10px;color:var(--color-text-tertiary);text-align:center;padding:4px 0;font-weight:500}
+  .cal-day{font-size:12px;text-align:center;padding:5px 2px;border-radius:6px;cursor:pointer;color:var(--color-text-primary);user-select:none}
+  .cal-day:hover{background:var(--color-bg-secondary)}
+  .cal-day.selected{background:var(--color-green);color:#fff;font-weight:500}
+  .cal-day.today{color:var(--color-green);font-weight:700}
+  .cal-day.empty{cursor:default;pointer-events:none}
+  .divider{height:0.5px;background:var(--color-border);margin:20px 0}
+  .result-card{border-radius:var(--radius-lg);border:0.5px solid var(--color-border);padding:1.25rem;margin-bottom:16px;background:var(--color-bg)}
+  .result-card.green{border-color:var(--color-green);background:var(--color-green-bg)}
+  .result-card.yellow{border-color:var(--color-yellow);background:var(--color-yellow-bg)}
+  .result-card.red{border-color:var(--color-red);background:var(--color-red-bg)}
+  .result-status{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;margin-bottom:6px}
+  .result-status.green{color:var(--color-green-dark)}
+  .result-status.yellow{color:var(--color-yellow-dark)}
+  .result-status.red{color:var(--color-red-dark)}
+  .result-date{font-size:24px;font-weight:500;margin:4px 0 2px}
+  .result-date.green{color:var(--color-green)}
+  .result-date.yellow{color:var(--color-yellow)}
+  .result-date.red{color:var(--color-red)}
+  .result-sublabel{font-size:12px;color:var(--color-text-tertiary)}
+  .callout{font-size:12px;padding:7px 10px;border-radius:var(--radius-md);margin-top:8px;line-height:1.5;display:flex;align-items:flex-start;gap:6px}
+  .callout i{margin-top:1px;flex-shrink:0}
+  .callout.yellow{background:rgba(186,117,23,.12);color:var(--color-yellow-dark)}
+  .callout.red{background:rgba(163,45,45,.12);color:var(--color-red-dark)}
+  .tl-section{margin-top:20px}
+  .tl-heading{font-size:10px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px}
+  .tl-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border)}
+  .tl-row:last-child{border-bottom:none}
+  .tl-icon{font-size:15px;color:var(--color-text-tertiary);width:20px;flex-shrink:0}
+  .tl-label{font-size:12px;color:var(--color-text-secondary);width:130px;flex-shrink:0}
+  .tl-date{font-size:13px;font-weight:500;color:var(--color-text-primary);flex:1}
+  .tl-gap{font-size:11px;color:var(--color-text-tertiary)}
+  .empty-state{font-size:13px;color:var(--color-text-tertiary);text-align:center;padding:2rem;border:0.5px dashed var(--color-border);border-radius:var(--radius-lg)}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1><i class="ti ti-calendar-check" aria-hidden="true" style="font-size:20px;vertical-align:-2px;margin-right:6px;color:var(--color-green)"></i>Deliverable Date Calculator</h1>
+  <p class="subtitle">Enter your LiDAR survey and install dates to get a recommended deliverable date.</p>
+
+  <div class="grid">
+    <div class="field">
+      <label><i class="ti ti-scan" aria-hidden="true" style="font-size:12px"></i> LiDAR survey date</label>
+      <input type="text" id="lidar-input" placeholder="Select date…" readonly>
+      <div class="cal-popup hidden" id="cal-lidar"></div>
+    </div>
+    <div class="field">
+      <label><i class="ti ti-tool" aria-hidden="true" style="font-size:12px"></i> Install date</label>
+      <input type="text" id="install-input" placeholder="Select date…" readonly>
+      <div class="cal-popup hidden" id="cal-install"></div>
+    </div>
+  </div>
+
+  <div id="result-area">
+    <div class="empty-state">Select both dates above to see your deliverable recommendation.</div>
+  </div>
+</div>
+
+<script>
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DAY_NAMES=["Su","Mo","Tu","We","Th","Fr","Sa"];
+
+// Schedule constants
+const STD_LIDAR_TO_DELIV=7;
+const STD_DELIV_TO_DESIGN=7;
+const STD_DESIGN_DUR=7;
+const STD_DESIGN_TO_INSTALL=14;
+const MIN_LIDAR_TO_DELIV=3;
+const MIN_DELIV_TO_DESIGN=2;
+const MIN_DESIGN_DUR=7;
+const MIN_DESIGN_TO_INSTALL=7;
+
+const state={lidar:null,install:null};
+const calStates={lidar:{},install:{}};
+
+function fmt(d){if(!d)return"";return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}
+function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
+function diffDays(a,b){return Math.round((b-a)/(1000*60*60*24))}
+
+function prevFriday(d){
+  const r=new Date(d);r.setDate(r.getDate()-1);
+  while(r.getDay()!==5)r.setDate(r.getDate()-1);
+  return r;
+}
+
+function buildCal(containerId,selectedDate,calState,onChange){
+  const el=document.getElementById(containerId);
+  const today=new Date();today.setHours(0,0,0,0);
+  if(!calState.year){calState.year=today.getFullYear();calState.month=today.getMonth()}
+  const{year:y,month:m}=calState;
+  const first=new Date(y,m,1).getDay();
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  let html=`<div class="cal-header">
+    <button class="cal-nav" id="${containerId}-prev">&#8592;</button>
+    <span class="cal-month-label">${MONTHS[m]} ${y}</span>
+    <button class="cal-nav" id="${containerId}-next">&#8594;</button>
+  </div><div class="cal-grid">`;
+  DAY_NAMES.forEach(d=>{html+=`<div class="cal-day-name">${d}</div>`});
+  for(let i=0;i<first;i++)html+=`<div class="cal-day empty"></div>`;
+  for(let i=1;i<=daysInMonth;i++){
+    const d=new Date(y,m,i);d.setHours(0,0,0,0);
+    let cls="cal-day";
+    if(selectedDate&&d.getTime()===selectedDate.getTime())cls+=" selected";
+    if(d.getTime()===today.getTime())cls+=" today";
+    html+=`<div class="${cls}" data-ts="${d.getTime()}">${i}</div>`;
+  }
+  html+="</div>";
+  el.innerHTML=html;
+  el.querySelector(`#${containerId}-prev`).onclick=e=>{e.stopPropagation();if(--calState.month<0){calState.month=11;calState.year--}buildCal(containerId,selectedDate,calState,onChange)};
+  el.querySelector(`#${containerId}-next`).onclick=e=>{e.stopPropagation();if(++calState.month>11){calState.month=0;calState.year++}buildCal(containerId,selectedDate,calState,onChange)};
+  el.querySelectorAll(".cal-day:not(.empty)").forEach(cell=>{
+    cell.onclick=e=>{e.stopPropagation();const picked=new Date(+cell.dataset.ts);onChange(picked);el.classList.add("hidden")}
+  });
+}
+
+function setupField(inputId,popupId,stateKey){
+  const input=document.getElementById(inputId);
+  const popup=document.getElementById(popupId);
+  input.onclick=e=>{
+    e.stopPropagation();
+    document.querySelectorAll(".cal-popup").forEach(p=>p.classList.add("hidden"));
+    buildCal(popupId,state[stateKey],calStates[stateKey],d=>{
+      state[stateKey]=d;input.value=fmt(d);compute();
+    });
+    popup.classList.remove("hidden");
+  };
+}
+setupField("lidar-input","cal-lidar","lidar");
+setupField("install-input","cal-install","install");
+document.addEventListener("click",()=>document.querySelectorAll(".cal-popup").forEach(p=>p.classList.add("hidden")));
+
+function compute(){
+  const ra=document.getElementById("result-area");
+  if(!state.lidar||!state.install){ra.innerHTML='<div class="empty-state">Select both dates above to see your deliverable recommendation.</div>';return}
+  const lidar=new Date(state.lidar);lidar.setHours(0,0,0,0);
+  const install=new Date(state.install);install.setHours(0,0,0,0);
+  if(install<=lidar){ra.innerHTML='<div class="empty-state" style="border-color:var(--color-red);color:var(--color-red)">Install date must be after LiDAR survey date.</div>';return}
+
+  const totalDays=diffDays(lidar,install);
+  const stdWindow=STD_LIDAR_TO_DELIV+STD_DELIV_TO_DESIGN+STD_DESIGN_DUR+STD_DESIGN_TO_INSTALL;
+  const minWindow=MIN_LIDAR_TO_DELIV+MIN_DELIV_TO_DESIGN+MIN_DESIGN_DUR+MIN_DESIGN_TO_INSTALL;
+
+  let status,delivDate,designStart,designEnd,callouts=[];
+
+  if(totalDays>=stdWindow){
+    // GREEN: all standard buffers fit
+    status="green";
+    delivDate=addDays(lidar,STD_LIDAR_TO_DELIV);
+    designStart=addDays(delivDate,STD_DELIV_TO_DESIGN);
+    designEnd=addDays(designStart,STD_DESIGN_DUR-1);
+  } else {
+    // Try flexibility: latest allowed design end = Friday before (install - MIN_DESIGN_TO_INSTALL)
+    const fridayBeforeInstall=prevFriday(install);
+    const latestDesignEnd=fridayBeforeInstall;
+    const latestDesignStart=addDays(latestDesignEnd,-(MIN_DESIGN_DUR-1));
+    const latestDelivDate=addDays(latestDesignStart,-MIN_DELIV_TO_DESIGN);
+    const minDelivDate=addDays(lidar,MIN_LIDAR_TO_DELIV);
+
+    if(latestDelivDate<minDelivDate||totalDays<minWindow){
+      status="red";
+      delivDate=null;designStart=null;designEnd=null;
+      callouts.push(`No valid schedule. Minimum required window: ${minWindow} days. Current gap: ${totalDays} days (short by ${minWindow-totalDays}).`);
+    } else {
+      status="yellow";
+      // Use earliest valid deliverable (right after min lidar window)
+      delivDate=minDelivDate;
+      designStart=addDays(delivDate,MIN_DELIV_TO_DESIGN);
+      // Push design start as late as possible if there's slack
+      const possibleDesignStart=addDays(delivDate,MIN_DELIV_TO_DESIGN);
+      if(possibleDesignStart<latestDesignStart)designStart=possibleDesignStart;
+      else designStart=latestDesignStart;
+      designEnd=addDays(designStart,MIN_DESIGN_DUR-1);
+      if(designEnd>latestDesignEnd)designEnd=latestDesignEnd;
+
+      const lidarGap=diffDays(lidar,delivDate);
+      const delivGap=diffDays(delivDate,designStart);
+      const designToInstall=diffDays(designEnd,install)-1;
+
+      if(lidarGap<STD_LIDAR_TO_DELIV)callouts.push(`LiDAR → Deliverable window reduced by ${STD_LIDAR_TO_DELIV-lidarGap} day${STD_LIDAR_TO_DELIV-lidarGap!==1?"s":""} (${lidarGap}d of ${STD_LIDAR_TO_DELIV}d standard).`);
+      if(delivGap<STD_DELIV_TO_DESIGN)callouts.push(`Deliverable → Design buffer reduced by ${STD_DELIV_TO_DESIGN-delivGap} day${STD_DELIV_TO_DESIGN-delivGap!==1?"s":""} (${delivGap}d of ${STD_DELIV_TO_DESIGN}d standard).`);
+      if(designToInstall<STD_DESIGN_TO_INSTALL)callouts.push(`Design → Install buffer reduced by ${STD_DESIGN_TO_INSTALL-designToInstall} day${STD_DESIGN_TO_INSTALL-designToInstall!==1?"s":""} (${designToInstall}d of ${STD_DESIGN_TO_INSTALL}d standard).`);
+    }
+  }
+
+  const colors={green:"var(--color-green)",yellow:"var(--color-yellow)",red:"var(--color-red)"};
+  const icons={green:"ti-circle-check",yellow:"ti-alert-triangle",red:"ti-circle-x"};
+  const labels={green:"On schedule — no flexibility needed",yellow:"Feasible with reduced buffers",red:"Impossible — schedule conflict"};
+
+  let html=`<div class="result-card ${status}">`;
+  html+=`<div class="result-status ${status}"><i class="ti ${icons[status]}" aria-hidden="true" style="font-size:15px"></i>${labels[status]}</div>`;
+  if(status!=="red"){
+    html+=`<div class="result-date ${status}">${fmt(delivDate)}</div>`;
+    html+=`<div class="result-sublabel">Recommended deliverable completion date</div>`;
+  }
+  callouts.forEach(c=>{html+=`<div class="callout ${status}"><i class="ti ti-info-circle" aria-hidden="true" style="font-size:13px"></i><span>${c}</span></div>`});
+  html+="</div>";
+
+  if(status!=="red"){
+    const tl=[
+      {label:"LiDAR survey",date:lidar,icon:"ti-scan"},
+      {label:"Deliverable due",date:delivDate,icon:"ti-file-check"},
+      {label:"Design start",date:designStart,icon:"ti-pencil"},
+      {label:"Design due",date:designEnd,icon:"ti-pencil-off"},
+      {label:"Install",date:install,icon:"ti-tool"},
+    ];
+    html+=`<div class="tl-section"><div class="tl-heading">Full schedule</div>`;
+    tl.forEach((r,i)=>{
+      const gap=i>0?`<span class="tl-gap">${diffDays(tl[i-1].date,r.date)}d later</span>`:"";
+      html+=`<div class="tl-row"><i class="ti ${r.icon} tl-icon" aria-hidden="true"></i><span class="tl-label">${r.label}</span><span class="tl-date">${fmt(r.date)}</span>${gap}</div>`;
+    });
+    html+="</div>";
+  }
+
+  ra.innerHTML=html;
+}
+</script>
+</body>
+</html>
