@@ -205,8 +205,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
   .app{max-width:100%}
   .card,.status-card{box-shadow:none;border:0.5px solid #ccc;break-inside:avoid}
   .proj-table tr.proj-detail{display:none}
-  #pane-single,#pane-multi{display:block!important}
+  #pane-multi{display:block!important}
+  #pane-single{display:none!important}
   #pane-ooo{display:none!important}
+  body.print-single #pane-single{display:block!important}
+  body.print-single #pane-multi{display:none!important}
   .gantt-wrap{overflow:visible}
   #print-expanded{display:block!important}
   #print-expanded .pe-project{break-inside:avoid;margin-bottom:1.5rem;border:0.5px solid #ccc;border-radius:10px;padding:1rem}
@@ -1018,7 +1021,7 @@ function resetAll(){
 // ═══════════════════════════════════════
 function printAll(){
   const pe=document.getElementById('print-expanded');
-  if(!projects.length){window.print();return}
+  if(!projects.length){document.body.classList.add('print-single');window.print();setTimeout(()=>document.body.classList.remove('print-single'),500);return}
 
   // Sort same as current sort
   const allRows=projects.map(p=>({...p,r:schedule(p.lidar,p.install)}));
@@ -1027,36 +1030,8 @@ function printAll(){
   else if(projSort==='status') rows.sort((a,b)=>STATUS_ORDER[a.r.status]-STATUS_ORDER[b.r.status]);
   else rows.sort((a,b)=>a.name.localeCompare(b.name));
 
-  // Build print container: dashboard summary + one card per project
-  let h='<div style="margin-bottom:1rem"><h2 style="font-size:15px;font-weight:600;margin-bottom:.75rem">Project summary</h2>';
-
-  // Summary table
-  h+=`<table style="width:100%;border-collapse:collapse;font-size:11px">
-    <thead><tr style="border-bottom:0.5px solid #ccc">
-      <th style="text-align:left;padding:5px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888">Project</th>
-      <th style="text-align:left;padding:5px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888">LiDAR</th>
-      <th style="text-align:left;padding:5px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888">Deliverable Due</th>
-      <th style="text-align:left;padding:5px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888">Design Due</th>
-      <th style="text-align:left;padding:5px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888">Install</th>
-      <th style="text-align:left;padding:5px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888">Status</th>
-    </tr></thead><tbody>`;
-  rows.forEach(p=>{
-    const s=p.r.status;
-    const statusColors={green:'#0F5C3E',yellow:'#5C4200',orange:'#7A3200',red:'#6B0F0F',black:'#000'};
-    const statusBgs={green:'#E8F5EE',yellow:'#FEF7E0',orange:'#FEF0E6',red:'#FDE8E8',black:'#E8E8E4'};
-    h+=`<tr style="border-bottom:0.5px solid #eee">
-      <td style="padding:6px 8px;font-weight:600">${p.name}</td>
-      <td style="padding:6px 8px;font-family:monospace">${fmtShort(p.lidar)}</td>
-      <td style="padding:6px 8px;font-family:monospace;color:${statusColors[s]}">${p.r.delivDate?fmtShort(p.r.delivDate):'—'}</td>
-      <td style="padding:6px 8px;font-family:monospace">${p.r.designDue?fmtShort(p.r.designDue):'—'}</td>
-      <td style="padding:6px 8px;font-family:monospace">${fmtShort(p.install)}</td>
-      <td style="padding:6px 8px"><span style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;background:${statusBgs[s]};color:${statusColors[s]}">${s.charAt(0).toUpperCase()+s.slice(1)}</span></td>
-    </tr>`;
-  });
-  h+=`</tbody></table></div>`;
-
-  // Individual project details
-  h+='<h2 style="font-size:15px;font-weight:600;margin-bottom:.75rem;margin-top:1.5rem">Full schedules</h2>';
+  // Build print container: full schedule per project (summary table is already visible above)
+  let h='<h2 style="font-size:15px;font-weight:600;margin-bottom:.75rem">Full schedules</h2>';
   rows.forEach(p=>{
     h+=`<div class="pe-project"><div class="pe-name">${p.name}</div><div id="pe-detail-${p.id}"></div></div>`;
   });
@@ -1070,7 +1045,8 @@ function printAll(){
     if(el) renderResult(p.r,p.lidar,p.install,p.name,el);
   });
 
-  // Print then clean up
+  // Print then clean up (multi-project: hide single pane)
+  document.body.classList.remove('print-single');
   setTimeout(()=>{
     window.print();
     setTimeout(()=>{
