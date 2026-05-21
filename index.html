@@ -199,7 +199,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 
 /* Print */
 @media print{
-  body{background:#fff;padding:0}
+  body{background:#fff;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .tabs,.btn-row,.proj-toolbar,.proj-add-section,.header-right,
   .cal-popup,.toast,.expand-icon,td button,.filter-row{display:none!important}
   .app{max-width:100%}
@@ -216,6 +216,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
   #print-expanded .pe-name{font-size:14px;font-weight:600;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:0.5px solid #eee}
   #print-expanded .status-card{border:0.5px solid #eee;padding:.75rem;margin-bottom:.5rem}
   #print-expanded .gantt-wrap{overflow:visible}
+  .week-flag{background:#1A5F8A!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .week2-flag{background:#5C3AA0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .dash-tile{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .status-pill{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .gantt-bar{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .gantt-track{background:#EFEDE6!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .gantt-bar{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .tl-dot{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .status-card{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .s-badge{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .callout{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
 }
 </style>
 </head>
