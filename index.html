@@ -471,7 +471,10 @@ function schedule(lidar,install){
   // Callouts in timeline order: LiDAR→Deliv, Deliv→Design, Design→Install
   if(ldGap<MIN_LD)result.callouts.push(`Emergency: LiDAR → Deliverable is only ${ldGap}cd / ${bizDiff(lidar,dv)}bd (minimum ${MIN_LD}cd, standard ${STD_LD}cd).`);
   else if(ldGap<STD_LD)result.callouts.push(`LiDAR → Deliverable is ${ldGap}cd / ${bizDiff(lidar,dv)}bd (standard ${STD_LD}cd).`);
-  if(ddGap<STD_DELIV_LAG)result.callouts.push(`Deliverable → Design due compressed to ${ddGap}cd / ${bizDiff(dv,dd)}bd (standard ${STD_DELIV_LAG}cd).`);
+  if(ddGap<STD_DELIV_LAG){
+    result.callouts.push(`Deliverable → Design due compressed to ${ddGap}cd / ${bizDiff(dv,dd)}bd (standard ${STD_DELIV_LAG}cd).`);
+    result.callouts.push(`⚠️ NV5 should directly notify Radar when deliverables are complete — design window is critically short.`);
+  }
   if(diGap<STD_DD_TO_I)result.callouts.push(`Design due is ${diGap}cd before install (standard ${STD_DD_TO_I}cd).`);
   if(extraCallout)result.callouts.push(extraCallout);
   return result;
