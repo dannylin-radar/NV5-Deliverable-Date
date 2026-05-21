@@ -20,6 +20,7 @@
   --red:#9B1C1C;--red-lt:#FDE8E8;--red-dk:#6B0F0F;
   --black:#18180F;--black-lt:#E8E8E4;--black-dk:#000;
   --week:#1A5F8A;--week-lt:#E6F2FA;--week-dk:#0F3D5C;
+  --week2:#5C3AA0;--week2-lt:#F0EAFB;--week2-dk:#3A1E7A;
   --rad:6px;--rad-lg:10px;--rad-xl:14px;
   --shadow:0 1px 3px rgba(0,0,0,.06),0 4px 12px rgba(0,0,0,.04);
   --shadow-lg:0 4px 16px rgba(0,0,0,.08),0 1px 4px rgba(0,0,0,.04);
@@ -99,6 +100,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .dash-tile.red{border-color:rgba(155,28,28,.3);background:var(--red-lt)}.dash-tile.red .dt-num,.dash-tile.red .dt-lbl{color:var(--red-dk)}
 .dash-tile.black{border-color:rgba(0,0,0,.2);background:var(--black-lt)}.dash-tile.black .dt-num,.dash-tile.black .dt-lbl{color:var(--black-dk)}
 .dash-tile.week{border-color:rgba(26,95,138,.3);background:var(--week-lt)}.dash-tile.week .dt-num,.dash-tile.week .dt-lbl{color:var(--week-dk)}
+.dash-tile.week2{border-color:rgba(92,58,160,.3);background:var(--week2-lt)}.dash-tile.week2 .dt-num,.dash-tile.week2 .dt-lbl{color:var(--week2-dk)}
 
 /* Status card */
 .status-card{border-radius:var(--rad-xl);border:0.5px solid var(--bd);padding:1.25rem;margin-bottom:1rem}
@@ -186,6 +188,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .expand-icon{font-size:10px;color:var(--t3);transition:transform .15s;display:inline-block}
 .expand-icon.open{transform:rotate(90deg)}
 .week-flag{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--week);margin-left:4px;vertical-align:middle}
+.week2-flag{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--week2);margin-left:4px;vertical-align:middle}
 
 /* Empty state */
 .empty-state{font-size:12px;color:var(--t3);text-align:center;padding:2rem;border:0.5px dashed var(--bd);border-radius:var(--rad-xl)}
@@ -759,11 +762,15 @@ function renderDashboard(rows){
   const el=document.getElementById('multi-dashboard');
   if(!rows.length){el.style.display='none';return}
   el.style.display='block';
-  const counts={green:0,yellow:0,orange:0,red:0,black:0,week:0};
-  rows.forEach(p=>{counts[p.r.status]++;if(isDueThisWeek(p.r.delivDate))counts.week++;});
-  const labels={green:'On Schedule',yellow:'Minor Flex',orange:'Major Flex',red:'Emergency',black:'Impossible',week:'Due This Week'};
+  const counts={green:0,yellow:0,orange:0,red:0,black:0,week:0,week2:0};
+  rows.forEach(p=>{
+    counts[p.r.status]++;
+    if(isDueThisWeek(p.r.delivDate)) counts.week++;
+    if(isDueThisWeek(p.r.designDue)) counts.week2++;
+  });
+  const labels={green:'On Schedule',yellow:'Minor Flex',orange:'Major Flex',red:'Emergency',black:'Impossible',week:'Deliverable Due This Week',week2:'Design Due This Week'};
   el.innerHTML='<div class="dashboard">'+
-    ['week','green','yellow','orange','red','black']
+    ['week','week2','green','yellow','orange','red','black']
       .filter(k=>counts[k]>0)
       .map(k=>`<div class="dash-tile ${k}"><div class="dt-num">${counts[k]}</div><div class="dt-lbl">${labels[k]}</div></div>`)
       .join('')+
@@ -806,7 +813,17 @@ function renderProjects(){
 
   if(!rows.length){wrap.innerHTML='<div class="empty-state">No projects match this filter.</div>';return}
 
-  let h=`<table class="proj-table"><thead><tr>
+  const hasWeekDeliv=rows.some(p=>isDueThisWeek(p.r.delivDate));
+  const hasWeekDesign=rows.some(p=>isDueThisWeek(p.r.designDue));
+  const showLegend=hasWeekDeliv||hasWeekDesign;
+  let h='';
+  if(showLegend){
+    h+=`<div style="display:flex;gap:12px;margin-bottom:8px;font-size:11px;color:var(--t2);flex-wrap:wrap">`;
+    if(hasWeekDeliv) h+=`<span style="display:flex;align-items:center;gap:4px"><span class="week-flag"></span> Deliverable due this week</span>`;
+    if(hasWeekDesign) h+=`<span style="display:flex;align-items:center;gap:4px"><span class="week2-flag"></span> Design due this week</span>`;
+    h+=`</div>`;
+  }
+  h+=`<table class="proj-table"><thead><tr>
     <th style="width:22px"></th>
     <th>Project</th><th>LiDAR</th><th>Deliverable Due</th><th>Design Due</th><th>Install</th><th>Status</th>
     <th style="width:28px"></th>
@@ -815,9 +832,13 @@ function renderProjects(){
   rows.forEach(p=>{
     const s=p.r.status;
     const isExp=expandedRow===p.id;
-    const dtw=isDueThisWeek(p.r.delivDate);
+    const dtwDeliv=isDueThisWeek(p.r.delivDate);
+    const dtwDesign=isDueThisWeek(p.r.designDue);
     const delivCell=p.r.delivDate
-      ?`<span class="mono" style="color:var(--${s==='black'?'t1':s})">${fmtShort(p.r.delivDate)}</span>${dtw?'<span class="week-flag" title="Due this week"></span>':''}`
+      ?`<span class="mono" style="color:var(--${s==='black'?'t1':s})">${fmtShort(p.r.delivDate)}</span>${dtwDeliv?'<span class="week-flag" title="Deliverable due this week"></span>':''}`
+      :'<span style="color:var(--t3)">—</span>';
+    const designCell=p.r.designDue
+      ?`<span class="mono">${fmtShort(p.r.designDue)}</span>${dtwDesign?'<span class="week2-flag" title="Design due this week"></span>':''}`
       :'<span style="color:var(--t3)">—</span>';
 
     h+=`<tr class="proj-row${isExp?' expanded':''}" onclick="toggleRow(${p.id})">
@@ -825,7 +846,7 @@ function renderProjects(){
       <td><span class="proj-name-cell" ondblclick="event.stopPropagation();startEdit(${p.id},'name',${JSON.stringify(p.name)},this)">${p.name}</span></td>
       <td><span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'lidar','${fmtInput(p.lidar)}',this)">${fmtShort(p.lidar)}</span></td>
       <td>${delivCell}</td>
-      <td class="mono">${p.r.designDue?fmtShort(p.r.designDue):'—'}</td>
+      <td>${designCell}</td>
       <td><span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'install','${fmtInput(p.install)}',this)">${fmtShort(p.install)}</span></td>
       <td><span class="status-pill ${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span></td>
       <td><button class="btn danger" style="padding:2px 7px;font-size:10px" onclick="event.stopPropagation();removeProject(${p.id})"><i class="ti ti-trash"></i></button></td>
