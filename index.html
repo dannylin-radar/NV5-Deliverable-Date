@@ -88,7 +88,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .ooo-del:hover{color:var(--red)}
 .ooo-empty{font-size:12px;color:var(--t3);padding:6px 0}
 
-/* Dashboard banner */
+/* Dashboard */
 .dashboard{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
 .dash-tile{flex:1;min-width:100px;border-radius:var(--rad-lg);padding:10px 14px;border:0.5px solid var(--bd);background:var(--card);display:flex;flex-direction:column;gap:2px}
 .dash-tile .dt-num{font-size:22px;font-weight:600;font-family:'DM Mono',monospace;line-height:1}
@@ -155,7 +155,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 /* Multi-project table */
 .proj-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;flex-wrap:wrap}
 .sort-row{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t3)}
-.filter-row{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t3)}
+.filter-row{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t3);flex-wrap:wrap}
 .sort-btn,.filter-btn{background:none;border:0.5px solid var(--bd);border-radius:var(--rad);font-size:10px;font-weight:600;padding:3px 9px;cursor:pointer;color:var(--t2);font-family:'DM Sans',sans-serif;transition:all .15s;letter-spacing:.02em}
 .sort-btn:hover,.filter-btn:hover{background:var(--bg2);color:var(--t1)}
 .sort-btn.active{background:var(--t1);color:#fff;border-color:var(--t1)}
@@ -164,6 +164,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .filter-btn.active.orange{background:var(--orange-lt);color:var(--orange-dk);border-color:rgba(179,74,0,.3)}
 .filter-btn.active.red{background:var(--red-lt);color:var(--red-dk);border-color:rgba(155,28,28,.3)}
 .filter-btn.active.black{background:var(--black-lt);color:var(--black-dk);border-color:rgba(0,0,0,.2)}
+.filter-btn.active.all{background:var(--t1);color:#fff;border-color:var(--t1)}
 .proj-table{width:100%;border-collapse:collapse}
 .proj-table th{font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;padding:5px 8px;border-bottom:0.5px solid var(--bd);text-align:left;white-space:nowrap}
 .proj-table td{padding:8px 8px;border-bottom:0.5px solid var(--bd);font-size:11px;vertical-align:middle}
@@ -174,7 +175,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .proj-detail-inner{padding:1rem 1rem 1rem 1.5rem;background:var(--card2)}
 .proj-name-cell{font-weight:600;color:var(--t1);font-size:12px}
 .proj-name-cell input{font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;border:0.5px solid var(--green);border-radius:var(--rad);padding:2px 6px;outline:none;background:var(--card);color:var(--t1);width:100%}
-.date-cell input{font-size:11px;font-family:'DM Mono',monospace;border:0.5px solid var(--green);border-radius:var(--rad);padding:2px 5px;outline:none;background:var(--card);color:var(--t1);width:100px}
+.date-edit input{font-size:11px;font-family:'DM Mono',monospace;border:0.5px solid var(--green);border-radius:var(--rad);padding:2px 5px;outline:none;background:var(--card);color:var(--t1);width:100px}
 .status-pill{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:.04em}
 .status-pill.green{background:rgba(26,127,90,.12);color:var(--green-dk)}
 .status-pill.yellow{background:rgba(138,101,0,.12);color:var(--yellow-dk)}
@@ -184,7 +185,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .mono{font-family:'DM Mono',monospace;font-size:11px}
 .expand-icon{font-size:10px;color:var(--t3);transition:transform .15s;display:inline-block}
 .expand-icon.open{transform:rotate(90deg)}
-.week-flag{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--week);margin-left:4px;vertical-align:middle;title:'Due this week'}
+.week-flag{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--week);margin-left:4px;vertical-align:middle}
 
 /* Empty state */
 .empty-state{font-size:12px;color:var(--t3);text-align:center;padding:2rem;border:0.5px dashed var(--bd);border-radius:var(--rad-xl)}
@@ -193,22 +194,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--t1);color:#fff;font-size:12px;font-weight:500;padding:8px 16px;border-radius:20px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:999}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ── PRINT ── */
+/* Print */
 @media print{
   body{background:#fff;padding:0}
   .tabs,.btn-row,.proj-toolbar,.proj-add-section,.header-right,
-  .cal-popup,.toast,.expand-icon,
-  td button,.filter-row{display:none!important}
+  .cal-popup,.toast,.expand-icon,td button,.filter-row{display:none!important}
   .app{max-width:100%}
   .card,.status-card{box-shadow:none;border:0.5px solid #ccc;break-inside:avoid}
   .proj-table tr.proj-detail{display:none}
-  .proj-table td,.proj-table th{font-size:10pt}
   #pane-single,#pane-multi{display:block!important}
   #pane-ooo{display:none!important}
   .gantt-wrap{overflow:visible}
-  .print-title{display:block!important;font-size:16pt;font-weight:700;margin-bottom:12pt}
 }
-.print-title{display:none}
 </style>
 </head>
 <body>
@@ -237,7 +234,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
       <div class="grid3" style="margin-bottom:10px">
         <div class="field">
           <label>Project name</label>
-          <input type="text" id="s-name" placeholder="e.g. Retail, Store #">
+          <input type="text" id="s-name" placeholder="e.g. Retail, Store #123">
         </div>
         <div class="field">
           <label><i class="ti ti-scan" style="font-size:10px"></i> NV5 LiDAR survey date</label>
@@ -263,13 +260,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 
   <!-- MULTI-PROJECT -->
   <div id="pane-multi" style="display:none">
-    <!-- Add project (fixed at top) -->
     <div class="card proj-add-section">
       <div class="section-title">Add project</div>
       <div class="grid4">
         <div class="field">
           <label>Project name</label>
-          <input type="text" id="m-name" placeholder="e.g. Retail, Store #">
+          <input type="text" id="m-name" placeholder="e.g. Retail, Store #123">
         </div>
         <div class="field" style="position:relative">
           <label>LiDAR date</label>
@@ -284,15 +280,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
         <button class="btn primary" onclick="addProject()" style="height:32px"><i class="ti ti-plus"></i> Add</button>
       </div>
       <div class="btn-row" style="margin-top:8px">
-        <label class="btn" style="cursor:pointer"><i class="ti ti-upload"></i> Import CSV <input type="file" id="csv-file" accept=".csv,.txt" style="display:none" onchange="importCSV(this)"></label>
+        <label class="btn" style="cursor:pointer"><i class="ti ti-upload"></i> Import CSV
+          <input type="file" id="csv-file" accept=".csv,.txt" style="display:none" onchange="importCSV(this)">
+        </label>
         <button class="btn" onclick="exportCSV()"><i class="ti ti-download"></i> Export CSV</button>
       </div>
     </div>
 
-    <!-- Dashboard -->
     <div id="multi-dashboard" style="display:none"></div>
 
-    <!-- Table -->
     <div class="card">
       <div class="proj-toolbar">
         <div class="sort-row">
@@ -302,7 +298,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
           <button class="sort-btn" id="sort-name" onclick="sortProjects('name')">Name</button>
         </div>
         <div class="filter-row" id="filter-row">
-          Filter: <button class="filter-btn active" id="filter-all" onclick="filterProjects('all')">All</button>
+          Filter: <button class="filter-btn active all" id="filter-all" onclick="filterProjects('all')">All</button>
         </div>
       </div>
       <div id="proj-table-wrap">
@@ -331,7 +327,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
               <input type="text" id="ooo-end" placeholder="MM/DD/YYYY" autocomplete="off">
               <div class="cal-popup hidden" id="cal-ooo-end"></div>
             </div>
-            <button class="btn primary" onclick="addOOORange()" style="height:32px;margin-bottom:0"><i class="ti ti-plus"></i> Add</button>
+            <button class="btn primary" onclick="addOOORange()" style="height:32px"><i class="ti ti-plus"></i> Add</button>
           </div>
         </div>
         <div>
@@ -354,79 +350,105 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // Constants
-// ═══════════════════════════════════════════════
-const STD_LD=7,STD_DD_TO_I=14,STD_DELIV_LAG=7;
-const MIN_LD=3,MIN_DUE_GAP=2,FLEX_DD_TO_I=7;
-const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
-const MONTHS_S=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-const DNAMES=["Su","Mo","Tu","We","Th","Fr","Sa"];
-const STATUS_LABELS={green:"On schedule",yellow:"Minor flex — deliverable moved earlier",orange:"Major flex — both dates compressed",red:"Emergency — LiDAR gap critically compressed",black:"No possible schedule"};
-const STATUS_ICONS={green:"ti-circle-check",yellow:"ti-circle-check",orange:"ti-alert-triangle",red:"ti-alert-triangle",black:"ti-circle-x"};
-const STATUS_ORDER={green:0,yellow:1,orange:2,red:3,black:4};
-const STORAGE_KEY='nv5_projects_v2';
-const OOO_KEY='nv5_ooo_v2';
+// ═══════════════════════════════════════
+const STD_LD        = 7;   // Standard: LiDAR → Deliverable (calendar days)
+const STD_DD_TO_I   = 14;  // Standard: Design due → Install
+const STD_DELIV_LAG = 7;   // Standard: Deliverable must be ≥ 7cd before design due
 
-// ═══════════════════════════════════════════════
+const MIN_LD        = 3;   // Flex: min LiDAR → Deliverable calendar days
+const MIN_BIZ_LAG   = 5;   // Yellow: deliverable must be ≥ 5 business days before design due
+const MIN_DUE_GAP   = 2;   // Orange/Red: deliverable → design due (calendar days)
+const FLEX_DD_TO_I  = 7;   // Orange/Red: design due → install minimum
+
+const STORAGE_KEY = 'nv5_projects_v3';
+const OOO_KEY     = 'nv5_ooo_v3';
+
+const MONTHS   = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const MONTHS_S = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const DNAMES   = ["Su","Mo","Tu","We","Th","Fr","Sa"];
+
+const STATUS_LABELS = {
+  green:  "On schedule — no flexibility needed",
+  yellow: "Minor flex — deliverable moved earlier",
+  orange: "Major flex — both dates compressed",
+  red:    "Emergency — LiDAR gap critically compressed",
+  black:  "No possible schedule"
+};
+const STATUS_ICONS = {green:"ti-circle-check",yellow:"ti-circle-check",orange:"ti-alert-triangle",red:"ti-alert-triangle",black:"ti-circle-x"};
+const STATUS_ORDER = {green:0,yellow:1,orange:2,red:3,black:4};
+
+// ═══════════════════════════════════════
 // State
-// ═══════════════════════════════════════════════
-let oooBlocks=[];
-let projects=[];
-let expandedRow=null;
-let projSort='deliv';
-let projFilter='all';
-let calStates={};
-let lastResult=null;
+// ═══════════════════════════════════════
+let oooBlocks  = [];
+let projects   = [];
+let expandedRow = null;
+let projSort   = 'deliv';
+let projFilter = 'all';
+let calStates  = {};
+let lastResult = null;
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // Persistence
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 function saveState(){
   try{
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(projects.map(p=>({...p,lidar:p.lidar.getTime(),install:p.install.getTime()}))));
-    localStorage.setItem(OOO_KEY,JSON.stringify(oooBlocks.map(b=>({...b,start:b.start.getTime(),end:b.end.getTime()}))));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(projects.map(p=>({...p,lidar:p.lidar.getTime(),install:p.install.getTime()}))));
+    localStorage.setItem(OOO_KEY, JSON.stringify(oooBlocks.map(b=>({...b,start:b.start.getTime(),end:b.end.getTime()}))));
   }catch(e){}
 }
 function loadState(){
   try{
-    const ps=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
-    projects=ps.map(p=>({...p,lidar:new Date(p.lidar),install:new Date(p.install)}));
-    const os=JSON.parse(localStorage.getItem(OOO_KEY)||'[]');
-    oooBlocks=os.map(b=>({...b,start:new Date(b.start),end:new Date(b.end)}));
+    const ps = JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+    projects = ps.map(p=>({...p,lidar:new Date(p.lidar),install:new Date(p.install)}));
+    const os = JSON.parse(localStorage.getItem(OOO_KEY)||'[]');
+    oooBlocks = os.map(b=>({...b,start:new Date(b.start),end:new Date(b.end)}));
   }catch(e){projects=[];oooBlocks=[];}
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // Date helpers
-// ═══════════════════════════════════════════════
-function fmtLong(d){return d?d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"}):""}
-function fmtShort(d){return d?`${MONTHS_S[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`:""}
-function fmtInput(d){return d?`${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`:""}
-function addD(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
-function diff(a,b){return Math.round((b-a)/864e5)}
-function dateKey(d){return`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`}
-function today(){const d=new Date();d.setHours(0,0,0,0);return d}
+// ═══════════════════════════════════════
+function fmtLong(d){ return d?d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"}):"" }
+function fmtShort(d){ return d?`${MONTHS_S[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`:"" }
+function fmtInput(d){ return d?`${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`:"" }
+function addD(d,n){ const r=new Date(d);r.setDate(r.getDate()+n);return r }
+function diff(a,b){ return Math.round((b-a)/864e5) }
+function dateKey(d){ return`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}` }
+function today(){ const d=new Date();d.setHours(0,0,0,0);return d }
 
-// Business days between two dates (Mon-Fri only)
+// Count business days from a to b (Mon-Fri)
 function bizDiff(a,b){
-  let count=0,cur=new Date(a);cur.setHours(0,0,0,0);
-  const end=new Date(b);end.setHours(0,0,0,0);
+  let count=0, cur=new Date(a); cur.setHours(0,0,0,0);
+  const end=new Date(b); end.setHours(0,0,0,0);
   const dir=end>=cur?1:-1;
   while(cur.getTime()!==end.getTime()){
     cur.setDate(cur.getDate()+dir);
     const dow=cur.getDay();
-    if(dow!==0&&dow!==6)count+=dir;
+    if(dow!==0&&dow!==6) count+=dir;
   }
   return count;
 }
 
+// Subtract n business days from date d (going backwards)
+function subBizDays(d,n){
+  const r=new Date(d); r.setHours(0,0,0,0);
+  let count=0;
+  while(count<n){
+    r.setDate(r.getDate()-1);
+    const dow=r.getDay();
+    if(dow!==0&&dow!==6) count++;
+  }
+  return r;
+}
+
 function parseInput(s){
   if(!s||!s.trim())return null;
-  // Try M/D/YYYY or M-D-YYYY
   const parts=s.trim().split(/[\/\-\.]/);
   if(parts.length===3){
-    const [a,b,c]=parts.map(Number);
+    const[a,b,c]=parts.map(Number);
     if(c>1900&&a>=1&&a<=12&&b>=1&&b<=31){const r=new Date(c,a-1,b);r.setHours(0,0,0,0);if(!isNaN(r))return r;}
   }
   const d=new Date(s);
@@ -436,129 +458,155 @@ function parseInput(s){
 
 function snapWD(d,dir){
   const r=new Date(d),dow=r.getDay();
-  if(dow===6)dir==="fwd"?r.setDate(r.getDate()+2):r.setDate(r.getDate()-1);
-  else if(dow===0)dir==="fwd"?r.setDate(r.getDate()+1):r.setDate(r.getDate()-2);
+  if(dow===6) dir==="fwd"?r.setDate(r.getDate()+2):r.setDate(r.getDate()-1);
+  else if(dow===0) dir==="fwd"?r.setDate(r.getDate()+1):r.setDate(r.getDate()-2);
   return r;
 }
-function nextWD(d){return snapWD(d,"fwd")}
-function prevWD(d){return snapWD(d,"back")}
-function prevFri(d){const r=new Date(d);while(r.getDay()!==5)r.setDate(r.getDate()-1);return r}
+function nextWD(d){ return snapWD(d,"fwd") }
+function prevWD(d){ return snapWD(d,"back") }
+function prevFri(d){ const r=new Date(d);while(r.getDay()!==5)r.setDate(r.getDate()-1);return r }
 
 function isOOO(d){
   const k=dateKey(d);
   return oooBlocks.some(b=>{
-    if(b.type==='day')return dateKey(b.start)===k;
+    if(b.type==='day') return dateKey(b.start)===k;
     return d>=b.start&&d<=b.end;
   });
 }
-function nextAvailWD(d){const r=new Date(d);r.setHours(0,0,0,0);for(let i=0;i<365;i++){const dow=r.getDay();if(dow!==0&&dow!==6&&!isOOO(r))return r;r.setDate(r.getDate()+1);}return null}
-function prevAvailWD(d){const r=new Date(d);r.setHours(0,0,0,0);for(let i=0;i<365;i++){const dow=r.getDay();if(dow!==0&&dow!==6&&!isOOO(r))return r;r.setDate(r.getDate()-1);}return null}
+function nextAvailWD(d){ const r=new Date(d);r.setHours(0,0,0,0);for(let i=0;i<365;i++){const dow=r.getDay();if(dow!==0&&dow!==6&&!isOOO(r))return r;r.setDate(r.getDate()+1);}return null }
+function prevAvailWD(d){ const r=new Date(d);r.setHours(0,0,0,0);for(let i=0;i<365;i++){const dow=r.getDay();if(dow!==0&&dow!==6&&!isOOO(r))return r;r.setDate(r.getDate()-1);}return null }
 
 function applyOOOToDesignDue(designDue,install){
-  if(!isOOO(designDue))return{date:designDue,oooWarning:null,oooMoved:false};
+  if(!isOOO(designDue)) return{date:designDue,oooWarning:null,oooMoved:false};
   const after=nextAvailWD(addD(designDue,1));
-  if(after&&diff(after,install)>=FLEX_DD_TO_I)return{date:after,oooWarning:`Design due pushed to ${fmtShort(after)} (first available day after OOO).`,oooMoved:true};
+  if(after&&diff(after,install)>=FLEX_DD_TO_I) return{date:after,oooWarning:`Design due pushed to ${fmtShort(after)} (first available day after OOO).`,oooMoved:true};
   const before=prevAvailWD(addD(designDue,-1));
   return{date:before,oooWarning:`Design due moved to ${fmtShort(before)} (before OOO — post-OOO date too close to install).`,oooMoved:true};
 }
 
-function isDueThisWeek(d){
-  if(!d)return false;
-  const t=today(),n=diff(t,d);
-  return n>=0&&n<=7;
-}
+function isDueThisWeek(d){ if(!d)return false;const n=diff(today(),d);return n>=0&&n<=7 }
 
 function countdown(d){
   if(!d)return{text:"",cls:"normal"};
   const n=diff(today(),d);
-  if(n<0)return{text:`${Math.abs(n)}bd overdue`,cls:"overdue"};
+  if(n<0)return{text:`${bizDiff(d,today())}bd overdue`,cls:"overdue"};
   if(n===0)return{text:"due today",cls:"week"};
   const bd=bizDiff(today(),d);
   if(isDueThisWeek(d))return{text:`due in ${bd} business day${bd!==1?'s':''}  ⚡ this week`,cls:"week"};
   return{text:`due in ${bd} business day${bd!==1?'s':''}`,cls:"normal"};
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // Core scheduling
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 function schedule(lidar,install){
   const result={status:null,delivDate:null,designDue:null,callouts:[],oooWarning:null};
-  const stdDesignDue=prevWD(addD(install,-STD_DD_TO_I));
-  const stdDelivDeadline=prevWD(addD(stdDesignDue,-STD_DELIV_LAG));
-  const stdDeliv=nextWD(addD(lidar,STD_LD));
 
-  function withOOO(designDue,delivDate){
+  // Standard fixed dates
+  const stdDesignDue     = prevWD(addD(install, -STD_DD_TO_I));
+  const stdDeliv         = nextWD(addD(lidar,    STD_LD));
+
+  // Standard: deliverable must be ≥ STD_DELIV_LAG calendar days before design due
+  const stdDelivDeadline = prevWD(addD(stdDesignDue, -STD_DELIV_LAG));
+
+  // Yellow: deliverable must be ≥ MIN_BIZ_LAG business days before design due
+  const yellowDelivDeadline = subBizDays(stdDesignDue, MIN_BIZ_LAG);
+
+  // Earliest possible deliverable
+  const minDeliv = nextWD(addD(lidar, MIN_LD));
+
+  // OOO helper
+  function withOOO(designDue, delivDate){
     const{date:dd,oooWarning,oooMoved}=applyOOOToDesignDue(designDue,install);
-    let dv=delivDate,extraCallout=null;
+    let dv=delivDate, extraCallout=null;
     if(oooMoved){
-      const newDeadline=prevWD(addD(dd,-STD_DELIV_LAG));
-      if(dv>newDeadline){dv=prevAvailWD(addD(dd,-MIN_DUE_GAP));extraCallout=`Deliverable also moved to ${fmtShort(dv)} to fit OOO-adjusted design due.`;}
+      const newDeadline=subBizDays(dd, MIN_BIZ_LAG);
+      if(dv>newDeadline){
+        dv=prevAvailWD(addD(dd,-MIN_DUE_GAP));
+        extraCallout=`Deliverable also moved to ${fmtShort(dv)} to fit OOO-adjusted design due.`;
+      }
     }
     return{designDue:dd,delivDate:dv,oooWarning,extraCallout};
   }
 
-  // GREEN
+  // ── GREEN ──────────────────────────────────────
+  // Standard deliverable lands ≥ STD_DELIV_LAG cd before standard design due
   if(stdDeliv<=stdDelivDeadline){
     const{designDue:dd,delivDate:dv,oooWarning,extraCallout}=withOOO(stdDesignDue,stdDeliv);
-    result.status="green";result.delivDate=dv;result.designDue=dd;result.oooWarning=oooWarning;
-    if(extraCallout)result.callouts.push(extraCallout);
+    result.status="green"; result.delivDate=dv; result.designDue=dd; result.oooWarning=oooWarning;
+    if(extraCallout) result.callouts.push(extraCallout);
     return result;
   }
-  // YELLOW
-  const minDeliv=nextWD(addD(lidar,MIN_LD));
-  if(minDeliv<=stdDelivDeadline){
+
+  // ── YELLOW ─────────────────────────────────────
+  // Move deliverable to earliest (LiDAR + MIN_LD), design due stays standard
+  // Valid if min deliverable is ≥ MIN_BIZ_LAG business days before standard design due
+  if(minDeliv<=yellowDelivDeadline){
     const ldGap=diff(lidar,minDeliv);
     const{designDue:dd,delivDate:dv,oooWarning,extraCallout}=withOOO(stdDesignDue,minDeliv);
-    result.status="yellow";result.delivDate=dv;result.designDue=dd;result.oooWarning=oooWarning;
-    result.callouts.push(`Deliverable moved ${STD_LD-ldGap}d earlier (${ldGap}d after LiDAR, standard is ${STD_LD}d). Design due unchanged.`);
-    if(extraCallout)result.callouts.push(extraCallout);
+    result.status="yellow"; result.delivDate=dv; result.designDue=dd; result.oooWarning=oooWarning;
+    result.callouts.push(`Deliverable moved ${STD_LD-ldGap}d earlier than standard (${ldGap}cd / ${bizDiff(lidar,minDeliv)}bd after LiDAR). Design due unchanged.`);
+    if(extraCallout) result.callouts.push(extraCallout);
     return result;
   }
-  // ORANGE / RED
-  const flexDesignDue=prevFri(addD(install,-FLEX_DD_TO_I));
-  const flexDeliv=prevWD(addD(flexDesignDue,-MIN_DUE_GAP));
-  const ldGap=diff(lidar,flexDeliv);
+
+  // ── ORANGE / RED ───────────────────────────────
+  // Flex design due: Friday ≤ install - FLEX_DD_TO_I
+  // Deliverable = design due - MIN_DUE_GAP calendar days
+  const flexDesignDue = prevFri(addD(install, -FLEX_DD_TO_I));
+  const flexDeliv     = prevWD(addD(flexDesignDue, -MIN_DUE_GAP));
+  const ldGap         = diff(lidar, flexDeliv);
+
   if(flexDeliv<=lidar){
     result.status="black";
-    result.callouts.push(`No possible schedule. Install is only ${diff(lidar,install)}d after LiDAR — not enough time with maximum flex.`);
+    result.callouts.push(`No possible schedule. Install is only ${diff(lidar,install)}d after LiDAR — not enough time even with maximum flex.`);
     return result;
   }
+
   const{designDue:dd,delivDate:dv,oooWarning,extraCallout}=withOOO(flexDesignDue,flexDeliv);
-  const ddGap=diff(dv,dd),diGap=diff(dd,install);
-  result.status=ldGap>=MIN_LD?"orange":"red";
-  result.delivDate=dv;result.designDue=dd;result.oooWarning=oooWarning;
-  if(ldGap<MIN_LD)result.callouts.push(`Emergency: LiDAR → Deliverable is only ${ldGap}d (min ${MIN_LD}d, standard ${STD_LD}d).`);
-  result.callouts.push(`Deliverable → Design due compressed to ${ddGap}d (standard ${STD_DELIV_LAG}d).`);
-  if(diGap<STD_DD_TO_I)result.callouts.push(`Design due is ${diGap}d before install (standard ${STD_DD_TO_I}d).`);
-  if(ldGap<STD_LD&&ldGap>=MIN_LD)result.callouts.push(`LiDAR → Deliverable is ${ldGap}d (standard ${STD_LD}d).`);
-  if(extraCallout)result.callouts.push(extraCallout);
+  const ddGap=diff(dv,dd);
+  const diGap=diff(dd,install);
+
+  result.status = ldGap>=MIN_LD ? "orange" : "red";
+  result.delivDate=dv; result.designDue=dd; result.oooWarning=oooWarning;
+
+  if(ldGap<MIN_LD)
+    result.callouts.push(`Emergency: LiDAR → Deliverable is only ${ldGap}cd / ${bizDiff(lidar,dv)}bd (minimum is ${MIN_LD}cd, standard is ${STD_LD}cd).`);
+  result.callouts.push(`Deliverable → Design due compressed to ${ddGap}cd / ${bizDiff(dv,dd)}bd (standard is ${STD_DELIV_LAG}cd).`);
+  if(diGap<STD_DD_TO_I)
+    result.callouts.push(`Design due is ${diGap}cd before install (standard is ${STD_DD_TO_I}cd).`);
+  if(ldGap<STD_LD&&ldGap>=MIN_LD)
+    result.callouts.push(`LiDAR → Deliverable is ${ldGap}cd / ${bizDiff(lidar,dv)}bd (standard is ${STD_LD}cd).`);
+  if(extraCallout) result.callouts.push(extraCallout);
   return result;
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // Render result
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 function renderResult(r,lidar,install,name,container){
   if(!r){container.innerHTML='<div class="empty-state">Enter dates and click Calculate.</div>';return}
   const s=r.status;
   const cd=r.delivDate?countdown(r.delivDate):{text:"",cls:"normal"};
   let h=`<div class="status-card ${s}"><div class="s-top"><div>`;
   h+=`<div class="s-badge ${s}"><i class="ti ${STATUS_ICONS[s]}" style="font-size:10px"></i>${STATUS_LABELS[s]}</div>`;
-  if(s!=='black'){h+=`<div class="s-date ${s}">${fmtLong(r.delivDate)}</div><div class="s-sub">NV5 Deliverable Due${name?` · ${name}`:''}</div>`;}
+  if(s!=='black'){
+    h+=`<div class="s-date ${s}">${fmtLong(r.delivDate)}</div>`;
+    h+=`<div class="s-sub">NV5 Deliverable Due${name?` · ${name}`:''}</div>`;
+  }
   h+=`</div>`;
-  if(s!=='black'&&r.delivDate)h+=`<span class="s-countdown ${cd.cls}">${cd.text}</span>`;
+  if(s!=='black'&&r.delivDate) h+=`<span class="s-countdown ${cd.cls}">${cd.text}</span>`;
   h+=`</div>`;
   r.callouts.forEach(c=>{h+=`<div class="callout ${s}"><i class="ti ti-info-circle"></i><span>${c}</span></div>`});
-  if(r.oooWarning)h+=`<div class="callout ooo"><i class="ti ti-calendar-off"></i><span>OOO: ${r.oooWarning}</span></div>`;
+  if(r.oooWarning) h+=`<div class="callout ooo"><i class="ti ti-calendar-off"></i><span>OOO: ${r.oooWarning}</span></div>`;
   h+=`</div>`;
 
   if(s!=='black'){
-    // Timeline with business days
     const tl=[
-      {lbl:"NV5 LiDAR Survey",  date:lidar,       ico:"ti-scan",       col:"neutral"},
-      {lbl:"NV5 Deliverable Due",date:r.delivDate, ico:"ti-file-check", col:s},
-      {lbl:"Radar Design Due",   date:r.designDue, ico:"ti-pencil-off", col:s},
-      {lbl:"Install",            date:install,     ico:"ti-tool",       col:"neutral"},
+      {lbl:"NV5 LiDAR Survey",   date:lidar,       ico:"ti-scan",       col:"neutral"},
+      {lbl:"NV5 Deliverable Due", date:r.delivDate, ico:"ti-file-check", col:s},
+      {lbl:"Radar Design Due",    date:r.designDue, ico:"ti-pencil-off", col:s},
+      {lbl:"Install",             date:install,     ico:"ti-tool",       col:"neutral"},
     ];
     h+=`<div class="tl-section"><div class="tl-head">Full schedule</div>`;
     tl.forEach((row,i)=>{
@@ -584,31 +632,29 @@ function renderGantt(lidar,delivDate,designDue,install,status){
   const colors={green:'#1A7F5A',yellow:'#8A6500',orange:'#B34A00',red:'#9B1C1C',black:'#18180F'};
   const c=colors[status]||'#9B9A90';
   const segs=[
-    {label:'LiDAR → Deliverable',from:lidar,    to:delivDate, color:c},
-    {label:'Deliverable → Design',from:delivDate,to:designDue, color:c+'88'},
-    {label:'Design → Install',    from:designDue, to:install,   color:'#C8C6BA'},
+    {label:'LiDAR → Deliverable', from:lidar,      to:delivDate, color:c},
+    {label:'Deliverable → Design', from:delivDate,  to:designDue, color:c+'88'},
+    {label:'Design → Install',     from:designDue,  to:install,   color:'#C8C6BA'},
   ];
   const markers=[{d:lidar,lbl:'LiDAR'},{d:delivDate,lbl:'Deliv'},{d:designDue,lbl:'Design'},{d:install,lbl:'Install'}];
-  let h=`<div class="gantt-wrap"><div class="gantt-head">Timeline (cd = calendar days, bd = business days)</div><div class="gantt">`;
-  h+=`<div class="gantt-rows">`;
+  let h=`<div class="gantt-wrap"><div class="gantt-head">Timeline (cd = calendar days, bd = business days)</div><div class="gantt"><div class="gantt-rows">`;
   segs.forEach(seg=>{
     const cd=diff(seg.from,seg.to),bd=bizDiff(seg.from,seg.to);
     h+=`<div class="gantt-row"><div class="gantt-row-lbl">${seg.label}</div><div class="gantt-track"><div class="gantt-bar" style="left:${pct(seg.from)};width:${pctW(seg.from,seg.to)};background:${seg.color}">${cd}cd/${bd}bd</div></div></div>`;
   });
-  h+=`</div>`;
-  h+=`<div class="gantt-row" style="margin-top:5px"><div class="gantt-row-lbl" style="font-size:9px;color:var(--t3)">Milestones</div><div class="gantt-track" style="height:10px;position:relative">`;
+  h+=`</div><div class="gantt-row" style="margin-top:5px"><div class="gantt-row-lbl" style="font-size:9px;color:var(--t3)">Milestones</div><div class="gantt-track" style="height:10px;position:relative">`;
   markers.forEach(m=>{h+=`<div style="position:absolute;left:${pct(m.d)};transform:translateX(-50%);top:-3px"><div style="width:2px;height:16px;background:var(--t2);border-radius:1px;margin:0 auto"></div><div style="font-size:8px;color:var(--t3);white-space:nowrap;transform:translateX(-50%);margin-top:1px;font-family:'DM Mono',monospace">${m.lbl}</div></div>`});
   h+=`</div></div></div></div>`;
   return h;
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // Single project
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 function computeSingle(){
-  const lidar=parseInput(document.getElementById('s-lidar').value);
+  const lidar  =parseInput(document.getElementById('s-lidar').value);
   const install=parseInput(document.getElementById('s-install').value);
-  const name=document.getElementById('s-name').value.trim();
+  const name   =document.getElementById('s-name').value.trim();
   const ra=document.getElementById('s-result');
   if(!lidar||!install){ra.innerHTML='<div class="empty-state">Please enter valid LiDAR and install dates.</div>';return}
   if(install<=lidar){ra.innerHTML='<div class="empty-state" style="border-color:var(--red);color:var(--red)">Install date must be after LiDAR survey date.</div>';return}
@@ -637,16 +683,16 @@ function copyToClipboard(){
   txt+=`Install:               ${fmtLong(install)}\n`;
   txt+=`${sep}\nStatus: ${STATUS_LABELS[r.status]}\n`;
   if(r.callouts.length){txt+='\nNotes:\n';r.callouts.forEach(c=>{txt+=`• ${c}\n`})}
-  if(r.oooWarning)txt+=`• OOO: ${r.oooWarning}\n`;
-  navigator.clipboard.writeText(txt).then(()=>showToast('Schedule copied!')).catch(()=>showToast('Copy failed — try manually.'));
+  if(r.oooWarning) txt+=`• OOO: ${r.oooWarning}\n`;
+  navigator.clipboard.writeText(txt).then(()=>showToast('Schedule copied!')).catch(()=>showToast('Copy failed.'));
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // Multi-project
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 function addProject(){
-  const name=document.getElementById('m-name').value.trim()||'Untitled';
-  const lidar=parseInput(document.getElementById('m-lidar').value);
+  const name   =document.getElementById('m-name').value.trim()||'Untitled';
+  const lidar  =parseInput(document.getElementById('m-lidar').value);
   const install=parseInput(document.getElementById('m-install').value);
   if(!lidar||!install){showToast('Please enter valid dates.');return}
   if(install<=lidar){showToast('Install must be after LiDAR.');return}
@@ -672,8 +718,6 @@ function sortProjects(key){
 
 function filterProjects(key){
   projFilter=key;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.filter-btn').forEach(b=>{if(b.id==='filter-'+key)b.classList.add('active')});
   renderProjects();
 }
 
@@ -685,19 +729,24 @@ function toggleRow(id){
 function startEdit(id,field,currentVal,displayEl){
   displayEl.style.display='none';
   const inp=document.createElement('input');
-  inp.type='text';inp.value=currentVal;
-  inp.className=field==='name'?'proj-name-cell':'date-cell';
+  inp.type='text'; inp.value=currentVal;
+  inp.style.cssText=field==='name'
+    ?'font-size:12px;font-weight:600;font-family:DM Sans,sans-serif;border:0.5px solid var(--green);border-radius:6px;padding:2px 6px;outline:none;background:white;color:var(--t1);width:100%'
+    :'font-size:11px;font-family:DM Mono,monospace;border:0.5px solid var(--green);border-radius:6px;padding:2px 5px;outline:none;background:white;color:var(--t1);width:100px';
   displayEl.parentNode.insertBefore(inp,displayEl.nextSibling);
   inp.focus();inp.select();
   function save(){
     const p=projects.find(p=>p.id===id);
     if(!p)return;
-    if(field==='name'){p.name=inp.value.trim()||p.name;}
-    else{const d=parseInput(inp.value);if(d){if(field==='lidar')p.lidar=d;else p.install=d;}}
+    if(field==='name'){ p.name=inp.value.trim()||p.name; }
+    else{ const d=parseInput(inp.value);if(d){if(field==='lidar')p.lidar=d;else p.install=d;} }
     saveState();renderProjects();
   }
   inp.addEventListener('blur',save);
-  inp.addEventListener('keydown',e=>{if(e.key==='Enter')inp.blur();if(e.key==='Escape'){inp.removeEventListener('blur',save);renderProjects();}});
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Enter')inp.blur();
+    if(e.key==='Escape'){inp.removeEventListener('blur',save);renderProjects();}
+  });
 }
 
 function renderDashboard(rows){
@@ -705,26 +754,26 @@ function renderDashboard(rows){
   if(!rows.length){el.style.display='none';return}
   el.style.display='block';
   const counts={green:0,yellow:0,orange:0,red:0,black:0,week:0};
-  rows.forEach(p=>{
-    counts[p.r.status]++;
-    if(isDueThisWeek(p.r.delivDate))counts.week++;
-  });
+  rows.forEach(p=>{counts[p.r.status]++;if(isDueThisWeek(p.r.delivDate))counts.week++;});
   const labels={green:'On Schedule',yellow:'Minor Flex',orange:'Major Flex',red:'Emergency',black:'Impossible',week:'Due This Week'};
   el.innerHTML='<div class="dashboard">'+
-    ['week','green','yellow','orange','red','black'].map(k=>
-      counts[k]>0||k==='green'?`<div class="dash-tile ${k}"><div class="dt-num">${counts[k]}</div><div class="dt-lbl">${labels[k]}</div></div>`:''
-    ).join('')+
+    ['week','green','yellow','orange','red','black']
+      .filter(k=>counts[k]>0)
+      .map(k=>`<div class="dash-tile ${k}"><div class="dt-num">${counts[k]}</div><div class="dt-lbl">${labels[k]}</div></div>`)
+      .join('')+
   '</div>';
 }
 
 function renderFilterBtns(rows){
   const present=new Set(rows.map(p=>p.r.status));
   const fr=document.getElementById('filter-row');
-  let h='Filter: <button class="filter-btn'+(projFilter==='all'?' active':'')+'" id="filter-all" onclick="filterProjects(\'all\')">All ('+rows.length+')</button>';
+  const allActive=projFilter==='all';
+  let h=`Filter: <button class="filter-btn${allActive?' active all':''}" onclick="filterProjects('all')">All (${rows.length})</button>`;
   ['green','yellow','orange','red','black'].forEach(s=>{
     if(present.has(s)){
       const cnt=rows.filter(p=>p.r.status===s).length;
-      h+=` <button class="filter-btn${projFilter===s?' active '+s:''}" id="filter-${s}" onclick="filterProjects('${s}')">${s.charAt(0).toUpperCase()+s.slice(1)} (${cnt})</button>`;
+      const active=projFilter===s;
+      h+=` <button class="filter-btn${active?' active '+s:''}" onclick="filterProjects('${s}')">${s.charAt(0).toUpperCase()+s.slice(1)} (${cnt})</button>`;
     }
   });
   fr.innerHTML=h;
@@ -735,16 +784,18 @@ function renderProjects(){
   if(!projects.length){
     document.getElementById('multi-dashboard').style.display='none';
     wrap.innerHTML='<div class="empty-state">No projects yet. Add one above.</div>';
+    document.getElementById('filter-row').innerHTML='Filter: <button class="filter-btn active all" onclick="filterProjects(\'all\')">All (0)</button>';
     return;
   }
+
   const allRows=projects.map(p=>({...p,r:schedule(p.lidar,p.install)}));
   renderDashboard(allRows);
   renderFilterBtns(allRows);
 
   let rows=[...allRows];
-  if(projFilter!=='all')rows=rows.filter(p=>p.r.status===projFilter);
-  if(projSort==='deliv')rows.sort((a,b)=>(a.r.delivDate||new Date(9999,0))-(b.r.delivDate||new Date(9999,0)));
-  else if(projSort==='status')rows.sort((a,b)=>STATUS_ORDER[a.r.status]-STATUS_ORDER[b.r.status]);
+  if(projFilter!=='all') rows=rows.filter(p=>p.r.status===projFilter);
+  if(projSort==='deliv') rows.sort((a,b)=>(a.r.delivDate||new Date(9999,0))-(b.r.delivDate||new Date(9999,0)));
+  else if(projSort==='status') rows.sort((a,b)=>STATUS_ORDER[a.r.status]-STATUS_ORDER[b.r.status]);
   else rows.sort((a,b)=>a.name.localeCompare(b.name));
 
   if(!rows.length){wrap.innerHTML='<div class="empty-state">No projects match this filter.</div>';return}
@@ -758,10 +809,11 @@ function renderProjects(){
   rows.forEach(p=>{
     const s=p.r.status;
     const isExp=expandedRow===p.id;
-    const dueThisWeek=isDueThisWeek(p.r.delivDate);
+    const dtw=isDueThisWeek(p.r.delivDate);
     const delivCell=p.r.delivDate
-      ?`<span class="mono" style="color:var(--${s==='black'?'t1':s})">${fmtShort(p.r.delivDate)}</span>${dueThisWeek?'<span class="week-flag" title="Due this week"></span>':''}`
+      ?`<span class="mono" style="color:var(--${s==='black'?'t1':s})">${fmtShort(p.r.delivDate)}</span>${dtw?'<span class="week-flag" title="Due this week"></span>':''}`
       :'<span style="color:var(--t3)">—</span>';
+
     h+=`<tr class="proj-row${isExp?' expanded':''}" onclick="toggleRow(${p.id})">
       <td><span class="expand-icon${isExp?' open':''}">&#9658;</span></td>
       <td><span class="proj-name-cell" ondblclick="event.stopPropagation();startEdit(${p.id},'name',${JSON.stringify(p.name)},this)">${p.name}</span></td>
@@ -782,14 +834,14 @@ function renderProjects(){
   rows.forEach(p=>{
     if(expandedRow===p.id){
       const el=document.getElementById(`detail-${p.id}`);
-      if(el)renderResult(p.r,p.lidar,p.install,p.name,el);
+      if(el) renderResult(p.r,p.lidar,p.install,p.name,el);
     }
   });
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // CSV Import / Export
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 function importCSV(input){
   const file=input.files[0];if(!file)return;
   const reader=new FileReader();
@@ -797,11 +849,9 @@ function importCSV(input){
     const lines=e.target.result.split(/\r?\n/).filter(l=>l.trim());
     let added=0,skipped=0;
     lines.forEach(line=>{
-      // Split by comma; handle quoted fields
       const cols=line.split(',').map(c=>c.replace(/^"|"$/g,'').trim());
-      if(cols.length<3)return;
+      if(cols.length<3){skipped++;return}
       const[name,lidarStr,installStr]=cols;
-      // Skip header-like rows where date columns don't parse
       const lidar=parseInput(lidarStr);
       const install=parseInput(installStr);
       if(!lidar||!install||install<=lidar){skipped++;return}
@@ -809,7 +859,7 @@ function importCSV(input){
       added++;
     });
     saveState();renderProjects();
-    showToast(`Imported ${added} project${added!==1?'s':''}${skipped?`, ${skipped} skipped`:'.'}`);
+    showToast(`Imported ${added} project${added!==1?'s':''}${skipped?`, ${skipped} skipped`:''}.`);
   };
   reader.readAsText(file);
   input.value='';
@@ -828,9 +878,9 @@ function exportCSV(){
   URL.revokeObjectURL(url);
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // OOO
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 function addOOORange(){
   const s=parseInput(document.getElementById('ooo-start').value);
   const e=parseInput(document.getElementById('ooo-end').value);
@@ -862,10 +912,10 @@ function renderOOO(){
   el.innerHTML=sorted.map(b=>`<div class="ooo-item"><i class="ti ti-calendar-off" style="font-size:12px;color:var(--t3)"></i><span>${b.type==='range'?'Range':'Day'}: <strong>${b.label}</strong></span><button class="ooo-del" onclick="removeOOO(${b.id})"><i class="ti ti-x"></i></button></div>`).join('');
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // Calendar
-// ═══════════════════════════════════════════════
-function getCS(id){if(!calStates[id]){const t=today();calStates[id]={year:t.getFullYear(),month:t.getMonth()}}return calStates[id]}
+// ═══════════════════════════════════════
+function getCS(id){ if(!calStates[id]){const t=today();calStates[id]={year:t.getFullYear(),month:t.getMonth()}}return calStates[id] }
 
 function buildCal(id,selDate,onPick){
   const el=document.getElementById(id);if(!el)return;
@@ -914,39 +964,39 @@ setupDateField('ooo-day','cal-ooo-day');
 
 ['s-lidar','s-install','s-name'].forEach(id=>{
   const el=document.getElementById(id);
-  if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')computeSingle()});
+  if(el) el.addEventListener('keydown',e=>{if(e.key==='Enter')computeSingle()});
 });
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // Tabs + Reset all
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 function switchTab(t){
   ['single','multi','ooo'].forEach(p=>{
     document.getElementById('pane-'+p).style.display=p===t?'block':'none';
     document.getElementById('tab-'+p).classList.toggle('active',p===t);
   });
-  if(t==='multi')renderProjects();
+  if(t==='multi') renderProjects();
 }
 
 function resetAll(){
   if(!confirm('Reset all projects and OOO blocks? This cannot be undone.'))return;
   projects=[];oooBlocks=[];expandedRow=null;lastResult=null;
-  localStorage.removeItem(STORAGE_KEY);localStorage.removeItem(OOO_KEY);
+  try{localStorage.removeItem(STORAGE_KEY);localStorage.removeItem(OOO_KEY);}catch(e){}
   resetSingle();renderProjects();renderOOO();
   showToast('All data cleared.');
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // Toast
-// ═══════════════════════════════════════════════
-function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500)}
+// ═══════════════════════════════════════
+function showToast(msg){ const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500) }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 // Init
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════
 loadState();
 renderOOO();
-if(projects.length){switchTab('multi');}
+if(projects.length){ switchTab('multi'); } else { renderProjects(); }
 </script>
 </body>
 </html>
