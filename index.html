@@ -205,6 +205,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
   #pane-single,#pane-multi{display:block!important}
   #pane-ooo{display:none!important}
   .gantt-wrap{overflow:visible}
+  #print-expanded{display:block!important}
+  #print-expanded .pe-project{break-inside:avoid;margin-bottom:1.5rem;border:0.5px solid #ccc;border-radius:10px;padding:1rem}
+  #print-expanded .pe-name{font-size:14px;font-weight:600;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:0.5px solid #eee}
+  #print-expanded .status-card{border:0.5px solid #eee;padding:.75rem;margin-bottom:.5rem}
+  #print-expanded .gantt-wrap{overflow:visible}
 }
 </style>
 </head>
@@ -216,7 +221,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
       <p>Schedule deliverables, design, and install dates with smart flex and OOO blocking.</p>
     </div>
     <div class="header-right" style="display:flex;gap:6px;flex-wrap:wrap">
-      <button class="btn" onclick="window.print()"><i class="ti ti-printer"></i> Print</button>
+      <button class="btn" onclick="printAll()"><i class="ti ti-printer"></i> Print</button>
       <button class="btn danger" onclick="resetAll()"><i class="ti ti-trash"></i> Reset all</button>
     </div>
   </div>
@@ -348,6 +353,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 </div>
 
 <div class="toast" id="toast"></div>
+<div id="print-expanded" style="display:none"></div>
 
 <script>
 // ═══════════════════════════════════════
@@ -489,7 +495,7 @@ function isDueThisWeek(d){ if(!d)return false;const n=diff(today(),d);return n>=
 function countdown(d){
   if(!d)return{text:"",cls:"normal"};
   const n=diff(today(),d);
-  if(n<0)return{text:`${bizDiff(d,today())}bd overdue`,cls:"overdue"};
+  if(n<0)return{text:`was due ${bizDiff(d,today())}bd ago`,cls:"overdue"};
   if(n===0)return{text:"due today",cls:"week"};
   const bd=bizDiff(today(),d);
   if(isDueThisWeek(d))return{text:`due in ${bd} business day${bd!==1?'s':''}  ⚡ this week`,cls:"week"};
@@ -676,7 +682,7 @@ function copyToClipboard(){
   let txt=`NV5 Deliverable Date Calculator${name?' — '+name:''}\n${sep}\n`;
   txt+=`NV5 LiDAR Survey:      ${fmtLong(lidar)}\n`;
   if(r.status!=='black'){
-    const cd=countdown(r.delivDate);
+    const cd=r.delivDate?countdown(r.delivDate):{text:'',cls:'normal'};
     txt+=`NV5 Deliverable Due:   ${fmtLong(r.delivDate)}  (${cd.text})\n`;
     txt+=`Radar Design Due:      ${fmtLong(r.designDue)}\n`;
   }
@@ -984,6 +990,73 @@ function resetAll(){
   try{localStorage.removeItem(STORAGE_KEY);localStorage.removeItem(OOO_KEY);}catch(e){}
   resetSingle();renderProjects();renderOOO();
   showToast('All data cleared.');
+}
+
+// ═══════════════════════════════════════
+// Print — expand all projects for print
+// ═══════════════════════════════════════
+function printAll(){
+  const pe=document.getElementById('print-expanded');
+  if(!projects.length){window.print();return}
+
+  // Sort same as current sort
+  const allRows=projects.map(p=>({...p,r:schedule(p.lidar,p.install)}));
+  let rows=[...allRows];
+  if(projSort==='deliv') rows.sort((a,b)=>(a.r.delivDate||new Date(9999,0))-(b.r.delivDate||new Date(9999,0)));
+  else if(projSort==='status') rows.sort((a,b)=>STATUS_ORDER[a.r.status]-STATUS_ORDER[b.r.status]);
+  else rows.sort((a,b)=>a.name.localeCompare(b.name));
+
+  // Build print container: dashboard summary + one card per project
+  let h='<div style="margin-bottom:1rem"><h2 style="font-size:15px;font-weight:600;margin-bottom:.75rem">Project summary</h2>';
+
+  // Summary table
+  h+=`<table style="width:100%;border-collapse:collapse;font-size:11px">
+    <thead><tr style="border-bottom:0.5px solid #ccc">
+      <th style="text-align:left;padding:5px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888">Project</th>
+      <th style="text-align:left;padding:5px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888">LiDAR</th>
+      <th style="text-align:left;padding:5px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888">Deliverable Due</th>
+      <th style="text-align:left;padding:5px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888">Design Due</th>
+      <th style="text-align:left;padding:5px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888">Install</th>
+      <th style="text-align:left;padding:5px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888">Status</th>
+    </tr></thead><tbody>`;
+  rows.forEach(p=>{
+    const s=p.r.status;
+    const statusColors={green:'#0F5C3E',yellow:'#5C4200',orange:'#7A3200',red:'#6B0F0F',black:'#000'};
+    const statusBgs={green:'#E8F5EE',yellow:'#FEF7E0',orange:'#FEF0E6',red:'#FDE8E8',black:'#E8E8E4'};
+    h+=`<tr style="border-bottom:0.5px solid #eee">
+      <td style="padding:6px 8px;font-weight:600">${p.name}</td>
+      <td style="padding:6px 8px;font-family:monospace">${fmtShort(p.lidar)}</td>
+      <td style="padding:6px 8px;font-family:monospace;color:${statusColors[s]}">${p.r.delivDate?fmtShort(p.r.delivDate):'—'}</td>
+      <td style="padding:6px 8px;font-family:monospace">${p.r.designDue?fmtShort(p.r.designDue):'—'}</td>
+      <td style="padding:6px 8px;font-family:monospace">${fmtShort(p.install)}</td>
+      <td style="padding:6px 8px"><span style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;background:${statusBgs[s]};color:${statusColors[s]}">${s.charAt(0).toUpperCase()+s.slice(1)}</span></td>
+    </tr>`;
+  });
+  h+=`</tbody></table></div>`;
+
+  // Individual project details
+  h+='<h2 style="font-size:15px;font-weight:600;margin-bottom:.75rem;margin-top:1.5rem">Full schedules</h2>';
+  rows.forEach(p=>{
+    h+=`<div class="pe-project"><div class="pe-name">${p.name}</div><div id="pe-detail-${p.id}"></div></div>`;
+  });
+
+  pe.innerHTML=h;
+  pe.style.display='block';
+
+  // Render each project result into its container
+  rows.forEach(p=>{
+    const el=document.getElementById(`pe-detail-${p.id}`);
+    if(el) renderResult(p.r,p.lidar,p.install,p.name,el);
+  });
+
+  // Print then clean up
+  setTimeout(()=>{
+    window.print();
+    setTimeout(()=>{
+      pe.style.display='none';
+      pe.innerHTML='';
+    },500);
+  },100);
 }
 
 // ═══════════════════════════════════════
