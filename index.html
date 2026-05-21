@@ -469,7 +469,7 @@ function schedule(lidar,install){
   result.status=ldGap>=MIN_LD?"orange":"red";
   result.delivDate=dv;result.designDue=dd;result.oooWarning=oooWarning;
   if(ldGap<MIN_LD)result.callouts.push(`Emergency: LiDAR → Deliverable is only ${ldGap}cd / ${bizDiff(lidar,dv)}bd (minimum ${MIN_LD}cd, standard ${STD_LD}cd).`);
-  result.callouts.push(`Deliverable → Design due is ${ddGap}cd / ${bizDiff(dv,dd)}bd (standard ${STD_DELIV_LAG}cd).`);
+  if(ddGap<STD_DELIV_LAG)result.callouts.push(`Deliverable → Design due compressed to ${ddGap}cd / ${bizDiff(dv,dd)}bd (standard ${STD_DELIV_LAG}cd).`);
   if(diGap<STD_DD_TO_I)result.callouts.push(`Design due is ${diGap}cd before install (standard ${STD_DD_TO_I}cd).`);
   if(ldGap>=MIN_LD&&ldGap<STD_LD)result.callouts.push(`LiDAR → Deliverable is ${ldGap}cd / ${bizDiff(lidar,dv)}bd (standard ${STD_LD}cd).`);
   if(extraCallout)result.callouts.push(extraCallout);
