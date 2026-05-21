@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Date Deliverable Calculator</title>
+<title>NV5 Deliverable Date Calculator</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -13,8 +12,10 @@
   --t1:#1a1a18;--t2:#5f5e5a;--t3:#888780;
   --bd:#e0dfd8;--bd2:#ccc;
   --green:#1D9E75;--green-dk:#0F6E56;--green-bg:rgba(29,158,117,.06);
-  --amber:#BA7517;--amber-dk:#854F0B;--amber-bg:rgba(186,117,23,.06);
+  --yellow:#C8960C;--yellow-dk:#7A5A00;--yellow-bg:rgba(200,150,12,.06);
+  --orange:#C45C0A;--orange-dk:#7A3300;--orange-bg:rgba(196,92,10,.06);
   --red:#A32D2D;--red-dk:#791F1F;--red-bg:rgba(163,45,45,.06);
+  --black:#1a1a18;--black-dk:#000;--black-bg:rgba(0,0,0,.06);
   --rad:8px;--rad-lg:12px;
 }
 @media(prefers-color-scheme:dark){
@@ -23,8 +24,10 @@
     --t1:#f0ede8;--t2:#b4b2a9;--t3:#888780;
     --bd:#3a3a38;--bd2:#4a4a48;
     --green:#5DCAA5;--green-dk:#9FE1CB;--green-bg:rgba(29,158,117,.12);
-    --amber:#EF9F27;--amber-dk:#FAC775;--amber-bg:rgba(186,117,23,.12);
+    --yellow:#F0C040;--yellow-dk:#F5D97A;--yellow-bg:rgba(200,150,12,.12);
+    --orange:#F0844A;--orange-dk:#F5B48A;--orange-bg:rgba(196,92,10,.12);
     --red:#F09595;--red-dk:#F7C1C1;--red-bg:rgba(163,45,45,.12);
+    --black:#ccc;--black-dk:#fff;--black-bg:rgba(255,255,255,.06);
   }
 }
 body{
@@ -82,17 +85,23 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
   border-radius:var(--rad-lg);border:0.5px solid var(--bd);
   padding:1.25rem;margin-bottom:16px;background:var(--bg);
 }
-.result-card.green{border-color:var(--green);background:var(--green-bg)}
-.result-card.yellow{border-color:var(--amber);background:var(--amber-bg)}
-.result-card.red{border-color:var(--red);background:var(--red-bg)}
+.result-card.green {border-color:var(--green); background:var(--green-bg)}
+.result-card.yellow{border-color:var(--yellow);background:var(--yellow-bg)}
+.result-card.orange{border-color:var(--orange);background:var(--orange-bg)}
+.result-card.red   {border-color:var(--red);   background:var(--red-bg)}
+.result-card.black {border-color:var(--black); background:var(--black-bg)}
 .r-status{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;margin-bottom:6px}
-.r-status.green{color:var(--green-dk)}
-.r-status.yellow{color:var(--amber-dk)}
-.r-status.red{color:var(--red-dk)}
+.r-status.green {color:var(--green-dk)}
+.r-status.yellow{color:var(--yellow-dk)}
+.r-status.orange{color:var(--orange-dk)}
+.r-status.red   {color:var(--red-dk)}
+.r-status.black {color:var(--black-dk)}
 .r-date{font-size:22px;font-weight:500;margin:4px 0 2px}
-.r-date.green{color:var(--green)}
-.r-date.yellow{color:var(--amber)}
-.r-date.red{color:var(--red)}
+.r-date.green {color:var(--green)}
+.r-date.yellow{color:var(--yellow)}
+.r-date.orange{color:var(--orange)}
+.r-date.red   {color:var(--red)}
+.r-date.black {color:var(--black)}
 .r-sub{font-size:12px;color:var(--t3)}
 .callout{
   font-size:12px;padding:7px 10px;border-radius:var(--rad);
@@ -100,8 +109,10 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
   display:flex;align-items:flex-start;gap:6px;
 }
 .callout i{margin-top:1px;flex-shrink:0}
-.callout.yellow{background:rgba(186,117,23,.12);color:#633806}
-.callout.red{background:rgba(163,45,45,.12);color:#791F1F}
+.callout.yellow{background:rgba(200,150,12,.12);color:var(--yellow-dk)}
+.callout.orange{background:rgba(196,92,10,.12);color:var(--orange-dk)}
+.callout.red   {background:rgba(163,45,45,.12);color:var(--red-dk)}
+.callout.black {background:rgba(0,0,0,.08);color:var(--black-dk)}
 .tl-section{margin-top:20px}
 .tl-head{
   font-size:10px;font-weight:500;color:var(--t3);
@@ -110,7 +121,7 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
 .tl-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--bd)}
 .tl-row:last-child{border-bottom:none}
 .tl-ico{font-size:14px;color:var(--t3);width:18px;flex-shrink:0}
-.tl-lbl{font-size:12px;color:var(--t2);width:140px;flex-shrink:0}
+.tl-lbl{font-size:12px;color:var(--t2);width:160px;flex-shrink:0}
 .tl-dt{font-size:13px;font-weight:500;color:var(--t1);flex:1}
 .tl-gap{font-size:11px;color:var(--t3)}
 .empty-state{
@@ -124,7 +135,7 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
   <h1>
     <i class="ti ti-calendar-check" aria-hidden="true"
        style="font-size:20px;vertical-align:-2px;margin-right:6px;color:#1D9E75"></i>
-    Deliverable Date Calculator
+    NV5 Deliverable Date Calculator
   </h1>
   <p class="sub">Enter your LiDAR survey and install dates to get a recommended deliverable date.</p>
 
@@ -154,13 +165,13 @@ const MONTHS = [
 const DNAMES = ["Su","Mo","Tu","We","Th","Fr","Sa"];
 
 // ── Schedule constants ────────────────────────────────────
-const STD_LD       = 7;   // Standard: LiDAR → Deliverable (calendar days)
-const STD_DtoI     = 21;  // Standard: Install - 21d = Design start
-const STD_DES_DtoI = 14;  // Standard: Install - 14d = Design due
+const STD_LD        = 7;   // Standard: LiDAR → Deliverable
+const STD_DD_TO_I   = 14;  // Standard: Design due → Install
+const STD_DELIV_LAG = 7;   // Standard: Deliverable → Design due gap
 
-const MIN_LD       = 3;   // Flex: LiDAR → Deliverable minimum
-const MIN_DUE_GAP  = 2;   // Flex: Deliverable → Design due minimum
-const MIN_DtoI     = 7;   // Flex: Design due → Install minimum (must land on Friday)
+const MIN_LD        = 3;   // Yellow flex: min LiDAR → Deliverable
+const MIN_DUE_GAP   = 2;   // Orange/Red flex: Deliverable → Design due
+const FLEX_DD_TO_I  = 7;   // Orange/Red flex: Design due → Install (Friday)
 
 // ── State ─────────────────────────────────────────────────
 const S  = { lidar: null, install: null };
@@ -180,12 +191,10 @@ function addD(d, n) {
 function diff(a, b) {
   return Math.round((b - a) / 864e5);
 }
-
-// Snap to nearest weekday; dir="fwd" moves forward, "back" moves backward
 function snapWD(d, dir) {
   const r = new Date(d), dow = r.getDay();
-  if (dow === 6) dir === "fwd" ? r.setDate(r.getDate() + 2) : r.setDate(r.getDate() - 1);
-  else if (dow === 0) dir === "fwd" ? r.setDate(r.getDate() + 1) : r.setDate(r.getDate() - 2);
+  if (dow === 6) dir === "fwd" ? r.setDate(r.getDate()+2) : r.setDate(r.getDate()-1);
+  else if (dow === 0) dir === "fwd" ? r.setDate(r.getDate()+1) : r.setDate(r.getDate()-2);
   return r;
 }
 function nextWD(d)  { return snapWD(d, "fwd")  }
@@ -203,7 +212,7 @@ function buildCal(id, sel, cs, cb) {
   if (!cs.year) { cs.year = today.getFullYear(); cs.month = today.getMonth(); }
   const y = cs.year, m = cs.month;
   const first = new Date(y, m, 1).getDay();
-  const dim   = new Date(y, m + 1, 0).getDate();
+  const dim   = new Date(y, m+1, 0).getDate();
 
   let h = `<div class="cal-header">
     <button class="cal-nav" id="${id}-p">&#8592;</button>
@@ -222,7 +231,7 @@ function buildCal(id, sel, cs, cb) {
   }
   h += "</div>";
 
-  // Set innerHTML FIRST, then attach listeners
+  // innerHTML FIRST, then attach listeners
   el.innerHTML = h;
 
   el.querySelector(`#${id}-p`).onclick = e => {
@@ -281,85 +290,114 @@ function compute() {
     return;
   }
 
-  let status, delivDate, designStart, designDue, callouts = [];
+  let status, delivDate, designDue, callouts = [];
 
-  // Standard milestone dates (these never move unless we must)
-  const stdDesignStart = prevWD(addD(install, -STD_DtoI));
-  const stdDesignDue   = prevWD(addD(install, -STD_DES_DtoI));
-  const stdDeliv       = nextWD(addD(lidar,    STD_LD));
+  // Fixed standard design due: install - 14d (weekday)
+  const stdDesignDue = prevWD(addD(install, -STD_DD_TO_I));
+  // Standard deliverable: lidar + 7d (weekday)
+  const stdDeliv     = nextWD(addD(lidar, STD_LD));
+  // Standard deliverable must be >= 7d before design due
+  const stdDelivDeadline = prevWD(addD(stdDesignDue, -STD_DELIV_LAG));
 
-  // ── GREEN: standard deliverable fits before standard design start ──
-  if (stdDeliv < stdDesignStart) {
-    status      = "green";
-    delivDate   = stdDeliv;
-    designStart = stdDesignStart;
-    designDue   = stdDesignDue;
+  // ── GREEN ──────────────────────────────────────────────
+  // stdDeliv is on or before stdDelivDeadline
+  if (stdDeliv <= stdDelivDeadline) {
+    status    = "green";
+    delivDate = stdDeliv;
+    designDue = stdDesignDue;
 
   } else {
+    // ── YELLOW ─────────────────────────────────────────
+    // Move deliverable earlier (LiDAR + 3d min), design due stays standard
     const minDeliv = nextWD(addD(lidar, MIN_LD));
 
-    // ── YELLOW L1: move deliverable earlier, design dates stay standard ──
-    if (minDeliv < stdDesignStart) {
-      status      = "yellow";
-      delivDate   = minDeliv;
-      designStart = stdDesignStart;
-      designDue   = stdDesignDue;
+    if (minDeliv <= stdDelivDeadline) {
+      status    = "yellow";
+      delivDate = minDeliv;
+      designDue = stdDesignDue;
       const ldGap = diff(lidar, delivDate);
       callouts.push(
-        `Deliverable moved ${STD_LD - ldGap} day${STD_LD - ldGap !== 1 ? "s" : ""} earlier than standard ` +
-        `(${ldGap}d after LiDAR, standard is ${STD_LD}d). Design dates unchanged.`
+        `Deliverable moved ${STD_LD - ldGap} day${STD_LD-ldGap!==1?"s":""} earlier than standard ` +
+        `(${ldGap}d after LiDAR, standard is ${STD_LD}d). Design due unchanged.`
       );
 
     } else {
-      // ── YELLOW L2: flex both deliverable and design ──
-      // Design due = Friday on or before (install - MIN_DtoI)
-      // Deliverable = design due - MIN_DUE_GAP (weekday)
-      const flexDesignDue = prevFri(addD(install, -MIN_DtoI));
+      // ── ORANGE / RED: flex design due too ─────────────
+      // Design due = Friday ≤ install - 7d
+      // Deliverable = design due - 2d (weekday)
+      const flexDesignDue = prevFri(addD(install, -FLEX_DD_TO_I));
       const flexDeliv     = prevWD(addD(flexDesignDue, -MIN_DUE_GAP));
+      const ldGap         = diff(lidar, flexDeliv);
 
-      // ── RED: flex deliverable is still before LiDAR + MIN_LD ──
-      if (flexDeliv < minDeliv) {
-        status = "red";
+      if (flexDeliv <= lidar) {
+        // ── BLACK: deliverable would be on or before lidar ──
+        status    = "black";
+        delivDate = null;
+        designDue = null;
         const td = diff(lidar, install);
         callouts.push(
-          `No valid schedule. Install is only ${td} day${td !== 1 ? "s" : ""} after LiDAR. ` +
-          `Minimum needed: ${MIN_LD + MIN_DUE_GAP + MIN_DtoI} days.`
+          `No possible schedule. Install is only ${td} day${td!==1?"s":""} after LiDAR — ` +
+          `not enough time to complete deliverables before design is due.`
         );
 
-      } else {
-        status      = "yellow";
-        delivDate   = flexDeliv;
-        designStart = null;
-        designDue   = flexDesignDue;
-
-        const ldGap = diff(lidar,    delivDate);
+      } else if (ldGap >= MIN_LD) {
+        // ── ORANGE: LiDAR gap >= 3d, design flexed ────────
+        status    = "orange";
+        delivDate = flexDeliv;
+        designDue = flexDesignDue;
         const ddGap = diff(delivDate, designDue);
         const diGap = diff(designDue, install);
-
+        callouts.push(
+          `Deliverable → Design due compressed to ${ddGap} day${ddGap!==1?"s":""} ` +
+          `(standard is ${STD_DELIV_LAG}d).`
+        );
+        if (diGap < STD_DD_TO_I)
+          callouts.push(
+            `Design due moved ${STD_DD_TO_I-diGap} day${STD_DD_TO_I-diGap!==1?"s":""} later than standard ` +
+            `(${diGap}d before install, standard is ${STD_DD_TO_I}d).`
+          );
         if (ldGap < STD_LD)
           callouts.push(
-            `Deliverable moved ${STD_LD - ldGap} day${STD_LD - ldGap !== 1 ? "s" : ""} earlier than standard ` +
-            `(${ldGap}d after LiDAR, standard is ${STD_LD}d).`
+            `LiDAR → Deliverable is ${ldGap}d (standard is ${STD_LD}d).`
           );
+
+      } else {
+        // ── RED: LiDAR gap < 3d, emergency ────────────────
+        status    = "red";
+        delivDate = flexDeliv;
+        designDue = flexDesignDue;
+        const ddGap = diff(delivDate, designDue);
+        const diGap = diff(designDue, install);
         callouts.push(
-          `Design flex applied: deliverable is ${ddGap} day${ddGap !== 1 ? "s" : ""} before design due ` +
-          `(standard is 7d before design start).`
+          `Emergency schedule: LiDAR → Deliverable is only ${ldGap} day${ldGap!==1?"s":""} ` +
+          `(minimum is 3d, standard is ${STD_LD}d).`
         );
-        if (diGap < STD_DES_DtoI)
+        callouts.push(
+          `Deliverable → Design due compressed to ${ddGap} day${ddGap!==1?"s":""} ` +
+          `(standard is ${STD_DELIV_LAG}d).`
+        );
+        if (diGap < STD_DD_TO_I)
           callouts.push(
-            `Design due moved ${STD_DES_DtoI - diGap} day${STD_DES_DtoI - diGap !== 1 ? "s" : ""} later than standard ` +
-            `(${diGap}d before install, standard is ${STD_DES_DtoI}d).`
+            `Design due is ${diGap}d before install (standard is ${STD_DD_TO_I}d).`
           );
       }
     }
   }
 
   // ── Render ────────────────────────────────────────────
-  const icons  = { green:"ti-circle-check", yellow:"ti-alert-triangle", red:"ti-circle-x" };
+  const icons = {
+    green:  "ti-circle-check",
+    yellow: "ti-circle-check",
+    orange: "ti-alert-triangle",
+    red:    "ti-alert-triangle",
+    black:  "ti-circle-x"
+  };
   const labels = {
     green:  "On schedule — no flexibility needed",
-    yellow: "Feasible with reduced buffers",
-    red:    "Impossible — schedule conflict"
+    yellow: "Minor flex — deliverable moved earlier, design unchanged",
+    orange: "Major flex — deliverable and design due both compressed",
+    red:    "Emergency — LiDAR to deliverable gap critically compressed",
+    black:  "No possible schedule"
   };
 
   let h = `<div class="result-card ${status}">
@@ -368,7 +406,7 @@ function compute() {
       ${labels[status]}
     </div>`;
 
-  if (status !== "red") {
+  if (status !== "black") {
     h += `<div class="r-date ${status}">${fmt(delivDate)}</div>
           <div class="r-sub">Recommended deliverable completion date</div>`;
   }
@@ -382,14 +420,13 @@ function compute() {
 
   h += "</div>";
 
-  if (status !== "red") {
-    const tl = [];
-    tl.push({ lbl:"LiDAR survey",    date:lidar,       ico:"ti-scan"        });
-    tl.push({ lbl:"Deliverable due",  date:delivDate,   ico:"ti-file-check"  });
-    if (designStart)
-      tl.push({ lbl:"Design start",  date:designStart, ico:"ti-pencil"      });
-    tl.push({ lbl:"Design due",       date:designDue,   ico:"ti-pencil-off"  });
-    tl.push({ lbl:"Install",          date:install,     ico:"ti-tool"        });
+  if (status !== "black") {
+    const tl = [
+      { lbl:"NV5 LiDAR Survey",      date:lidar,      ico:"ti-scan"       },
+      { lbl:"NV5 Deliverable Due",    date:delivDate,  ico:"ti-file-check" },
+      { lbl:"Radar Design Due",       date:designDue,  ico:"ti-pencil-off" },
+      { lbl:"Install",                date:install,    ico:"ti-tool"       },
+    ];
 
     h += `<div class="tl-section"><div class="tl-head">Full schedule</div>`;
     tl.forEach((r, i) => {
@@ -409,6 +446,5 @@ function compute() {
   ra.innerHTML = h;
 }
 </script>
-
 </body>
 </html>
