@@ -230,7 +230,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
     <div class="card">
       <div class="section-title">Project details</div>
       <div class="grid3" style="margin-bottom:10px">
-        <div class="field"><label>Project name</label><input type="text" id="s-name" placeholder="e.g. Retail, Store #123"></div>
+        <div class="field"><label>Store #</label><input type="text" id="s-name" placeholder="e.g. 101, 777"></div>
         <div class="field"><label><i class="ti ti-scan" style="font-size:10px"></i> NV5 LiDAR survey date</label><input type="text" id="s-lidar" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-s-lidar"></div></div>
         <div class="field"><label><i class="ti ti-tool" style="font-size:10px"></i> Install date</label><input type="text" id="s-install" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-s-install"></div></div>
       </div>
@@ -248,16 +248,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
     <div class="card proj-add-section">
       <div class="section-title">Add project</div>
       <div class="grid4">
-        <div class="field"><label>Project name</label><input type="text" id="m-name" placeholder="e.g. Retail, Store #123"></div>
-        <div class="field" style="position:relative"><label>LiDAR date</label><input type="text" id="m-lidar" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-m-lidar"></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:end">
+        <div class="field"><label>Retailer</label><input type="text" id="m-group" placeholder="e.g. AEO, ON" autocomplete="off"></div>
+        <div class="field"><label>Store #</label><input type="text" id="m-name" placeholder="e.g. 101, 777" autocomplete="off"></div>
         <div class="field" style="position:relative"><label>Install date</label><input type="text" id="m-install" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-m-install"></div></div>
         <button class="btn primary" onclick="addProject()" style="height:32px"><i class="ti ti-plus"></i> Add</button>
-      </div>
-      <div style="margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <div class="field" style="flex:1;min-width:140px">
-          <label>Group / region</label>
-          <input type="text" id="m-group" placeholder="e.g. West Coast" autocomplete="off">
-        </div>
       </div>
       <div class="btn-row" style="margin-top:8px">
         <label class="btn" style="cursor:pointer"><i class="ti ti-upload"></i> Import CSV<input type="file" id="csv-file" accept=".csv,.txt" style="display:none" onchange="importCSV(this)"></label>
@@ -273,7 +268,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
           <button class="sort-btn active" id="sort-deliv" onclick="sortProjects('deliv')">Deliverable</button>
           <button class="sort-btn" id="sort-status" onclick="sortProjects('status')">Status</button>
           <button class="sort-btn" id="sort-name" onclick="sortProjects('name')">Name</button>
-          <button class="sort-btn" id="sort-group" onclick="sortProjects('group')">Group</button>
+          <button class="sort-btn" id="sort-group" onclick="sortProjects('group')">Retailer</button>
         </div>
         <div class="filter-row" id="filter-row">Filter: <button class="filter-btn active all" onclick="filterProjects('all')">All</button></div>
       </div>
@@ -636,7 +631,7 @@ function renderProjects(){
   h+=`<table class="proj-table"><thead><tr>
     <th class="cb-col"><input type="checkbox" ${allChecked?'checked':''} onchange="toggleSelectAll(this.checked)" style="cursor:pointer"></th>
     <th style="width:22px"></th>
-    <th>Project</th><th>Group</th><th>LiDAR</th><th>Deliverable Due</th><th>Design Due</th><th>Install</th><th>Status</th>
+    <th>Retailer</th><th>Store #</th><th>LiDAR</th><th>Deliverable Due</th><th>Design Due</th><th>Install</th><th>Status</th><th>Delete</th>
     <th style="width:28px"></th>
   </tr></thead><tbody>`;
 
@@ -666,14 +661,14 @@ function projRow(p){
   let h=`<tr class="proj-row${isExp?' expanded':''}${isSel?' selected':''}" onclick="toggleRow(${p.id},event)">
     <td><input type="checkbox" class="proj-row-cb" data-id="${p.id}" ${isSel?'checked':''} onchange="toggleSelect(${p.id},event)" style="cursor:pointer"></td>
     <td><span class="expand-icon${isExp?' open':''}">&#9658;</span></td>
+    <td style="font-size:11px;color:var(--t2)">${p.group||'—'}</td>
     <td><span class="proj-name-cell" ondblclick="event.stopPropagation();startEdit(${p.id},'name',${JSON.stringify(p.name)},this)">${p.name}</span></td>
-    <td style="font-size:11px;color:var(--t3)">${p.group||''}</td>
     <td><span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'lidar','${fmtInput(p.lidar)}',this)">${fmtShort(p.lidar)}</span></td>
     <td>${delivCell}</td>
     <td>${designCell}</td>
     <td><span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'install','${fmtInput(p.install)}',this)">${fmtShort(p.install)}</span></td>
     <td><span class="status-pill ${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span></td>
-    <td><button class="btn danger" style="padding:2px 7px;font-size:10px" onclick="event.stopPropagation();removeProject(${p.id})"><i class="ti ti-trash"></i></button></td>
+    <td><button class="btn danger" style="padding:2px 7px;font-size:10px" onclick="event.stopPropagation();removeProject(${p.id})"><i class="ti ti-trash"></i> Delete</button></td>
   </tr>`;
   if(isExp)h+=`<tr class="proj-detail"><td colspan="10"><div class="proj-detail-inner" id="detail-${p.id}"></div></td></tr>`;
   return h;
@@ -691,10 +686,10 @@ function importCSV(input){
     lines.forEach(line=>{
       const cols=line.split(',').map(c=>c.replace(/^"|"$/g,'').trim());
       if(cols.length<3){skipped++;return}
-      const[name,lidarStr,installStr,group='']=cols;
+      const[retailer='',storeNum='',lidarStr='',installStr='']=cols;
       const lidar=parseInput(lidarStr),install=parseInput(installStr);
       if(!lidar||!install||install<=lidar){skipped++;return}
-      projects.push({id:Date.now()+Math.random(),name:name||'Untitled',lidar,install,group:group.trim()});added++;
+      projects.push({id:Date.now()+Math.random(),name:storeNum.trim()||'Untitled',lidar,install,group:retailer.trim()});added++;
     });
     saveState();renderProjects();showToast(`Imported ${added} project${added!==1?'s':''}${skipped?`, ${skipped} skipped`:''}.`);
   };
@@ -703,8 +698,8 @@ function importCSV(input){
 function exportCSV(){
   if(!projects.length){showToast('No projects to export.');return}
   const rows=projects.map(p=>({...p,r:schedule(p.lidar,p.install)}));
-  let csv='Project Name,LiDAR Date,Install Date,Group,Deliverable Due,Design Due,Status\n';
-  rows.forEach(p=>{csv+=`"${p.name}","${fmtShort(p.lidar)}","${fmtShort(p.install)}","${p.group||''}","${p.r.delivDate?fmtShort(p.r.delivDate):''}","${p.r.designDue?fmtShort(p.r.designDue):''}","${p.r.status}"\n`;});
+  let csv='Retailer,Store #,LiDAR Date,Install Date,Deliverable Due,Design Due,Status\n';
+  rows.forEach(p=>{csv+=`"${p.group||''}","${p.name}","${fmtShort(p.lidar)}","${fmtShort(p.install)}","${p.r.delivDate?fmtShort(p.r.delivDate):''}","${p.r.designDue?fmtShort(p.r.designDue):''}","${p.r.status}"\n`;});
   const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='nv5-schedule.csv';a.click();URL.revokeObjectURL(url);
 }
 
