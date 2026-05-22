@@ -784,13 +784,18 @@ function loadFromURL(){
   const d=params.get('d');
   if(!d)return;
   try{
+    // Replace projects entirely with the shared set — don't merge with localStorage
     const data=JSON.parse(decodeURIComponent(atob(d)));
+    projects=[];
     data.forEach(p=>{
       const lidar=new Date(p.l),install=new Date(p.i);
       if(!isNaN(lidar)&&!isNaN(install)&&install>lidar)
         projects.push({id:Date.now()+Math.random(),name:p.n||'Untitled',lidar,install,group:p.g||''});
     });
-    saveState();showToast(`Loaded ${projects.length} project${projects.length!==1?'s':''} from shared link.`);
+    saveState();
+    // Remove ?d= from URL so refreshing doesn't re-load and overwrite edits
+    history.replaceState(null,'',location.pathname);
+    showToast(`Loaded ${projects.length} project${projects.length!==1?'s':''} from shared link.`);
     switchTab('multi');
   }catch(e){showToast('Could not load shared link.');}
 }
