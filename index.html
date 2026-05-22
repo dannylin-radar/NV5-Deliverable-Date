@@ -247,10 +247,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
   <div id="pane-multi" style="display:none">
     <div class="card proj-add-section">
       <div class="section-title">Add project</div>
-      <div class="grid4">
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:end">
         <div class="field"><label>Retailer</label><input type="text" id="m-group" placeholder="e.g. AEO, ON" autocomplete="off"></div>
         <div class="field"><label>Store #</label><input type="text" id="m-name" placeholder="e.g. 101, 777" autocomplete="off"></div>
+        <div class="field" style="position:relative"><label>LiDAR date</label><input type="text" id="m-lidar" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-m-lidar"></div></div>
         <div class="field" style="position:relative"><label>Install date</label><input type="text" id="m-install" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-m-install"></div></div>
         <button class="btn primary" onclick="addProject()" style="height:32px"><i class="ti ti-plus"></i> Add</button>
       </div>
