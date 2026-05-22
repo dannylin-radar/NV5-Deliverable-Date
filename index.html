@@ -179,6 +179,67 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .bulk-bar{display:none;align-items:center;gap:8px;padding:7px 0;margin-bottom:8px;font-size:12px;color:var(--t2)}
 .bulk-bar.visible{display:flex}
 
+
+/* ── Mobile ───────────────────────────────────────────── */
+@media(max-width:768px){
+  body{padding:1rem .75rem 3rem}
+  .app{max-width:100%}
+
+  /* Header */
+  .header{flex-direction:column;align-items:flex-start;gap:6px}
+  .header-right{width:100%;justify-content:flex-start}
+
+  /* Tabs */
+  .tabs{width:100%}
+  .tab{flex:1;text-align:center}
+
+  /* Add project form - stack into 2x2 */
+  .proj-add-section > div[style*="grid-template-columns:1fr 1fr 1fr 1fr auto"]{
+    grid-template-columns:1fr 1fr!important;
+  }
+  .proj-add-section button.btn.primary{grid-column:1/-1;width:100%}
+
+  /* Dashboard tiles - 3 per row max */
+  .dashboard{gap:6px}
+  .dash-tile{min-width:calc(33% - 6px);padding:8px 10px}
+  .dash-tile .dt-num{font-size:18px}
+  .dash-tile .dt-lbl{font-size:9px}
+
+  /* Sort/filter rows - allow wrapping tightly */
+  .proj-toolbar{flex-direction:column;align-items:flex-start;gap:6px}
+  .sort-row,.filter-row{flex-wrap:wrap;gap:4px}
+
+  /* Table - hide non-essential columns on mobile */
+  .proj-table th.hide-mobile,
+  .proj-table td.hide-mobile{display:none!important}
+
+  /* Make remaining cells readable */
+  .proj-table td{padding:8px 5px;font-size:11px}
+  .proj-table th{padding:5px 5px;font-size:9px}
+  .proj-name-cell{font-size:11px}
+  .status-pill{font-size:8px;padding:2px 5px}
+
+  /* Expanded detail - full width */
+  .proj-detail-inner{padding:.75rem}
+  .tl-lbl{width:130px}
+  .gantt-row-lbl{width:100px;font-size:9px}
+
+  /* Status card date size */
+  .s-date{font-size:20px}
+
+  /* Share bar */
+  .share-bar{flex-wrap:wrap}
+  .share-bar input{width:100%}
+
+  /* Single project grid */
+  .grid3{grid-template-columns:1fr!important}
+
+  /* OOO grid */
+  .grid2{grid-template-columns:1fr!important}
+
+  /* Cal popup - full width on mobile */
+  .cal-popup{width:100%;left:0;right:0}
+}
 @media print{
   body{background:#fff;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .tabs,.btn-row,.proj-toolbar,.proj-add-section,.header-right,
@@ -631,7 +692,7 @@ function renderProjects(){
   h+=`<table class="proj-table"><thead><tr>
     <th class="cb-col"><input type="checkbox" ${allChecked?'checked':''} onchange="toggleSelectAll(this.checked)" style="cursor:pointer"></th>
     <th style="width:22px"></th>
-    <th>Retailer</th><th>Store #</th><th>LiDAR</th><th>Deliverable Due</th><th>Design Due</th><th>Install</th><th>Status</th><th>Delete</th>
+    <th>Retailer</th><th>Store #</th><th class="hide-mobile">LiDAR</th><th>Deliverable Due</th><th class="hide-mobile">Design Due</th><th class="hide-mobile">Install</th><th>Status</th><th>Delete</th>
     <th style="width:28px"></th>
   </tr></thead><tbody>`;
 
@@ -663,10 +724,10 @@ function projRow(p){
     <td><span class="expand-icon${isExp?' open':''}">&#9658;</span></td>
     <td style="font-size:11px;color:var(--t2)">${p.group||'—'}</td>
     <td><span class="proj-name-cell" ondblclick="event.stopPropagation();startEdit(${p.id},'name',${JSON.stringify(p.name)},this)">${p.name}</span></td>
-    <td><span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'lidar','${fmtInput(p.lidar)}',this)">${fmtShort(p.lidar)}</span></td>
+    <td class="hide-mobile"><span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'lidar','${fmtInput(p.lidar)}',this)">${fmtShort(p.lidar)}</span></td>
     <td>${delivCell}</td>
-    <td>${designCell}</td>
-    <td><span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'install','${fmtInput(p.install)}',this)">${fmtShort(p.install)}</span></td>
+    <td class="hide-mobile">${designCell}</td>
+    <td class="hide-mobile"><span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'install','${fmtInput(p.install)}',this)">${fmtShort(p.install)}</span></td>
     <td><span class="status-pill ${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span></td>
     <td><button class="btn danger" style="padding:2px 7px;font-size:10px" onclick="event.stopPropagation();removeProject(${p.id})"><i class="ti ti-trash"></i> Delete</button></td>
   </tr>`;
