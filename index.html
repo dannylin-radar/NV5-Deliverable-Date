@@ -394,6 +394,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 
 <div class="toast" id="toast"></div>
 
+<!-- OOO edit modal -->
+<div class="modal-overlay hidden" id="ooo-edit-modal" onclick="closeOOOEditModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-title">
+      Edit OOO block
+      <button class="modal-close" onclick="closeOOOEditModal()">&#10005;</button>
+    </div>
+    <div id="ooo-edit-body" style="margin-bottom:1.25rem"></div>
+    <div class="modal-actions">
+      <button class="btn danger" onclick="deleteOOOFromModal()"><i class="ti ti-trash"></i> Delete</button>
+      <button class="btn" onclick="closeOOOEditModal()">Cancel</button>
+      <button class="btn primary" onclick="saveOOOEdit()"><i class="ti ti-check"></i> Save</button>
+    </div>
+  </div>
+</div>
+
 <!-- Edit modal -->
 <div class="modal-overlay hidden" id="edit-modal" onclick="closeEditModal()">
   <div class="modal" onclick="event.stopPropagation()">
@@ -855,7 +871,23 @@ function loadFromURL(){
 function addOOORange(){const s=parseInput(document.getElementById('ooo-start').value),e=parseInput(document.getElementById('ooo-end').value);if(!s||!e){showToast('Enter valid dates.');return}if(e<s){showToast('End must be on or after start.');return}oooBlocks.push({type:'range',start:s,end:e,label:`${fmtShort(s)} → ${fmtShort(e)}`,id:Date.now()});document.getElementById('ooo-start').value='';document.getElementById('ooo-end').value='';saveState();renderOOO();renderProjects();}
 function addOOODay(){const d=parseInput(document.getElementById('ooo-day').value);if(!d){showToast('Enter a valid date.');return}oooBlocks.push({type:'day',start:d,end:d,label:fmtShort(d),id:Date.now()});document.getElementById('ooo-day').value='';saveState();renderOOO();renderProjects();}
 function removeOOO(id){oooBlocks=oooBlocks.filter(b=>b.id!==id);saveState();renderOOO();renderProjects();}
-function renderOOO(){const el=document.getElementById('ooo-list');if(!oooBlocks.length){el.innerHTML='<div class="ooo-empty">No OOO blocks added yet.</div>';return}const sorted=[...oooBlocks].sort((a,b)=>a.start-b.start);el.innerHTML=sorted.map(b=>`<div class="ooo-item"><i class="ti ti-calendar-off" style="font-size:12px;color:var(--t3)"></i><span>${b.type==='range'?'Range':'Day'}: <strong>${b.label}</strong></span><button class="ooo-del" onclick="removeOOO(${b.id})"><i class="ti ti-x"></i></button></div>`).join('');}
+function renderOOO(){
+  const el=document.getElementById('ooo-list');
+  if(!oooBlocks.length){el.innerHTML='<div class="ooo-empty">No OOO blocks added yet.</div>';return}
+  const sorted=[...oooBlocks].sort((a,b)=>a.start-b.start);
+  el.innerHTML=sorted.map(b=>`
+    <div class="ooo-item">
+      <i class="ti ti-calendar-off" style="font-size:12px;color:var(--t3)"></i>
+      <span>${b.type==='range'?'Range':'Day'}: <strong>${b.label}</strong></span>
+      <div class="action-menu-wrap" style="margin-left:auto">
+        <button class="action-dots" onclick="event.stopPropagation();toggleOOOMenu(${b.id})" title="Actions">&#8942;</button>
+        <div class="action-dropdown" id="ooo-menu-${b.id}">
+          <button class="action-item" onclick="openOOOEditModal(${b.id})"><i class="ti ti-pencil" style="font-size:13px"></i> Edit</button>
+          <button class="action-item danger" onclick="removeOOO(${b.id})"><i class="ti ti-trash" style="font-size:13px"></i> Delete</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
 
 // ═══════════════════════════════════════
 // Calendar
@@ -974,6 +1006,68 @@ setupDateField('edit-install','cal-edit-install');
   const el=document.getElementById(id);
   if(el) el.addEventListener('keydown',e=>{if(e.key==='Enter')saveEdit();if(e.key==='Escape')closeEditModal();});
 });
+
+// ═══════════════════════════════════════
+// OOO menu + edit
+// ═══════════════════════════════════════
+function toggleOOOMenu(id){
+  const menu=document.getElementById('ooo-menu-'+id);
+  if(!menu)return;
+  const isOpen=menu.classList.contains('open');
+  document.querySelectorAll('.action-dropdown.open').forEach(m=>m.classList.remove('open'));
+  if(!isOpen)menu.classList.add('open');
+}
+
+let editingOOOId=null;
+function openOOOEditModal(id){
+  const b=oooBlocks.find(b=>b.id===id);
+  if(!b)return;
+  editingOOOId=id;
+  document.querySelectorAll('.action-dropdown.open').forEach(m=>m.classList.remove('open'));
+  const body=document.getElementById('ooo-edit-body');
+  if(b.type==='range'){
+    body.innerHTML=`
+      <div class="modal-grid">
+        <div class="field" style="position:relative"><label>Start</label><input type="text" id="ooo-edit-start" value="${fmtInput(b.start)}" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-ooo-edit-start"></div></div>
+        <div class="field" style="position:relative"><label>End</label><input type="text" id="ooo-edit-end" value="${fmtInput(b.end)}" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-ooo-edit-end"></div></div>
+      </div>`;
+    setTimeout(()=>{
+      setupDateField('ooo-edit-start','cal-ooo-edit-start');
+      setupDateField('ooo-edit-end','cal-ooo-edit-end');
+    },0);
+  } else {
+    body.innerHTML=`
+      <div class="field" style="position:relative"><label>Date</label><input type="text" id="ooo-edit-day" value="${fmtInput(b.start)}" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-ooo-edit-day"></div></div>`;
+    setTimeout(()=>setupDateField('ooo-edit-day','cal-ooo-edit-day'),0);
+  }
+  document.getElementById('ooo-edit-modal').classList.remove('hidden');
+}
+function closeOOOEditModal(){
+  document.getElementById('ooo-edit-modal').classList.add('hidden');
+  editingOOOId=null;
+}
+function saveOOOEdit(){
+  const b=oooBlocks.find(b=>b.id===editingOOOId);
+  if(!b){closeOOOEditModal();return;}
+  if(b.type==='range'){
+    const s=parseInput(document.getElementById('ooo-edit-start').value);
+    const e=parseInput(document.getElementById('ooo-edit-end').value);
+    if(!s||!e){showToast('Please enter valid dates.');return;}
+    if(e<s){showToast('End must be on or after start.');return;}
+    b.start=s;b.end=e;b.label=`${fmtShort(s)} → ${fmtShort(e)}`;
+  } else {
+    const d=parseInput(document.getElementById('ooo-edit-day').value);
+    if(!d){showToast('Please enter a valid date.');return;}
+    b.start=d;b.end=d;b.label=fmtShort(d);
+  }
+  saveState();renderOOO();renderProjects();
+  closeOOOEditModal();showToast('OOO block updated.');
+}
+function deleteOOOFromModal(){
+  if(!editingOOOId)return;
+  removeOOO(editingOOOId);
+  closeOOOEditModal();
+}
 
 // ═══════════════════════════════════════
 // Toast
