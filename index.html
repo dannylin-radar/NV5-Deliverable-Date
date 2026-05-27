@@ -42,9 +42,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 @media(max-width:560px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
 .field{position:relative}
 .field label{font-size:10px;font-weight:600;color:var(--t2);letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:4px}
-.field input[type=text],.field select{width:100%;padding:7px 9px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card2);color:var(--t1);border:0.5px solid var(--bd2);border-radius:var(--rad);outline:none;transition:border-color .15s,box-shadow .15s}
-.field input[type=text]:hover,.field select:hover{border-color:var(--t3)}
-.field input[type=text]:focus,.field select:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(26,127,90,.15)}
+.field input[type=text],.field input[type=password],.field select{width:100%;padding:7px 9px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card2);color:var(--t1);border:0.5px solid var(--bd2);border-radius:var(--rad);outline:none;transition:border-color .15s,box-shadow .15s}
+.field input[type=text]:hover,.field input[type=password]:hover,.field select:hover{border-color:var(--t3)}
+.field input[type=text]:focus,.field input[type=password]:focus,.field select:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(26,127,90,.15)}
 .cal-popup{position:absolute;top:calc(100% + 4px);left:0;z-index:400;background:var(--card);border:0.5px solid var(--bd2);border-radius:var(--rad-lg);padding:10px;width:238px;box-shadow:var(--shadow-lg)}
 .cal-popup.hidden{display:none}
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
@@ -480,6 +480,32 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 </div>
 <div id="print-expanded" style="display:none"></div>
 
+<!-- Reviewer login modal -->
+<div class="modal-overlay hidden" id="reviewer-login-modal" onclick="closeReviewerLoginModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-title">
+      Reviewer login
+      <button class="modal-close" onclick="closeReviewerLoginModal()">&#10005;</button>
+    </div>
+    <div style="font-size:12px;color:var(--t3);margin-bottom:12px">
+      Log in with a Supabase Auth user that has also been added to the <span class="mono">nv5_reviewers</span> table.
+    </div>
+    <div class="field" style="margin-bottom:10px">
+      <label>Email</label>
+      <input type="text" id="reviewer-email" placeholder="reviewer@company.com" autocomplete="email">
+    </div>
+    <div class="field" style="margin-bottom:1.25rem">
+      <label>Password</label>
+      <input type="password" id="reviewer-password" placeholder="Password" autocomplete="current-password" style="width:100%;padding:7px 9px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card2);color:var(--t1);border:0.5px solid var(--bd2);border-radius:var(--rad);outline:none">
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeReviewerLoginModal()">Cancel</button>
+      <button class="btn primary" onclick="submitReviewerLogin()"><i class="ti ti-lock"></i> Login</button>
+    </div>
+  </div>
+</div>
+
+
 <script>
 // ═══════════════════════════════════════
 // Constants
@@ -575,11 +601,28 @@ function updateAuthUI(){
   showDataStatus(currentUser?(isReviewer?`Reviewer: ${currentUser.email}`:`Logged in, not reviewer: ${currentUser.email}`):(db?'Shared via Supabase':'Supabase not configured'));
   renderApprovals();
 }
-async function reviewerLogin(){
+function reviewerLogin(){
   if(!db){showToast('Supabase is not configured yet.');return;}
-  const email=prompt('Reviewer email:');if(!email)return;
-  const {error}=await db.auth.signInWithOtp({email,emailRedirectTo:location.href.split('?')[0],options:{shouldCreateUser:false}});
-  if(error)showToast(error.message);else showToast('Check your email for the reviewer login link.');
+  const modal=document.getElementById('reviewer-login-modal');
+  if(modal)modal.classList.remove('hidden');
+  setTimeout(()=>document.getElementById('reviewer-email')?.focus(),50);
+}
+function closeReviewerLoginModal(){
+  const modal=document.getElementById('reviewer-login-modal');
+  if(modal)modal.classList.add('hidden');
+}
+async function submitReviewerLogin(){
+  if(!db){showToast('Supabase is not configured yet.');return;}
+  const email=document.getElementById('reviewer-email')?.value.trim();
+  const password=document.getElementById('reviewer-password')?.value;
+  if(!email||!password){showToast('Enter reviewer email and password.');return;}
+  const {data,error}=await db.auth.signInWithPassword({email,password});
+  if(error){showToast(error.message);return;}
+  currentUser=data.user||null;
+  await checkReviewer();
+  closeReviewerLoginModal();
+  if(isReviewer)showToast('Reviewer logged in.');
+  else showToast('Logged in, but this email is not in the reviewer list.');
 }
 async function reviewerLogout(){if(!db)return;await db.auth.signOut();currentUser=null;isReviewer=false;updateAuthUI();showToast('Logged out.');}
 
@@ -808,8 +851,8 @@ function requestOneDateChange(projectId,kind){
   const calc=schedule(p.lidar,p.install);
   const delivInput=document.getElementById('mod-deliv-input-'+projectId);
   const designInput=document.getElementById('mod-design-input-'+projectId);
-  const newDeliv=kind==='deliv'?fromSqlDate(delivInput.value):(p.requestedDelivDate||calc.delivDate);
-  const newDesign=kind==='design'?fromSqlDate(designInput.value):(p.requestedDesignDue||calc.designDue);
+  const newDeliv=kind==='deliv'?parseInput(delivInput.value):(p.requestedDelivDate||calc.delivDate);
+  const newDesign=kind==='design'?parseInput(designInput.value):(p.requestedDesignDue||calc.designDue);
   if(!newDeliv||!newDesign){showToast('Select a valid date.');return;}
   if(newDesign<=newDeliv){showToast('Radar Design Due must be after NV5 Deliverable Due.');return;}
   if(p.install&&newDesign>=p.install){showToast('Radar Design Due must be before install.');return;}
@@ -850,8 +893,8 @@ function renderModifyCards(p,r){
   if(hasApprovedRequest(p)){
     h+=`<div class="request-card" style="background:var(--green-lt);border-color:rgba(26,127,90,.3);color:var(--green-dk)"><strong>Request Approved</strong><div style="margin-top:6px">Approved NV5 Deliverable Due: <strong>${fmtShort(p.approvedDelivDate)}</strong><br>Approved Radar Design Due: <strong>${fmtShort(p.approvedDesignDue)}</strong></div></div>`;
   }
-  h+=`<div class="mod-card" id="mod-deliv-${p.id}"><strong>Modify NV5 Deliverable Due</strong><div class="request-grid"><div class="field"><label>Select new date</label><input type="date" id="mod-deliv-input-${p.id}" value="${delivVal}"></div></div><div class="request-actions"><button class="btn primary" onclick="event.stopPropagation();requestOneDateChange(${p.id},'deliv')">Submit request</button></div></div>`;
-  h+=`<div class="mod-card" id="mod-design-${p.id}"><strong>Modify Radar Design Due</strong><div class="request-grid"><div class="field"><label>Select new date</label><input type="date" id="mod-design-input-${p.id}" value="${designVal}"></div></div><div class="request-actions"><button class="btn primary" onclick="event.stopPropagation();requestOneDateChange(${p.id},'design')">Submit request</button></div></div>`;
+  h+=`<div class="mod-card" id="mod-deliv-${p.id}"><strong>Modify NV5 Deliverable Due</strong><div class="request-grid"><div class="field" style="position:relative"><label>Select new date</label><input type="text" id="mod-deliv-input-${p.id}" value="${fmtInput(hasPendingRequest(p)?p.requestedDelivDate:r.delivDate)}" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-mod-deliv-${p.id}"></div></div></div><div class="request-actions"><button class="btn primary" onclick="event.stopPropagation();requestOneDateChange(${p.id},'deliv')">Submit request</button></div></div>`;
+  h+=`<div class="mod-card" id="mod-design-${p.id}"><strong>Modify Radar Design Due</strong><div class="request-grid"><div class="field" style="position:relative"><label>Select new date</label><input type="text" id="mod-design-input-${p.id}" value="${fmtInput(hasPendingRequest(p)?p.requestedDesignDue:r.designDue)}" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-mod-design-${p.id}"></div></div></div><div class="request-actions"><button class="btn primary" onclick="event.stopPropagation();requestOneDateChange(${p.id},'design')">Submit request</button></div></div>`;
   return h;
 }
 function renderApprovals(){
@@ -904,6 +947,10 @@ function renderResult(r,lidar,install,name,container,project=null){
   }
   if(project)h+=renderModifyCards(project,r);
   container.innerHTML=h;
+  if(project){
+    setupDateField('mod-deliv-input-'+project.id,'cal-mod-deliv-'+project.id);
+    setupDateField('mod-design-input-'+project.id,'cal-mod-design-'+project.id);
+  }
 }
 
 function renderGantt(lidar,delivDate,designDue,install,status){
@@ -1359,6 +1406,12 @@ function deleteOOOFromModal(){
 // Toast
 // ═══════════════════════════════════════
 function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500)}
+
+
+['reviewer-email','reviewer-password'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')submitReviewerLogin();if(e.key==='Escape')closeReviewerLoginModal();});
+});
 
 // ═══════════════════════════════════════
 // Init
