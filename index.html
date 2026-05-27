@@ -81,6 +81,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .dash-tile.orange{border-color:rgba(179,74,0,.3);background:var(--orange-lt)}.dash-tile.orange .dt-num,.dash-tile.orange .dt-lbl{color:var(--orange-dk)}
 .dash-tile.red{border-color:rgba(155,28,28,.3);background:var(--red-lt)}.dash-tile.red .dt-num,.dash-tile.red .dt-lbl{color:var(--red-dk)}
 .dash-tile.black{border-color:rgba(0,0,0,.2);background:var(--black-lt)}.dash-tile.black .dt-num,.dash-tile.black .dt-lbl{color:var(--black-dk)}
+.dash-tile.pending{border-color:rgba(92,91,82,.25);background:var(--bg2)}.dash-tile.pending .dt-num,.dash-tile.pending .dt-lbl{color:var(--t2)}
 .dash-tile.week{border-color:rgba(26,95,138,.3);background:var(--week-lt)}.dash-tile.week .dt-num,.dash-tile.week .dt-lbl{color:var(--week-dk)}
 .dash-tile.week2{border-color:rgba(92,58,160,.3);background:var(--week2-lt)}.dash-tile.week2 .dt-num,.dash-tile.week2 .dt-lbl{color:var(--week2-dk)}
 .status-card{border-radius:var(--rad-xl);border:0.5px solid var(--bd);padding:1.25rem;margin-bottom:1rem}
@@ -140,6 +141,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .filter-btn.active.orange{background:var(--orange-lt);color:var(--orange-dk);border-color:rgba(179,74,0,.3)}
 .filter-btn.active.red{background:var(--red-lt);color:var(--red-dk);border-color:rgba(155,28,28,.3)}
 .filter-btn.active.black{background:var(--black-lt);color:var(--black-dk);border-color:rgba(0,0,0,.2)}
+.filter-btn.active.pending{background:var(--bg2);color:var(--t2);border-color:var(--bd2)}
 .filter-btn.active.all{background:var(--t1);color:#fff;border-color:var(--t1)}
 .proj-table{width:100%;border-collapse:collapse}
 .proj-table th{font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;padding:5px 8px;border-bottom:0.5px solid var(--bd);text-align:left;white-space:nowrap}
@@ -158,6 +160,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .status-pill.orange{background:rgba(179,74,0,.12);color:var(--orange-dk)}
 .status-pill.red{background:rgba(155,28,28,.12);color:var(--red-dk)}
 .status-pill.black{background:rgba(0,0,0,.08);color:var(--black-dk)}
+.status-pill.pending{background:var(--bg2);color:var(--t2)}
 .mono{font-family:'DM Mono',monospace;font-size:11px}
 .expand-icon{font-size:10px;color:var(--t3);transition:transform .15s;display:inline-block}
 .expand-icon.open{transform:rotate(90deg)}
@@ -333,7 +336,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
         <div class="field"><label>Retailer</label><input type="text" id="m-group" placeholder="e.g. AEO, ON" autocomplete="off"></div>
         <div class="field"><label>Store #</label><input type="text" id="m-name" placeholder="e.g. 101, 777" autocomplete="off"></div>
         <div class="field" style="position:relative"><label>LiDAR date</label><input type="text" id="m-lidar" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-m-lidar"></div></div>
-        <div class="field" style="position:relative"><label>Install date</label><input type="text" id="m-install" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-m-install"></div></div>
+        <div class="field" style="position:relative"><label>Install date <span style="color:var(--t3);font-weight:500">(optional)</span></label><input type="text" id="m-install" placeholder="Add later" autocomplete="off"><div class="cal-popup hidden" id="cal-m-install"></div></div>
         <button class="btn primary" onclick="addProject()" style="height:32px"><i class="ti ti-plus"></i> Add</button>
       </div>
       <div class="btn-row" style="margin-top:8px">
@@ -441,9 +444,9 @@ const STORAGE_KEY='nv5_v4', OOO_KEY='nv5_ooo_v4';
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const MONTHS_S=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const DNAMES=["Su","Mo","Tu","We","Th","Fr","Sa"];
-const STATUS_LABELS={green:"On schedule — no flexibility needed",yellow:"Minor flex — deliverable moved earlier",orange:"Major flex — both dates compressed",red:"Emergency — LiDAR gap critically compressed",black:"No possible schedule"};
-const STATUS_ICONS={green:"ti-circle-check",yellow:"ti-circle-check",orange:"ti-alert-triangle",red:"ti-alert-triangle",black:"ti-circle-x"};
-const STATUS_ORDER={green:0,yellow:1,orange:2,red:3,black:4};
+const STATUS_LABELS={green:"On schedule — no flexibility needed",yellow:"Minor flex — deliverable moved earlier",orange:"Major flex — both dates compressed",red:"Emergency — LiDAR gap critically compressed",black:"No possible schedule",pending:"Install date pending"};
+const STATUS_ICONS={green:"ti-circle-check",yellow:"ti-circle-check",orange:"ti-alert-triangle",red:"ti-alert-triangle",black:"ti-circle-x",pending:"ti-calendar-question"};
+const STATUS_ORDER={green:0,yellow:1,orange:2,red:3,black:4,pending:5};
 
 // ═══════════════════════════════════════
 // State
@@ -456,14 +459,14 @@ let calStates={}, lastResult=null, selectedIds=new Set(), collapsedGroups=new Se
 // ═══════════════════════════════════════
 function saveState(){
   try{
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(projects.map(p=>({...p,lidar:p.lidar.getTime(),install:p.install.getTime()}))));
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(projects.map(p=>({...p,lidar:p.lidar?p.lidar.getTime():null,install:p.install?p.install.getTime():null}))));
     localStorage.setItem(OOO_KEY,JSON.stringify(oooBlocks.map(b=>({...b,start:b.start.getTime(),end:b.end.getTime()}))));
   }catch(e){}
 }
 function loadState(){
   try{
     const ps=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
-    projects=ps.map(p=>({...p,lidar:new Date(p.lidar),install:new Date(p.install)}));
+    projects=ps.map(p=>({...p,lidar:p.lidar?new Date(p.lidar):null,install:p.install?new Date(p.install):null}));
     const os=JSON.parse(localStorage.getItem(OOO_KEY)||'[]');
     oooBlocks=os.map(b=>({...b,start:new Date(b.start),end:new Date(b.end)}));
   }catch(e){projects=[];oooBlocks=[];}
@@ -676,12 +679,13 @@ function addProject(){
   const lidar=parseInput(document.getElementById('m-lidar').value);
   const install=parseInput(document.getElementById('m-install').value);
   const group=document.getElementById('m-group').value.trim()||'';
-  if(!lidar||!install){showToast('Please enter valid dates.');return}
-  if(install<=lidar){showToast('Install must be after LiDAR.');return}
-  projects.push({id:Date.now(),name,lidar,install,group});
+  if(!lidar){showToast('Please enter a valid LiDAR date.');return}
+  if(install&&install<=lidar){showToast('Install must be after LiDAR.');return}
+  projects.push({id:Date.now(),name,lidar,install:install||null,group});
   document.getElementById('m-name').value='';document.getElementById('m-lidar').value='';
   document.getElementById('m-install').value='';document.getElementById('m-group').value='';
   saveState();renderProjects();
+  showToast(install?'Project added.':'Project added — install date can be added later.');
 }
 function removeProject(id){projects=projects.filter(p=>p.id!==id);if(expandedRow===id)expandedRow=null;selectedIds.delete(id);saveState();renderProjects();}
 function sortProjects(key){projSort=key;document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));document.getElementById('sort-'+key).classList.add('active');renderProjects();}
@@ -707,24 +711,24 @@ function startEdit(id,field,currentVal,displayEl){
 
 function renderDashboard(rows){
   const el=document.getElementById('multi-dashboard');if(!rows.length){el.style.display='none';return}el.style.display='block';
-  const counts={green:0,yellow:0,orange:0,red:0,black:0,week:0,week2:0};
+  const counts={green:0,yellow:0,orange:0,red:0,black:0,pending:0,week:0,week2:0};
   rows.forEach(p=>{counts[p.r.status]++;if(isDueThisWeek(p.r.delivDate))counts.week++;if(isDueThisWeek(p.r.designDue))counts.week2++;});
-  const labels={green:'On Schedule',yellow:'Minor Flex',orange:'Major Flex',red:'Emergency',black:'Impossible',week:'Deliverable Due This Week',week2:'Design Due This Week'};
-  el.innerHTML='<div class="dashboard">'+['week','week2','green','yellow','orange','red','black'].filter(k=>counts[k]>0).map(k=>`<div class="dash-tile ${k}"><div class="dt-num">${counts[k]}</div><div class="dt-lbl">${labels[k]}</div></div>`).join('')+'</div>';
+  const labels={green:'On Schedule',yellow:'Minor Flex',orange:'Major Flex',red:'Emergency',black:'Impossible',pending:'Install Pending',week:'Deliverable Due This Week',week2:'Design Due This Week'};
+  el.innerHTML='<div class="dashboard">'+['week','week2','pending','green','yellow','orange','red','black'].filter(k=>counts[k]>0).map(k=>`<div class="dash-tile ${k}"><div class="dt-num">${counts[k]}</div><div class="dt-lbl">${labels[k]}</div></div>`).join('')+'</div>';
 }
 
 function renderFilterBtns(rows){
   const present=new Set(rows.map(p=>p.r.status));
   const fr=document.getElementById('filter-row');
   let h=`Filter: <button class="filter-btn${projFilter==='all'?' active all':''}" onclick="filterProjects('all')">All (${rows.length})</button>`;
-  ['green','yellow','orange','red','black'].forEach(s=>{if(present.has(s)){const cnt=rows.filter(p=>p.r.status===s).length;h+=` <button class="filter-btn${projFilter===s?' active '+s:''}" onclick="filterProjects('${s}')">${s.charAt(0).toUpperCase()+s.slice(1)} (${cnt})</button>`;}});
+  ['pending','green','yellow','orange','red','black'].forEach(s=>{if(present.has(s)){const cnt=rows.filter(p=>p.r.status===s).length;h+=` <button class="filter-btn${projFilter===s?' active '+s:''}" onclick="filterProjects('${s}')">${s.charAt(0).toUpperCase()+s.slice(1)} (${cnt})</button>`;}});
   fr.innerHTML=h;
 }
 
 function renderProjects(){
   const wrap=document.getElementById('proj-table-wrap');
   if(!projects.length){document.getElementById('multi-dashboard').style.display='none';wrap.innerHTML='<div class="empty-state">No projects yet. Add one above.</div>';document.getElementById('filter-row').innerHTML='Filter: <button class="filter-btn active all" onclick="filterProjects(\'all\')">All (0)</button>';updateBulkBar();return;}
-  const allRows=projects.map(p=>({...p,r:schedule(p.lidar,p.install)}));
+  const allRows=projects.map(p=>({...p,r:p.install?schedule(p.lidar,p.install):{status:'pending',delivDate:null,designDue:null,callouts:[],oooWarning:null}}));
   renderDashboard(allRows);renderFilterBtns(allRows);
   let rows=[...allRows];
   if(projFilter!=='all')rows=rows.filter(p=>p.r.status===projFilter);
@@ -753,7 +757,6 @@ function renderProjects(){
     <th style="width:28px"></th>
   </tr></thead><tbody>`;
 
-  // Group by group if sort=group, else flat
   if(projSort==='group'){
     const groups=[...new Set(rows.map(p=>p.group||''))];
     groups.forEach(g=>{
@@ -767,15 +770,16 @@ function renderProjects(){
   }
   h+=`</tbody></table>`;
   wrap.innerHTML=h;
-  rows.forEach(p=>{if(expandedRow===p.id){const el=document.getElementById(`detail-${p.id}`);if(el)renderResult(p.r,p.lidar,p.install,p.name,el);}});
+  rows.forEach(p=>{if(expandedRow===p.id){const el=document.getElementById(`detail-${p.id}`);if(el){if(p.install)renderResult(p.r,p.lidar,p.install,p.name,el);else el.innerHTML='<div class="empty-state">Install date pending. Use Edit to add it later and generate the schedule.</div>';}}});
   updateBulkBar();
 }
 
 function projRow(p){
   const s=p.r.status,isExp=expandedRow===p.id,isSel=selectedIds.has(p.id);
   const dtwDeliv=isDueThisWeek(p.r.delivDate),dtwDesign=isDueThisWeek(p.r.designDue);
-  const delivCell=p.r.delivDate?`<span class="mono" style="color:var(--${s==='black'?'t1':s})">${fmtShort(p.r.delivDate)}</span>${dtwDeliv?'<span class="week-flag" title="Deliverable due this week"></span>':''}`:'<span style="color:var(--t3)">—</span>';
+  const delivCell=p.r.delivDate?`<span class="mono" style="color:var(--${s==='black'?'t1':s})">${fmtShort(p.r.delivDate)}</span>${dtwDeliv?'<span class="week-flag" title="Deliverable due this week"></span>':''}`:'<span style="color:var(--t3)">Pending install</span>';
   const designCell=p.r.designDue?`<span class="mono">${fmtShort(p.r.designDue)}</span>${dtwDesign?'<span class="week2-flag" title="Design due this week"></span>':''}`:'<span style="color:var(--t3)">—</span>';
+  const installCell=p.install?`<span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'install','${fmtInput(p.install)}',this)">${fmtShort(p.install)}</span>`:`<button class="btn" onclick="event.stopPropagation();openEditModal(${p.id})" style="padding:3px 8px;font-size:10px">Add date</button>`;
   let h=`<tr class="proj-row${isExp?' expanded':''}${isSel?' selected':''}" onclick="toggleRow(${p.id},event)">
     <td><input type="checkbox" class="proj-row-cb" data-id="${p.id}" ${isSel?'checked':''} onchange="toggleSelect(${p.id},event)" style="cursor:pointer"></td>
     <td><span class="expand-icon${isExp?' open':''}">&#9658;</span></td>
@@ -784,7 +788,7 @@ function projRow(p){
     <td class="hide-mobile"><span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'lidar','${fmtInput(p.lidar)}',this)">${fmtShort(p.lidar)}</span></td>
     <td>${delivCell}</td>
     <td class="hide-mobile">${designCell}</td>
-    <td class="hide-mobile"><span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'install','${fmtInput(p.install)}',this)">${fmtShort(p.install)}</span></td>
+    <td class="hide-mobile">${installCell}</td>
     <td><span class="status-pill ${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span></td>
     <td style="position:relative">
       <div class="action-menu-wrap">
@@ -814,8 +818,8 @@ function importCSV(input){
       if(cols.length<3){skipped++;return}
       const[retailer='',storeNum='',lidarStr='',installStr='']=cols;
       const lidar=parseInput(lidarStr),install=parseInput(installStr);
-      if(!lidar||!install||install<=lidar){skipped++;return}
-      projects.push({id:Date.now()+Math.random(),name:storeNum.trim()||'Untitled',lidar,install,group:retailer.trim()});added++;
+      if(!lidar||(install&&install<=lidar)){skipped++;return}
+      projects.push({id:Date.now()+Math.random(),name:storeNum.trim()||'Untitled',lidar,install:install||null,group:retailer.trim()});added++;
     });
     saveState();renderProjects();showToast(`Imported ${added} project${added!==1?'s':''}${skipped?`, ${skipped} skipped`:''}.`);
   };
@@ -823,9 +827,9 @@ function importCSV(input){
 }
 function exportCSV(){
   if(!projects.length){showToast('No projects to export.');return}
-  const rows=projects.map(p=>({...p,r:schedule(p.lidar,p.install)}));
+  const rows=projects.map(p=>({...p,r:p.install?schedule(p.lidar,p.install):{status:'pending',delivDate:null,designDue:null}}));
   let csv='Retailer,Store #,LiDAR Date,Install Date,Deliverable Due,Design Due,Status\n';
-  rows.forEach(p=>{csv+=`"${p.group||''}","${p.name}","${fmtShort(p.lidar)}","${fmtShort(p.install)}","${p.r.delivDate?fmtShort(p.r.delivDate):''}","${p.r.designDue?fmtShort(p.r.designDue):''}","${p.r.status}"\n`;});
+  rows.forEach(p=>{csv+=`"${p.group||''}","${p.name}","${fmtShort(p.lidar)}","${p.install?fmtShort(p.install):''}","${p.r.delivDate?fmtShort(p.r.delivDate):''}","${p.r.designDue?fmtShort(p.r.designDue):''}","${p.r.status}"\n`;});
   const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='nv5-schedule.csv';a.click();URL.revokeObjectURL(url);
 }
 
@@ -834,7 +838,7 @@ function exportCSV(){
 // ═══════════════════════════════════════
 function shareURL(){
   if(!projects.length){showToast('No projects to share.');return}
-  const data=projects.map(p=>({n:p.name,l:p.lidar.getTime(),i:p.install.getTime(),g:p.group||''}));
+  const data=projects.map(p=>({n:p.name,l:p.lidar?p.lidar.getTime():null,i:p.install?p.install.getTime():null,g:p.group||''}));
   const encoded=btoa(encodeURIComponent(JSON.stringify(data)));
   const url=`${location.href.split('?')[0]}?d=${encoded}`;
   navigator.clipboard.writeText(url).then(()=>{
@@ -849,16 +853,14 @@ function loadFromURL(){
   const d=params.get('d');
   if(!d)return;
   try{
-    // Replace projects entirely with the shared set — don't merge with localStorage
     const data=JSON.parse(decodeURIComponent(atob(d)));
     projects=[];
     data.forEach(p=>{
-      const lidar=new Date(p.l),install=new Date(p.i);
-      if(!isNaN(lidar)&&!isNaN(install)&&install>lidar)
-        projects.push({id:Date.now()+Math.random(),name:p.n||'Untitled',lidar,install,group:p.g||''});
+      const lidar=p.l?new Date(p.l):null,install=p.i?new Date(p.i):null;
+      if(lidar&&!isNaN(lidar)&&(!install||(install&&!isNaN(install)&&install>lidar)))
+        projects.push({id:Date.now()+Math.random(),name:p.n||'Untitled',lidar,install:install||null,group:p.g||''});
     });
     saveState();
-    // Remove ?d= from URL so refreshing doesn't re-load and overwrite edits
     history.replaceState(null,'',location.pathname);
     showToast(`Loaded ${projects.length} project${projects.length!==1?'s':''} from shared link.`);
     switchTab('multi');
@@ -924,7 +926,7 @@ setupDateField('ooo-start','cal-ooo-start');setupDateField('ooo-end','cal-ooo-en
 function printAll(){
   const pe=document.getElementById('print-expanded');
   if(!projects.length){document.body.classList.add('print-single');window.print();setTimeout(()=>document.body.classList.remove('print-single'),500);return}
-  const allRows=projects.map(p=>({...p,r:schedule(p.lidar,p.install)}));
+  const allRows=projects.map(p=>({...p,r:p.install?schedule(p.lidar,p.install):{status:'pending',delivDate:null,designDue:null,callouts:[],oooWarning:null}}));
   let rows=[...allRows];
   if(projSort==='deliv')rows.sort((a,b)=>(a.r.delivDate||new Date(9999,0))-(b.r.delivDate||new Date(9999,0)));
   else if(projSort==='status')rows.sort((a,b)=>STATUS_ORDER[a.r.status]-STATUS_ORDER[b.r.status]);
@@ -933,7 +935,7 @@ function printAll(){
   let h='<h2 style="font-size:15px;font-weight:600;margin-bottom:.75rem">Full schedules</h2>';
   rows.forEach(p=>{h+=`<div class="pe-project"><div class="pe-name">${p.name}${p.group?` <span style="font-size:11px;font-weight:400;color:#888">· ${p.group}</span>`:''}</div><div id="pe-detail-${p.id}"></div></div>`;});
   pe.innerHTML=h;pe.style.display='block';
-  rows.forEach(p=>{const el=document.getElementById(`pe-detail-${p.id}`);if(el)renderResult(p.r,p.lidar,p.install,p.name,el);});
+  rows.forEach(p=>{const el=document.getElementById(`pe-detail-${p.id}`);if(el){if(p.install)renderResult(p.r,p.lidar,p.install,p.name,el);else el.innerHTML='<div class="empty-state">Install date pending.</div>';}});
   document.body.classList.remove('print-single');
   setTimeout(()=>{window.print();setTimeout(()=>{pe.style.display='none';pe.innerHTML='';},500);},100);
 }
@@ -973,9 +975,8 @@ function openEditModal(id){
   document.getElementById('edit-group').value = p.group || '';
   document.getElementById('edit-name').value = p.name || '';
   document.getElementById('edit-lidar').value = fmtInput(p.lidar);
-  document.getElementById('edit-install').value = fmtInput(p.install);
+  document.getElementById('edit-install').value = p.install?fmtInput(p.install):'';
   document.getElementById('edit-modal').classList.remove('hidden');
-  // Close any open menus
   document.querySelectorAll('.action-dropdown.open').forEach(m=>m.classList.remove('open'));
 }
 function closeEditModal(){
@@ -987,16 +988,16 @@ function saveEdit(){
   if(!p){ closeEditModal(); return; }
   const lidar   = parseInput(document.getElementById('edit-lidar').value);
   const install = parseInput(document.getElementById('edit-install').value);
-  if(!lidar||!install){ showToast('Please enter valid LiDAR and install dates.'); return; }
-  if(install<=lidar){ showToast('Install must be after LiDAR.'); return; }
+  if(!lidar){ showToast('Please enter a valid LiDAR date.'); return; }
+  if(install&&install<=lidar){ showToast('Install must be after LiDAR.'); return; }
   p.group   = document.getElementById('edit-group').value.trim();
   p.name    = document.getElementById('edit-name').value.trim() || p.name;
   p.lidar   = lidar;
-  p.install = install;
+  p.install = install||null;
   saveState();
   renderProjects();
   closeEditModal();
-  showToast('Project updated.');
+  showToast(p.install?'Project updated.':'Project updated — install date pending.');
 }
 // Wire up edit modal calendar fields
 setupDateField('edit-lidar','cal-edit-lidar');
