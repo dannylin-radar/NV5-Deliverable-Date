@@ -1219,7 +1219,16 @@ function printAll(){
 // ═══════════════════════════════════════
 // Tabs + Reset all
 // ═══════════════════════════════════════
-function switchTab(t){['multi','single','ooo','approvals'].forEach(p=>{const pane=document.getElementById('pane-'+p);const tab=document.getElementById('tab-'+p);if(pane)pane.style.display=p===t?'block':'none';if(tab)tab.classList.toggle('active',p===t);});if(t==='multi')renderProjects();if(t==='approvals')renderApprovals();});if(t==='multi')renderProjects();if(t==='approvals')renderApprovals();}
+function switchTab(t){
+  ['multi','single','ooo','approvals'].forEach(p=>{
+    const pane=document.getElementById('pane-'+p);
+    const tab=document.getElementById('tab-'+p);
+    if(pane)pane.style.display=p===t?'block':'none';
+    if(tab)tab.classList.toggle('active',p===t);
+  });
+  if(t==='multi')renderProjects();
+  if(t==='approvals')renderApprovals();
+}
 async function resetAll(){if(!confirm('Reset all projects and OOO blocks?'))return;const pids=projects.map(p=>p.id),oids=oooBlocks.map(b=>b.id);projects=[];oooBlocks=[];expandedRow=null;lastResult=null;selectedIds.clear();await Promise.all([deleteRemote('nv5_projects',pids),deleteRemote('nv5_ooo_blocks',oids)]);resetSingle();renderProjects();renderOOO();showToast('All shared data cleared.');}
 
 // ═══════════════════════════════════════
