@@ -507,7 +507,7 @@ let calStates={}, lastResult=null, selectedIds=new Set(), collapsedGroups=new Se
 // 2) Replace these two values with your Supabase Project URL and public anon key.
 const SUPABASE_URL = 'https://nbsbgsyousrujwymxkfk.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ic2Jnc3lvdXNydWp3eW14a2ZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5MDE1ODYsImV4cCI6MjA5NTQ3NzU4Nn0._3KbYnXiFneRpY4F-FnLhIqdTvJGBxE5_7Tm7SX_Nqo';
-let db=null, currentUser=null, realtimeChannel=null, isReviewer=false, realtimeChannel=null, isLoadingRemote=false;
+let db=null, currentUser=null, isReviewer=false, realtimeChannel=null, isLoadingRemote=false;
 function makeId(){return Date.now()*1000+Math.floor(Math.random()*1000)}
 function supabaseReady(){return SUPABASE_URL.startsWith('https://')&&SUPABASE_ANON_KEY.length>40&&window.supabase}
 function sqlDate(d){return d?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`:null}
@@ -1219,7 +1219,7 @@ function printAll(){
 // ═══════════════════════════════════════
 // Tabs + Reset all
 // ═══════════════════════════════════════
-function switchTab(t){['multi','single','ooo','approvals'].forEach(p=>{const pane=document.getElementById('pane-'+p),tab=document.getElementById('tab-'+p);if(pane)pane.style.display=p===t?'block':'none';if(tab)tab.classList.toggle('active',p===t);});if(t==='multi')renderProjects();if(t==='approvals')renderApprovals();}
+function switchTab(t){['multi','single','ooo','approvals'].forEach(p=>{const pane=document.getElementById('pane-'+p);const tab=document.getElementById('tab-'+p);if(pane)pane.style.display=p===t?'block':'none';if(tab)tab.classList.toggle('active',p===t);});if(t==='multi')renderProjects();if(t==='approvals')renderApprovals();});if(t==='multi')renderProjects();if(t==='approvals')renderApprovals();}
 async function resetAll(){if(!confirm('Reset all projects and OOO blocks?'))return;const pids=projects.map(p=>p.id),oids=oooBlocks.map(b=>b.id);projects=[];oooBlocks=[];expandedRow=null;lastResult=null;selectedIds.clear();await Promise.all([deleteRemote('nv5_projects',pids),deleteRemote('nv5_ooo_blocks',oids)]);resetSingle();renderProjects();renderOOO();showToast('All shared data cleared.');}
 
 // ═══════════════════════════════════════
