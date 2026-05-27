@@ -213,6 +213,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .request-pill{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--yellow-lt);color:var(--yellow-dk);border:0.5px solid rgba(138,101,0,.25);margin-left:5px}
 .status-card.requested{border-color:rgba(138,101,0,.35);background:var(--yellow-lt)}
 
+
+/* Timeline date modification UI */
+.modify-pill{display:inline-flex;align-items:center;gap:4px;margin-left:8px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:#fff;border:0.5px solid var(--bd2);color:var(--t2);cursor:pointer;font-family:'DM Sans',sans-serif}
+.modify-pill:hover{background:var(--bg2);color:var(--t1)}
+.request-card{margin-top:.875rem;padding:12px 14px;border:0.5px solid rgba(138,101,0,.3);background:var(--yellow-lt);border-radius:var(--rad-lg);font-size:12px;color:var(--yellow-dk)}
+.request-card strong{font-weight:700}
+.request-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.request-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.request-grid .field input{background:#fff}
+.request-pill{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--yellow-lt);color:var(--yellow-dk);border:0.5px solid rgba(138,101,0,.25);margin-left:5px;white-space:nowrap}
+.request-pill.approved{background:var(--green-lt);color:var(--green-dk);border-color:rgba(26,127,90,.25)}
+.request-pill.rejected{background:var(--red-lt);color:var(--red-dk);border-color:rgba(155,28,28,.25)}
+.mod-card{margin-top:10px;padding:12px;border:0.5px solid var(--bd);background:var(--card);border-radius:var(--rad-lg);display:none}
+.mod-card.open{display:block}
+.approval-card{padding:14px;border:0.5px solid var(--bd);border-radius:var(--rad-xl);background:var(--card);margin-bottom:12px}
+.approval-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:10px}
+.approval-title{font-size:13px;font-weight:700;color:var(--t1)}
+.approval-sub{font-size:11px;color:var(--t3);margin-top:2px}
+
 /* Bulk toolbar */
 .bulk-bar{display:none;align-items:center;gap:8px;padding:7px 0;margin-bottom:8px;font-size:12px;color:var(--t2)}
 .bulk-bar.visible{display:flex}
@@ -322,13 +341,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
   <div id="share-banner" style="display:none"></div>
 
   <div class="tabs">
-    <button class="tab active" id="tab-single" onclick="switchTab('single')">Single Project</button>
-    <button class="tab" id="tab-multi" onclick="switchTab('multi')">Multi-Project</button>
+    <button class="tab active" id="tab-multi" onclick="switchTab('multi')">Multi-Project</button>
+    <button class="tab" id="tab-single" onclick="switchTab('single')">Single Project</button>
     <button class="tab" id="tab-ooo" onclick="switchTab('ooo')">OOO Blocks</button>
+    <button class="tab" id="tab-approvals" onclick="switchTab('approvals')" style="display:none">Approval Requests</button>
   </div>
 
   <!-- SINGLE -->
-  <div id="pane-single">
+  <div id="pane-single" style="display:none">
     <div class="card">
       <div class="section-title">Project details</div>
       <div class="grid3" style="margin-bottom:10px">
@@ -346,7 +366,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
   </div>
 
   <!-- MULTI -->
-  <div id="pane-multi" style="display:none">
+  <div id="pane-multi">
     <div class="card proj-add-section">
       <div class="section-title">Add project</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:end">
@@ -408,6 +428,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
         </div>
       </div>
       <div id="ooo-list" class="ooo-list"><div class="ooo-empty">No OOO blocks added yet.</div></div>
+    </div>
+  </div>
+
+  <!-- APPROVALS -->
+  <div id="pane-approvals" style="display:none">
+    <div class="card">
+      <div class="section-title">Approval requests</div>
+      <p style="font-size:12px;color:var(--t3);margin-bottom:12px">Reviewer-only view of pending timeline change requests.</p>
+      <div id="approval-list"><div class="empty-state">No pending approval requests.</div></div>
     </div>
   </div>
 </div>
@@ -478,13 +507,13 @@ let calStates={}, lastResult=null, selectedIds=new Set(), collapsedGroups=new Se
 // 2) Replace these two values with your Supabase Project URL and public anon key.
 const SUPABASE_URL = 'https://nbsbgsyousrujwymxkfk.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ic2Jnc3lvdXNydWp3eW14a2ZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5MDE1ODYsImV4cCI6MjA5NTQ3NzU4Nn0._3KbYnXiFneRpY4F-FnLhIqdTvJGBxE5_7Tm7SX_Nqo';
-let db=null, currentUser=null, realtimeChannel=null, isLoadingRemote=false;
+let db=null, currentUser=null, realtimeChannel=null, isReviewer=false, realtimeChannel=null, isLoadingRemote=false;
 function makeId(){return Date.now()*1000+Math.floor(Math.random()*1000)}
 function supabaseReady(){return SUPABASE_URL.startsWith('https://')&&SUPABASE_ANON_KEY.length>40&&window.supabase}
 function sqlDate(d){return d?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`:null}
 function fromSqlDate(v){if(!v)return null;const [y,m,d]=String(v).split('-').map(Number);const r=new Date(y,m-1,d);r.setHours(0,0,0,0);return r}
-function projectToRow(p){return{id:p.id,name:p.name||'Untitled',retailer:p.group||'',lidar_date:sqlDate(p.lidar),install_date:sqlDate(p.install),requested_deliv_date:sqlDate(p.requestedDelivDate),requested_design_due:sqlDate(p.requestedDesignDue),request_status:p.requestStatus||null,request_note:p.requestNote||'',updated_at:new Date().toISOString()}}
-function rowToProject(r){return{id:Number(r.id),name:r.name||'Untitled',group:r.retailer||'',lidar:fromSqlDate(r.lidar_date),install:fromSqlDate(r.install_date),requestedDelivDate:fromSqlDate(r.requested_deliv_date),requestedDesignDue:fromSqlDate(r.requested_design_due),requestStatus:r.request_status||null,requestNote:r.request_note||''}}
+function projectToRow(p){return{id:p.id,name:p.name||'Untitled',retailer:p.group||'',lidar_date:sqlDate(p.lidar),install_date:sqlDate(p.install),requested_deliv_date:sqlDate(p.requestedDelivDate),requested_design_due:sqlDate(p.requestedDesignDue),request_status:p.requestStatus||null,request_note:p.requestNote||'',approved_deliv_date:sqlDate(p.approvedDelivDate),approved_design_due:sqlDate(p.approvedDesignDue),updated_at:new Date().toISOString()}}
+function rowToProject(r){return{id:Number(r.id),name:r.name||'Untitled',group:r.retailer||'',lidar:fromSqlDate(r.lidar_date),install:fromSqlDate(r.install_date),requestedDelivDate:fromSqlDate(r.requested_deliv_date),requestedDesignDue:fromSqlDate(r.requested_design_due),requestStatus:r.request_status||null,requestNote:r.request_note||'',approvedDelivDate:fromSqlDate(r.approved_deliv_date),approvedDesignDue:fromSqlDate(r.approved_design_due)}}
 function oooToRow(b){return{id:b.id,type:b.type,start_date:sqlDate(b.start),end_date:sqlDate(b.end),label:b.label||'',updated_at:new Date().toISOString()}}
 function rowToOOO(r){const start=fromSqlDate(r.start_date),end=fromSqlDate(r.end_date);return{id:Number(r.id),type:r.type||'day',start,end,label:r.label||((r.type==='range')?`${fmtShort(start)} → ${fmtShort(end)}`:fmtShort(start))}}
 function showDataStatus(msg){const el=document.getElementById('data-status');if(el)el.textContent=msg}
@@ -498,8 +527,9 @@ async function initSupabase(){
   }
   db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
   const {data:{session}}=await db.auth.getSession();
-  currentUser=session?.user||null;updateAuthUI();
+  currentUser=session?.user||null;await checkReviewer();
   await loadState();
+  db.auth.onAuthStateChange(async (_event, session)=>{currentUser=session?.user||null;await checkReviewer();renderProjects();});
   realtimeChannel=db.channel('nv5-shared-data')
     .on('postgres_changes',{event:'*',schema:'public',table:'nv5_projects'},()=>loadState())
     .on('postgres_changes',{event:'*',schema:'public',table:'nv5_ooo_blocks'},()=>loadState())
@@ -516,7 +546,7 @@ async function loadState(){
   projects=(pRes.data||[]).map(rowToProject).filter(p=>p.lidar);
   oooBlocks=(oRes.data||[]).map(rowToOOO).filter(b=>b.start&&b.end);
   isLoadingRemote=false;
-  renderOOO();renderProjects();showDataStatus(currentUser?`Reviewer: ${currentUser.email}`:'Shared via Supabase');
+  renderOOO();renderProjects();renderApprovals();showDataStatus(currentUser?`Reviewer: ${currentUser.email}`:'Shared via Supabase');
 }
 async function saveState(){
   if(isLoadingRemote||!db)return;
@@ -529,17 +559,29 @@ async function saveState(){
   const err=results.find(r=>r.error)?.error;if(err)showToast(err.message);
 }
 async function deleteRemote(table,ids){if(!db||!ids.length)return;const {error}=await db.from(table).delete().in('id',ids);if(error)showToast(error.message)}
+
+async function checkReviewer(){
+  isReviewer=false;
+  if(!db||!currentUser){updateAuthUI();return false;}
+  const {data,error}=await db.from('nv5_reviewers').select('email').eq('email',currentUser.email).maybeSingle();
+  isReviewer=!!data&&!error;
+  updateAuthUI();
+  return isReviewer;
+}
+
 function updateAuthUI(){
   const logout=document.getElementById('logout-btn');if(logout)logout.style.display=currentUser?'inline-flex':'none';
-  showDataStatus(currentUser?`Reviewer: ${currentUser.email}`:(db?'Shared via Supabase':'Supabase not configured'));
+  const approvals=document.getElementById('tab-approvals');if(approvals)approvals.style.display=isReviewer?'inline-flex':'none';
+  showDataStatus(currentUser?(isReviewer?`Reviewer: ${currentUser.email}`:`Logged in, not reviewer: ${currentUser.email}`):(db?'Shared via Supabase':'Supabase not configured'));
+  renderApprovals();
 }
 async function reviewerLogin(){
   if(!db){showToast('Supabase is not configured yet.');return;}
-  const email=prompt('Reviewer email for approval access:');if(!email)return;
-  const {error}=await db.auth.signInWithOtp({email,emailRedirectTo:location.href.split('?')[0]});
+  const email=prompt('Reviewer email:');if(!email)return;
+  const {error}=await db.auth.signInWithOtp({email,emailRedirectTo:location.href.split('?')[0],options:{shouldCreateUser:false}});
   if(error)showToast(error.message);else showToast('Check your email for the reviewer login link.');
 }
-async function reviewerLogout(){if(!db)return;await db.auth.signOut();currentUser=null;updateAuthUI();showToast('Logged out.');}
+async function reviewerLogout(){if(!db)return;await db.auth.signOut();currentUser=null;isReviewer=false;updateAuthUI();showToast('Logged out.');}
 
 /*
 Supabase setup SQL:
@@ -735,63 +777,95 @@ function schedule(lidar,install){
 }
 
 
+
 function getProjectById(id){return projects.find(p=>Number(p.id)===Number(id))}
 function hasPendingRequest(p){return p&&p.requestStatus==='pending'&&p.requestedDelivDate&&p.requestedDesignDue}
-function clearTimelineRequest(projectId){
-  const p=getProjectById(projectId);if(!p)return;
-  p.requestStatus=null;p.requestedDelivDate=null;p.requestedDesignDue=null;p.requestNote='';
-  saveState();renderProjects();showToast('Requested timeline cleared.');
+function hasApprovedRequest(p){return p&&p.requestStatus==='approved'&&p.approvedDelivDate&&p.approvedDesignDue}
+function requestBadge(p){
+  if(hasPendingRequest(p))return '<span class="request-pill">Pending approval</span>';
+  if(hasApprovedRequest(p))return '<span class="request-pill approved">Request Approved</span>';
+  if(p&&p.requestStatus==='rejected')return '<span class="request-pill rejected">Request Rejected</span>';
+  return '';
 }
-function requestTimelineChange(projectId){
+function activeScheduleForProject(p){
+  if(!p.install)return {status:'pending',delivDate:null,designDue:null,callouts:[],oooWarning:null};
+  const r=schedule(p.lidar,p.install);
+  if(hasApprovedRequest(p)){
+    r.delivDate=p.approvedDelivDate;
+    r.designDue=p.approvedDesignDue;
+    r.callouts=[`Approved custom timeline. Calculated deliverable was ${fmtShort(schedule(p.lidar,p.install).delivDate)} and calculated design due was ${fmtShort(schedule(p.lidar,p.install).designDue)}.`];
+    r.oooWarning=null;
+  }
+  return r;
+}
+function toggleModifyCard(projectId,kind){
+  const id=`mod-${kind}-${projectId}`;
+  document.querySelectorAll('.mod-card.open').forEach(el=>{if(el.id!==id)el.classList.remove('open')});
+  const el=document.getElementById(id);if(el)el.classList.toggle('open');
+}
+function requestOneDateChange(projectId,kind){
   const p=getProjectById(projectId);if(!p||!p.install){showToast('Install date is required before requesting timeline changes.');return;}
   const calc=schedule(p.lidar,p.install);
-  const deliv=parseInput(document.getElementById('req-deliv-'+projectId)?.value||'');
-  const design=parseInput(document.getElementById('req-design-'+projectId)?.value||'');
-  if(!deliv||!design){showToast('Enter valid requested dates.');return;}
-  if(design<=deliv){showToast('Radar Design Due must be after NV5 Deliverable Due.');return;}
-  if(p.install&&design>=p.install){showToast('Radar Design Due must be before install.');return;}
-  p.requestedDelivDate=deliv;
-  p.requestedDesignDue=design;
+  const delivInput=document.getElementById('mod-deliv-input-'+projectId);
+  const designInput=document.getElementById('mod-design-input-'+projectId);
+  const newDeliv=kind==='deliv'?fromSqlDate(delivInput.value):(p.requestedDelivDate||calc.delivDate);
+  const newDesign=kind==='design'?fromSqlDate(designInput.value):(p.requestedDesignDue||calc.designDue);
+  if(!newDeliv||!newDesign){showToast('Select a valid date.');return;}
+  if(newDesign<=newDeliv){showToast('Radar Design Due must be after NV5 Deliverable Due.');return;}
+  if(p.install&&newDesign>=p.install){showToast('Radar Design Due must be before install.');return;}
+  p.requestedDelivDate=newDeliv;
+  p.requestedDesignDue=newDesign;
   p.requestStatus='pending';
-  p.requestNote=`Requested change from calculated dates: Deliverable ${fmtShort(calc.delivDate)} → ${fmtShort(deliv)}, Design ${fmtShort(calc.designDue)} → ${fmtShort(design)}`;
-  saveState();renderProjects();showToast('Timeline change requested — pending approval.');
+  p.requestNote=`Requested change from calculated dates: Deliverable ${fmtShort(calc.delivDate)} → ${fmtShort(newDeliv)}, Design ${fmtShort(calc.designDue)} → ${fmtShort(newDesign)}`;
+  saveState();renderProjects();renderApprovals();showToast('Timeline change requested — pending approval.');
 }
 function approveTimelineRequest(projectId){
+  if(!isReviewer){showToast('Reviewer login required.');return;}
   const p=getProjectById(projectId);if(!p||!hasPendingRequest(p))return;
   p.approvedDelivDate=p.requestedDelivDate;
   p.approvedDesignDue=p.requestedDesignDue;
   p.requestStatus='approved';
-  saveState();renderProjects();showToast('Requested timeline approved.');
+  p.requestNote='Timeline request approved.';
+  saveState();renderProjects();renderApprovals();showToast('Requested timeline approved.');
 }
 function rejectTimelineRequest(projectId){
+  if(!isReviewer){showToast('Reviewer login required.');return;}
   const p=getProjectById(projectId);if(!p||!hasPendingRequest(p))return;
   p.requestStatus='rejected';
   p.requestNote='Requested timeline was rejected.';
-  saveState();renderProjects();showToast('Requested timeline rejected.');
+  saveState();renderProjects();renderApprovals();showToast('Requested timeline rejected.');
 }
-function renderTimelineRequestBox(p,r){
+function renderModifyCards(p,r){
   if(!p||!p.install||!r||r.status==='black')return '';
-  const requested=hasPendingRequest(p);
-  let h=`<div class="request-card"><strong>${requested?'⚠️ New dates requested — pending approval':'Request timeline changes'}</strong>`;
-  if(requested){
-    h+=`<div style="margin-top:6px">Requested NV5 Deliverable Due: <strong>${fmtShort(p.requestedDelivDate)}</strong><br>Requested Radar Design Due: <strong>${fmtShort(p.requestedDesignDue)}</strong></div>`;
-    h+=`<div style="margin-top:6px">${p.requestNote||'These dates are not approved yet.'}</div>`;
-  }else{
-    h+=`<div style="margin-top:6px">Modify the dates below to submit a request. The calculated schedule will remain active until a reviewer approves it.</div>`;
+  const delivVal=sqlDate(hasPendingRequest(p)?p.requestedDelivDate:r.delivDate);
+  const designVal=sqlDate(hasPendingRequest(p)?p.requestedDesignDue:r.designDue);
+  let h='';
+  if(hasPendingRequest(p)){
+    h+=`<div class="request-card"><strong>⚠️ New dates requested — pending approval</strong><div style="margin-top:6px">Requested NV5 Deliverable Due: <strong>${fmtShort(p.requestedDelivDate)}</strong><br>Requested Radar Design Due: <strong>${fmtShort(p.requestedDesignDue)}</strong></div><div style="margin-top:6px">${p.requestNote||'These dates are not approved yet.'}</div>`;
+    if(isReviewer){
+      h+=`<div class="request-actions"><button class="btn primary" onclick="event.stopPropagation();approveTimelineRequest(${p.id})"><i class="ti ti-check"></i> Approve</button><button class="btn danger" onclick="event.stopPropagation();rejectTimelineRequest(${p.id})"><i class="ti ti-ban"></i> Reject</button></div>`;
+    }
+    h+=`</div>`;
   }
-  h+=`<div class="request-grid">
-    <div class="field"><label>Requested NV5 Deliverable Due</label><input type="text" id="req-deliv-${p.id}" value="${fmtInput(requested?p.requestedDelivDate:r.delivDate)}" autocomplete="off"></div>
-    <div class="field"><label>Requested Radar Design Due</label><input type="text" id="req-design-${p.id}" value="${fmtInput(requested?p.requestedDesignDue:r.designDue)}" autocomplete="off"></div>
-  </div>`;
-  h+=`<div class="request-actions">
-    <button class="btn primary" onclick="event.stopPropagation();requestTimelineChange(${p.id})"><i class="ti ti-send"></i> Submit request</button>`;
-  if(requested){
-    h+=`<button class="btn" onclick="event.stopPropagation();clearTimelineRequest(${p.id})"><i class="ti ti-x"></i> Cancel request</button>`;
-    h+=`<button class="btn primary" onclick="event.stopPropagation();approveTimelineRequest(${p.id})"><i class="ti ti-check"></i> Approve</button>`;
-    h+=`<button class="btn danger" onclick="event.stopPropagation();rejectTimelineRequest(${p.id})"><i class="ti ti-ban"></i> Reject</button>`;
+  if(hasApprovedRequest(p)){
+    h+=`<div class="request-card" style="background:var(--green-lt);border-color:rgba(26,127,90,.3);color:var(--green-dk)"><strong>Request Approved</strong><div style="margin-top:6px">Approved NV5 Deliverable Due: <strong>${fmtShort(p.approvedDelivDate)}</strong><br>Approved Radar Design Due: <strong>${fmtShort(p.approvedDesignDue)}</strong></div></div>`;
   }
-  h+=`</div></div>`;
+  h+=`<div class="mod-card" id="mod-deliv-${p.id}"><strong>Modify NV5 Deliverable Due</strong><div class="request-grid"><div class="field"><label>Select new date</label><input type="date" id="mod-deliv-input-${p.id}" value="${delivVal}"></div></div><div class="request-actions"><button class="btn primary" onclick="event.stopPropagation();requestOneDateChange(${p.id},'deliv')">Submit request</button></div></div>`;
+  h+=`<div class="mod-card" id="mod-design-${p.id}"><strong>Modify Radar Design Due</strong><div class="request-grid"><div class="field"><label>Select new date</label><input type="date" id="mod-design-input-${p.id}" value="${designVal}"></div></div><div class="request-actions"><button class="btn primary" onclick="event.stopPropagation();requestOneDateChange(${p.id},'design')">Submit request</button></div></div>`;
   return h;
+}
+function renderApprovals(){
+  const el=document.getElementById('approval-list');if(!el)return;
+  if(!isReviewer){el.innerHTML='<div class="empty-state">Reviewer login required.</div>';return;}
+  const pending=projects.filter(hasPendingRequest);
+  if(!pending.length){el.innerHTML='<div class="empty-state">No pending approval requests.</div>';return;}
+  let h='';
+  pending.forEach(p=>{
+    const r=activeScheduleForProject(p);
+    h+=`<div class="approval-card"><div class="approval-head"><div><div class="approval-title">${p.name||'Untitled'}${p.group?` · ${p.group}`:''}</div><div class="approval-sub">${p.requestNote||''}</div></div><div class="request-actions"><button class="btn primary" onclick="approveTimelineRequest(${p.id})">Approve</button><button class="btn danger" onclick="rejectTimelineRequest(${p.id})">Reject</button></div></div><div id="approval-detail-${p.id}"></div></div>`;
+  });
+  el.innerHTML=h;
+  pending.forEach(p=>{const detail=document.getElementById(`approval-detail-${p.id}`);if(detail)renderResult(activeScheduleForProject(p),p.lidar,p.install,p.name,detail,p);});
 }
 
 // ═══════════════════════════════════════
@@ -820,12 +894,15 @@ function renderResult(r,lidar,install,name,container,project=null){
     tl.forEach((row,i)=>{
       let g='';
       if(i>0){const cal=diff(tl[i-1].date,row.date),biz=bizDiff(tl[i-1].date,row.date);g=`<span class="tl-gap">${cal}cd / ${biz}bd</span>`;}
-      h+=`<div class="tl-row"><div class="tl-dot ${row.col}"></div><i class="ti ${row.ico} tl-ico"></i><span class="tl-lbl">${row.lbl}</span><span class="tl-dt">${fmtLong(row.date)}</span>${g}</div>`;
+      let mod='';
+      if(project&&row.lbl==='NV5 Deliverable Due')mod=`<button class="modify-pill" onclick="event.stopPropagation();toggleModifyCard(${project.id},'deliv')">Modify Date</button>`;
+      if(project&&row.lbl==='Radar Design Due')mod=`<button class="modify-pill" onclick="event.stopPropagation();toggleModifyCard(${project.id},'design')">Modify Date</button>`;
+      h+=`<div class="tl-row"><div class="tl-dot ${row.col}"></div><i class="ti ${row.ico} tl-ico"></i><span class="tl-lbl">${row.lbl}</span><span class="tl-dt">${fmtLong(row.date)}${mod}</span>${g}</div>`;
     });
     h+=`</div>`;
     h+=renderGantt(lidar,r.delivDate,r.designDue,install,s);
   }
-  if(project)h+=renderTimelineRequestBox(project,r);
+  if(project)h+=renderModifyCards(project,r);
   container.innerHTML=h;
 }
 
@@ -927,7 +1004,7 @@ function renderFilterBtns(rows){
 function renderProjects(){
   const wrap=document.getElementById('proj-table-wrap');
   if(!projects.length){document.getElementById('multi-dashboard').style.display='none';wrap.innerHTML='<div class="empty-state">No projects yet. Add one above.</div>';document.getElementById('filter-row').innerHTML='Filter: <button class="filter-btn active all" onclick="filterProjects(\'all\')">All (0)</button>';updateBulkBar();return;}
-  const allRows=projects.map(p=>({...p,r:p.install?schedule(p.lidar,p.install):{status:'pending',delivDate:null,designDue:null,callouts:[],oooWarning:null}}));
+  const allRows=projects.map(p=>({...p,r:activeScheduleForProject(p)}));
   renderDashboard(allRows);renderFilterBtns(allRows);
   let rows=[...allRows];
   if(projFilter!=='all')rows=rows.filter(p=>p.r.status===projFilter);
@@ -988,7 +1065,7 @@ function projRow(p){
     <td>${delivCell}</td>
     <td class="hide-mobile">${designCell}</td>
     <td class="hide-mobile">${installCell}</td>
-    <td><span class="status-pill ${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span>${hasPendingRequest(p)?'<span class="request-pill">Pending approval</span>':''}</td>
+    <td><span class="status-pill ${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span>${requestBadge(p)}</td>
     <td style="position:relative">
       <div class="action-menu-wrap">
         <button class="action-dots" onclick="event.stopPropagation();toggleMenu(${p.id})" title="Actions">&#8942;</button>
@@ -1125,7 +1202,7 @@ setupDateField('ooo-start','cal-ooo-start');setupDateField('ooo-end','cal-ooo-en
 function printAll(){
   const pe=document.getElementById('print-expanded');
   if(!projects.length){document.body.classList.add('print-single');window.print();setTimeout(()=>document.body.classList.remove('print-single'),500);return}
-  const allRows=projects.map(p=>({...p,r:p.install?schedule(p.lidar,p.install):{status:'pending',delivDate:null,designDue:null,callouts:[],oooWarning:null}}));
+  const allRows=projects.map(p=>({...p,r:activeScheduleForProject(p)}));
   let rows=[...allRows];
   if(projSort==='deliv')rows.sort((a,b)=>(a.r.delivDate||new Date(9999,0))-(b.r.delivDate||new Date(9999,0)));
   else if(projSort==='status')rows.sort((a,b)=>STATUS_ORDER[a.r.status]-STATUS_ORDER[b.r.status]);
@@ -1142,7 +1219,7 @@ function printAll(){
 // ═══════════════════════════════════════
 // Tabs + Reset all
 // ═══════════════════════════════════════
-function switchTab(t){['single','multi','ooo'].forEach(p=>{document.getElementById('pane-'+p).style.display=p===t?'block':'none';document.getElementById('tab-'+p).classList.toggle('active',p===t);});if(t==='multi')renderProjects();}
+function switchTab(t){['multi','single','ooo','approvals'].forEach(p=>{const pane=document.getElementById('pane-'+p),tab=document.getElementById('tab-'+p);if(pane)pane.style.display=p===t?'block':'none';if(tab)tab.classList.toggle('active',p===t);});if(t==='multi')renderProjects();if(t==='approvals')renderApprovals();}
 async function resetAll(){if(!confirm('Reset all projects and OOO blocks?'))return;const pids=projects.map(p=>p.id),oids=oooBlocks.map(b=>b.id);projects=[];oooBlocks=[];expandedRow=null;lastResult=null;selectedIds.clear();await Promise.all([deleteRemote('nv5_projects',pids),deleteRemote('nv5_ooo_blocks',oids)]);resetSingle();renderProjects();renderOOO();showToast('All shared data cleared.');}
 
 // ═══════════════════════════════════════
