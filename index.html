@@ -440,7 +440,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 
 
 
-/* Layout refinement v9: align preview with calendar, move submit under Gantt, remove Gantt scrolling */
+/* Layout refinement v10: align preview with calendar, move submit under Gantt, remove preview extra text/scrolling */
 .mod-card.open{
   display:grid;
   grid-template-columns:minmax(0,35%) minmax(0,65%);
@@ -451,70 +451,85 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .mod-card.open>div:first-of-type{grid-column:1/-1}
 .mod-card.open .request-grid{
   grid-column:1;
-  grid-row:3;
+  grid-row:3 / span 2;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  margin-top:8px;
 }
 .mod-card.open .preview-gantt-card{
   grid-column:2;
   grid-row:3;
-  margin-top:62px;
+  margin-top:72px; /* lines preview top with the calendar top, below the date input */
   position:static;
   top:auto;
-  overflow:visible;
+  overflow:visible!important;
+  align-self:start;
 }
 .mod-card.open .request-actions{
   grid-column:2;
   grid-row:4;
   margin-top:8px;
-  align-self:start;
+  align-self:start; /* button starts at the bottom of the left calendar column */
+  justify-content:flex-start;
 }
 .mod-card.open .request-actions .btn.primary{
   min-width:160px;
   justify-content:center;
 }
-.gantt-wrap{
-  overflow:visible;
-}
-.gantt-rows{
-  gap:8px;
-}
-.gantt-track{
-  height:24px;
-}
-.gantt-row{
-  align-items:center;
-}
-.gantt-bar{
-  min-height:24px;
-}
-.preview-gantt-card .gantt-wrap,
-.mod-card.open .preview-gantt-card .gantt-wrap{
-  overflow:visible;
-}
-.preview-gantt-card .gantt,
-.mod-card.open .preview-gantt-card .gantt{
-  min-width:0;
+.mod-card.open .cal-popup.preview-docked{
   width:100%;
-}
-.preview-gantt-card .gantt-rows,
-.mod-card.open .preview-gantt-card .gantt-rows{
-  gap:9px;
-}
-.preview-gantt-card .gantt-track,
-.mod-card.open .preview-gantt-card .gantt-track{
-  height:30px;
-}
-.preview-gantt-card .gantt-bar,
-.mod-card.open .preview-gantt-card .gantt-bar{
-  min-height:30px;
+  max-width:none;
+  padding:12px;
+  margin-top:10px;
+  overflow:visible!important;
 }
 .mod-card.open .cal-popup.preview-docked .cal-preview-note{
   display:none!important;
   min-height:0;
-  margin-top:0;
+  margin:0;
+  padding:0;
 }
 .mod-card.open .cal-popup.preview-docked .cal-preview-legend{
   min-height:0;
   padding-bottom:0;
+}
+.gantt-wrap,
+.gantt,
+.gantt-rows,
+.preview-gantt-card,
+.preview-gantt-card .gantt-wrap,
+.preview-gantt-card .gantt,
+.mod-card.open .preview-gantt-card .gantt-wrap,
+.mod-card.open .preview-gantt-card .gantt{
+  overflow:visible!important;
+}
+.gantt-rows,
+.preview-gantt-card .gantt-rows,
+.mod-card.open .preview-gantt-card .gantt-rows{
+  gap:9px;
+}
+.gantt-track,
+.preview-gantt-card .gantt-track,
+.mod-card.open .preview-gantt-card .gantt-track{
+  height:30px;
+}
+.gantt-bar,
+.preview-gantt-card .gantt-bar,
+.mod-card.open .preview-gantt-card .gantt-bar{
+  min-height:30px;
+  line-height:30px;
+}
+.preview-gantt-card .gantt,
+.mod-card.open .preview-gantt-card .gantt{
+  min-width:0!important;
+  width:100%!important;
+}
+.preview-gantt-card .gantt-row-lbl,
+.mod-card.open .preview-gantt-card .gantt-row-lbl{
+  width:132px;
+  white-space:normal;
+  line-height:1.25;
 }
 @media(max-width:980px){
   .mod-card.open{display:block}
@@ -1483,12 +1498,9 @@ function renderPreviewGantt(projectId,kind,deliv,design,invalid,source='selected
     }
     target.className='preview-gantt-card';
     const calc=schedule(p.lidar,p.install);
-    const delivDelta=diff(calc.delivDate,deliv);
-    const designDelta=diff(calc.designDue,design);
-    const deltaText=`Deliverable ${delivDelta===0?'unchanged':(delivDelta>0?`moves ${delivDelta}d later`:`moves ${Math.abs(delivDelta)}d earlier`)} · Design ${designDelta===0?'unchanged':(designDelta>0?`moves ${designDelta}d later`:`moves ${Math.abs(designDelta)}d earlier`)}`;
     const pill=source==='hover'?'<span class="preview-state-pill hover">Hover preview</span>':'<span class="preview-state-pill">Selected proposal</span>';
     const help=source==='hover'?'Click the hovered date to lock it as the request.':'Hover to explore alternatives. The chart stays locked until you click another date or edit the input.';
-    target.innerHTML=`<div class="preview-gantt-title">Proposed Gantt preview ${pill}</div><div class="preview-instruction">${help}</div><div style="font-size:12px;color:var(--t2);margin:8px 0 6px">${fmtShort(p.lidar)} → <strong>${fmtShort(deliv)}</strong> → <strong>${fmtShort(design)}</strong> → ${fmtShort(p.install)}</div>${renderGantt(p.lidar,deliv,design,p.install,calc.status)}<div class="compare-delta">${deltaText}</div>`;
+    target.innerHTML=`<div class="preview-gantt-title">Proposed Gantt preview ${pill}</div><div class="preview-instruction">${help}</div>${renderGantt(p.lidar,deliv,design,p.install,calc.status)}`;
   });
 }
 function updateProposalPreview(projectId,kind,proposalDate=null,calId=null,source='selected'){
