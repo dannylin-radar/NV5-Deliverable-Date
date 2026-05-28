@@ -378,31 +378,31 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 }
 
 
-/* Layout refinement v7: larger side-by-side calendar + Gantt, less dead space */
+/* Layout refinement v8: balanced side-by-side calendar + live Gantt */
 .mod-card.open{
   display:grid;
-  grid-template-columns:minmax(430px,480px) minmax(0,1fr);
-  gap:8px;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:12px;
   align-items:start;
 }
 .mod-card.open .request-grid{grid-template-columns:1fr;margin-top:8px}
-.mod-card.open .request-grid .field input{font-size:18px;padding:10px 12px}
+.mod-card.open .request-grid .field input{font-size:14px;padding:8px 10px}
 .mod-card.open .request-actions{margin-top:10px}
 .mod-card.open .cal-popup.preview-docked{
   width:100%;
   max-width:none;
-  padding:14px;
+  padding:10px;
   margin-top:10px;
 }
-.mod-card.open .cal-popup.preview-docked .cal-header{margin-bottom:12px}
-.mod-card.open .cal-popup.preview-docked .cal-mlbl{font-size:16px}
-.mod-card.open .cal-popup.preview-docked .cal-nav{font-size:18px;padding:4px 10px}
-.mod-card.open .cal-popup.preview-docked .cal-grid{gap:4px}
-.mod-card.open .cal-popup.preview-docked .cal-dn{font-size:11px;padding:5px 0}
+.mod-card.open .cal-popup.preview-docked .cal-header{margin-bottom:8px}
+.mod-card.open .cal-popup.preview-docked .cal-mlbl{font-size:14px}
+.mod-card.open .cal-popup.preview-docked .cal-nav{font-size:16px;padding:3px 8px}
+.mod-card.open .cal-popup.preview-docked .cal-grid{gap:3px}
+.mod-card.open .cal-popup.preview-docked .cal-dn{font-size:10px;padding:4px 0}
 .mod-card.open .cal-popup.preview-docked .cal-d{
-  font-size:14px;
-  min-height:36px;
-  padding:8px 3px 10px;
+  font-size:12px;
+  min-height:30px;
+  padding:6px 2px 8px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -410,22 +410,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .mod-card.open .cal-popup.preview-docked .cal-d.preview-lidar-deliv::after,
 .mod-card.open .cal-popup.preview-docked .cal-d.preview-deliv-design::after,
 .mod-card.open .cal-popup.preview-docked .cal-d.preview-design-install::after{
-  left:5px;
-  right:5px;
+  left:4px;
+  right:4px;
   bottom:3px;
-  height:4px;
+  height:3px;
 }
-.mod-card.open .cal-preview-legend{font-size:10px;min-height:66px}
-.mod-card.open .cal-preview-note{font-size:11px;line-height:1.5}
+.mod-card.open .cal-preview-legend{font-size:9px;min-height:58px}
+.mod-card.open .cal-preview-note{font-size:10px;line-height:1.45}
 .mod-card.open .preview-gantt-card{
-  padding:16px;
+  padding:12px;
   min-width:0;
+  width:100%;
 }
 .mod-card.open .preview-gantt-card .gantt-wrap{overflow-x:hidden}
 .mod-card.open .preview-gantt-card .gantt{min-width:0;width:100%}
-.mod-card.open .preview-gantt-card .gantt-row-lbl{width:130px;font-size:11px}
-.mod-card.open .preview-gantt-card .gantt-track{height:28px}
-.mod-card.open .preview-gantt-card .gantt-bar{font-size:11px}
+.mod-card.open .preview-gantt-card .gantt-row-lbl{width:112px;font-size:10px}
+.mod-card.open .preview-gantt-card .gantt-track{height:24px}
+.mod-card.open .preview-gantt-card .gantt-bar{font-size:10px}
 @media(max-width:980px){
   .mod-card.open{display:block}
   .mod-card.open .preview-gantt-card{position:static;margin-top:10px}
