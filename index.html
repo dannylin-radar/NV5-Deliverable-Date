@@ -261,6 +261,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 
 
 .preview-gantt-card{margin-top:10px;padding:10px;border:0.5px solid var(--bd);border-radius:var(--rad-lg);background:var(--card2)}
+.mod-card.open{display:grid;grid-template-columns:minmax(260px,420px) minmax(360px,1fr);gap:14px;align-items:start}
+.mod-card.open>strong,.mod-card.open>div:first-of-type{grid-column:1/-1}
+.mod-card.open .request-grid,.mod-card.open .request-actions{grid-column:1}
+.mod-card.open .preview-gantt-card{grid-column:2;grid-row:3 / span 3;margin-top:0;position:sticky;top:12px}
+.mod-card.open .cal-popup.preview-docked{grid-column:1}
+@media(max-width:900px){.mod-card.open{display:block}.mod-card.open .preview-gantt-card{position:static;margin-top:10px}}
 .preview-gantt-card.invalid{border-color:rgba(155,28,28,.35);background:var(--red-lt);color:var(--red-dk)}
 .preview-gantt-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:6px}
 .preview-gantt-card.invalid .preview-gantt-title{color:var(--red-dk)}
@@ -885,8 +891,20 @@ function activeScheduleForProject(p){
 }
 function toggleModifyCard(projectId,kind){
   const id=`mod-${kind}-${projectId}`;
-  document.querySelectorAll('.mod-card.open').forEach(el=>{if(el.id!==id)el.classList.remove('open')});
-  const el=document.getElementById(id);if(el)el.classList.toggle('open');
+  document.querySelectorAll('.mod-card.open').forEach(el=>{
+    if(el.id!==id){
+      el.classList.remove('open');
+      el.querySelectorAll('.cal-popup').forEach(p=>hideCalendarPopup(p));
+    }
+  });
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.classList.toggle('open');
+  if(el.classList.contains('open')){
+    openPreviewCalendar(projectId,kind);
+  } else {
+    el.querySelectorAll('.cal-popup').forEach(p=>hideCalendarPopup(p));
+  }
 }
 function requestOneDateChange(projectId,kind){
   const p=getProjectById(projectId);if(!p||!p.install){showToast('Install date is required before requesting timeline changes.');return;}
@@ -1371,7 +1389,18 @@ function buildCal(id,selDate,onPick,previewOpts=null){
   el.querySelector(`#${id}-p`).onclick=e=>{e.stopPropagation();if(--cs.month<0){cs.month=11;cs.year--}buildCal(id,selDate,onPick,previewOpts)};
   el.querySelector(`#${id}-n`).onclick=e=>{e.stopPropagation();if(++cs.month>11){cs.month=0;cs.year++}buildCal(id,selDate,onPick,previewOpts)};
   el.querySelectorAll('.cal-d:not(.emp)').forEach(cell=>{
-    cell.onclick=e=>{e.stopPropagation();onPick(new Date(+cell.dataset.ts));el.classList.add('hidden')};
+    cell.onclick=e=>{
+      e.stopPropagation();
+      const picked=new Date(+cell.dataset.ts);
+      onPick(picked);
+      if(!previewOpts)el.classList.add('hidden');
+      else{
+        buildCal(id,picked,onPick,previewOpts);
+        applyCalendarGanttPreview(id,picked,previewOpts);
+        el.classList.remove('hidden');
+        el.classList.add('preview-docked');
+      }
+    };
     if(previewOpts){
       cell.onmouseenter=()=>applyCalendarGanttPreview(id,new Date(+cell.dataset.ts),previewOpts);
       cell.onmouseleave=()=>{};
@@ -1395,21 +1424,47 @@ function hideCalendarPopup(pop){
   if(!pop)return;
   pop.classList.add('hidden');pop.classList.remove('preview-floating','preview-docked');pop.style.left='';pop.style.top='';pop.style.width='';
 }
+function openPreviewCalendar(projectId,kind){
+  const inputId=`mod-${kind}-input-${projectId}`;
+  const calId=`cal-mod-${kind}-${projectId}`;
+  const inp=document.getElementById(inputId),pop=document.getElementById(calId);
+  if(!inp||!pop)return;
+  const cur=parseInput(inp.value);
+  const previewOpts={projectId,kind};
+  buildCal(calId,cur,d=>{
+    inp.value=fmtInput(d);
+    updateProposalPreview(projectId,kind,d,calId);
+  },previewOpts);
+  pop.classList.remove('hidden');
+  positionCalendarPopup(inp,pop,previewOpts);
+  updateProposalPreview(projectId,kind,cur,calId);
+}
 function setupDateField(inputId,calId,onChange,previewOpts=null){
   const inp=document.getElementById(inputId),pop=document.getElementById(calId);if(!inp||!pop)return;
   inp.addEventListener('input',()=>{const d=parseInput(inp.value);if(d&&onChange)onChange(d);if(previewOpts)updateProposalPreview(previewOpts.projectId,previewOpts.kind,d,null)});
   inp.addEventListener('blur',()=>{const d=parseInput(inp.value);if(!d)inp.value=''});
   inp.addEventListener('click',e=>{
     e.stopPropagation();
-    document.querySelectorAll('.cal-popup').forEach(p=>hideCalendarPopup(p));
+    document.querySelectorAll('.cal-popup').forEach(p=>{
+      if(!previewOpts || !p.closest('.mod-card.open'))hideCalendarPopup(p);
+    });
     const cur=parseInput(inp.value);
-    buildCal(calId,cur,d=>{inp.value=fmtInput(d);if(onChange)onChange(d);if(previewOpts)updateProposalPreview(previewOpts.projectId,previewOpts.kind,d,null);hideCalendarPopup(pop)},previewOpts);
+    buildCal(calId,cur,d=>{
+      inp.value=fmtInput(d);
+      if(onChange)onChange(d);
+      if(previewOpts)updateProposalPreview(previewOpts.projectId,previewOpts.kind,d,calId);
+      else hideCalendarPopup(pop);
+    },previewOpts);
     pop.classList.remove('hidden');
     if(previewOpts)updateProposalPreview(previewOpts.projectId,previewOpts.kind,cur,calId);
     requestAnimationFrame(()=>positionCalendarPopup(inp,pop,previewOpts));
   });
 }
-document.addEventListener('click',()=>document.querySelectorAll('.cal-popup').forEach(p=>hideCalendarPopup(p)));
+document.addEventListener('click',()=>document.querySelectorAll('.cal-popup').forEach(p=>{
+  // Keep modify-date preview calendars docked while users scroll/click the live Gantt.
+  if(p.classList.contains('preview-docked'))return;
+  hideCalendarPopup(p);
+}));
 window.addEventListener('resize',()=>document.querySelectorAll('.cal-popup.preview-floating:not(.hidden)').forEach(pop=>{
   const inputId=pop.id.replace('cal-','');
   const inp=document.getElementById(inputId);
