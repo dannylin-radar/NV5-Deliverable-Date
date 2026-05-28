@@ -186,6 +186,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 /* Calendar Gantt hover preview */
 .cal-preview-legend{display:block;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--bd);font-size:9px;color:var(--t3);line-height:1.45;min-height:54px}
 .cal-popup.previewing .cal-preview-legend{display:block}
+.cal-popup.preview-floating{position:fixed;left:auto;top:auto;width:312px;max-width:calc(100vw - 24px);z-index:900}
+.cal-popup.preview-floating .cal-preview-note{max-width:none}
 .cal-preview-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px}
 .cal-preview-key{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
 .cal-preview-swatch{width:14px;height:4px;border-radius:4px;display:inline-block}
@@ -332,6 +334,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 
   /* Cal popup - full width on mobile */
   .cal-popup{width:100%;left:0;right:0}
+  .cal-popup.preview-floating{width:calc(100vw - 24px)!important;left:12px!important;right:auto;top:84px!important;max-height:calc(100vh - 108px);overflow:auto}
 }
 @media print{
   body{background:#fff;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -1335,7 +1338,7 @@ function paintCalendarGanttPreview(calId,hoverDate,data){
   const note=document.getElementById(calId+'-preview-note');
   if(note){
     if(invalid){note.classList.add('invalid');note.textContent='Invalid preview. Check the proposed Deliverable / Design / Install order.';}
-    else{note.classList.remove('invalid');note.textContent=`Preview: Deliverable ${fmtShort(deliv)} · Design ${fmtShort(design)} · Install ${fmtShort(p.install)}`;}
+    else{note.classList.remove('invalid');note.textContent=`Preview: Deliverable ${fmtShort(deliv)} · Design ${fmtShort(design)} · Install ${fmtShort(p.install)} (${diff(p.lidar,deliv)}cd / ${diff(deliv,design)}cd / ${diff(design,p.install)}cd)`;}
   }
 }
 function applyCalendarGanttPreview(calId,hoverDate,opts){
@@ -1372,13 +1375,48 @@ function buildCal(id,selDate,onPick,previewOpts=null){
     }
   });
 }
+function positionCalendarPopup(inp,pop,previewOpts=null){
+  if(!inp||!pop)return;
+  if(!previewOpts){pop.classList.remove('preview-floating');pop.style.left='';pop.style.top='';return;}
+  pop.classList.add('preview-floating');
+  const r=inp.getBoundingClientRect();
+  const vw=window.innerWidth, vh=window.innerHeight, gap=10, pad=12;
+  const w=Math.min(312,vw-pad*2);
+  pop.style.width=w+'px';
+  let left;
+  if(r.right+gap+w<=vw-pad)left=r.right+gap;
+  else if(r.left-gap-w>=pad)left=r.left-gap-w;
+  else left=Math.max(pad,Math.min(r.left,vw-w-pad));
+  let top=r.top;
+  const h=pop.offsetHeight||360;
+  if(top+h>vh-pad)top=Math.max(pad,vh-h-pad);
+  pop.style.left=Math.round(left)+'px';
+  pop.style.top=Math.round(top)+'px';
+}
+function hideCalendarPopup(pop){
+  if(!pop)return;
+  pop.classList.add('hidden');pop.classList.remove('preview-floating');pop.style.left='';pop.style.top='';pop.style.width='';
+}
 function setupDateField(inputId,calId,onChange,previewOpts=null){
   const inp=document.getElementById(inputId),pop=document.getElementById(calId);if(!inp||!pop)return;
   inp.addEventListener('input',()=>{const d=parseInput(inp.value);if(d&&onChange)onChange(d);if(previewOpts)updateProposalPreview(previewOpts.projectId,previewOpts.kind,d,null)});
   inp.addEventListener('blur',()=>{const d=parseInput(inp.value);if(!d)inp.value=''});
-  inp.addEventListener('click',e=>{e.stopPropagation();document.querySelectorAll('.cal-popup').forEach(p=>p.classList.add('hidden'));const cur=parseInput(inp.value);buildCal(calId,cur,d=>{inp.value=fmtInput(d);if(onChange)onChange(d);if(previewOpts)updateProposalPreview(previewOpts.projectId,previewOpts.kind,d,null);pop.classList.add('hidden')},previewOpts);pop.classList.remove('hidden');if(previewOpts)updateProposalPreview(previewOpts.projectId,previewOpts.kind,cur,calId);});
+  inp.addEventListener('click',e=>{
+    e.stopPropagation();
+    document.querySelectorAll('.cal-popup').forEach(p=>hideCalendarPopup(p));
+    const cur=parseInput(inp.value);
+    buildCal(calId,cur,d=>{inp.value=fmtInput(d);if(onChange)onChange(d);if(previewOpts)updateProposalPreview(previewOpts.projectId,previewOpts.kind,d,null);hideCalendarPopup(pop)},previewOpts);
+    pop.classList.remove('hidden');
+    if(previewOpts)updateProposalPreview(previewOpts.projectId,previewOpts.kind,cur,calId);
+    requestAnimationFrame(()=>positionCalendarPopup(inp,pop,previewOpts));
+  });
 }
-document.addEventListener('click',()=>document.querySelectorAll('.cal-popup').forEach(p=>p.classList.add('hidden')));
+document.addEventListener('click',()=>document.querySelectorAll('.cal-popup').forEach(p=>hideCalendarPopup(p)));
+window.addEventListener('resize',()=>document.querySelectorAll('.cal-popup.preview-floating:not(.hidden)').forEach(pop=>{
+  const inputId=pop.id.replace('cal-','');
+  const inp=document.getElementById(inputId);
+  positionCalendarPopup(inp,pop,true);
+}));
 setupDateField('s-lidar','cal-s-lidar');setupDateField('s-install','cal-s-install');
 setupDateField('m-lidar','cal-m-lidar');setupDateField('m-install','cal-m-install');
 setupDateField('ooo-start','cal-ooo-start');setupDateField('ooo-end','cal-ooo-end');setupDateField('ooo-day','cal-ooo-day');
