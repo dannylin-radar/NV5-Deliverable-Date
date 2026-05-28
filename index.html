@@ -183,6 +183,29 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--t1);color:#fff;font-size:12px;font-weight:500;padding:8px 16px;border-radius:20px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:999}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+/* Calendar Gantt hover preview */
+.cal-preview-legend{display:none;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--bd);font-size:9px;color:var(--t3);line-height:1.45}
+.cal-popup.previewing .cal-preview-legend{display:block}
+.cal-preview-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.cal-preview-key{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.cal-preview-swatch{width:14px;height:4px;border-radius:4px;display:inline-block}
+.cal-preview-note{font-size:10px;color:var(--t2);margin-top:4px}
+.cal-preview-note.invalid{color:var(--red-dk);font-weight:600}
+.cal-d{position:relative;overflow:hidden}
+.cal-d.preview-lidar-deliv::after,
+.cal-d.preview-deliv-design::after,
+.cal-d.preview-design-install::after{content:'';position:absolute;left:3px;right:3px;bottom:2px;height:3px;border-radius:6px}
+.cal-d.preview-lidar-deliv::after{background:var(--green)}
+.cal-d.preview-deliv-design::after{background:var(--orange)}
+.cal-d.preview-design-install::after{background:var(--bd2)}
+.cal-d.preview-hover{outline:2px solid var(--t1);outline-offset:-2px;font-weight:700}
+.cal-d.preview-invalid{background:var(--red-lt)!important;color:var(--red-dk)!important}
+.cal-d.preview-ms-lidar,.cal-d.preview-ms-deliv,.cal-d.preview-ms-design,.cal-d.preview-ms-install{font-weight:800}
+.cal-d.preview-ms-lidar::before,.cal-d.preview-ms-deliv::before,.cal-d.preview-ms-design::before,.cal-d.preview-ms-install::before{content:'';position:absolute;top:2px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--t1)}
+.cal-d.preview-ms-deliv::before{background:var(--green)}
+.cal-d.preview-ms-design::before{background:var(--orange)}
+.cal-d.preview-ms-install::before{background:var(--t2)}
+
 /* 3-dot action menu */
 .action-menu-wrap{position:relative;display:inline-block}
 .action-dots{background:none;border:none;cursor:pointer;font-size:16px;color:var(--t3);padding:2px 6px;border-radius:var(--rad);line-height:1;font-family:'DM Sans',sans-serif}
@@ -893,8 +916,8 @@ function renderModifyCards(p,r){
   if(hasApprovedRequest(p)){
     h+=`<div class="request-card" style="background:var(--green-lt);border-color:rgba(26,127,90,.3);color:var(--green-dk)"><strong>Request Approved</strong><div style="margin-top:6px">Approved NV5 Deliverable Due: <strong>${fmtShort(p.approvedDelivDate)}</strong><br>Approved Radar Design Due: <strong>${fmtShort(p.approvedDesignDue)}</strong></div></div>`;
   }
-  h+=`<div class="mod-card" id="mod-deliv-${p.id}"><strong>Modify NV5 Deliverable Due</strong><div class="request-grid"><div class="field" style="position:relative"><label>Select new date</label><input type="text" id="mod-deliv-input-${p.id}" value="${fmtInput(hasPendingRequest(p)?p.requestedDelivDate:r.delivDate)}" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-mod-deliv-${p.id}"></div></div></div><div class="request-actions"><button class="btn primary" onclick="event.stopPropagation();requestOneDateChange(${p.id},'deliv')">Submit request</button></div></div>`;
-  h+=`<div class="mod-card" id="mod-design-${p.id}"><strong>Modify Radar Design Due</strong><div class="request-grid"><div class="field" style="position:relative"><label>Select new date</label><input type="text" id="mod-design-input-${p.id}" value="${fmtInput(hasPendingRequest(p)?p.requestedDesignDue:r.designDue)}" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-mod-design-${p.id}"></div></div></div><div class="request-actions"><button class="btn primary" onclick="event.stopPropagation();requestOneDateChange(${p.id},'design')">Submit request</button></div></div>`;
+  h+=`<div class="mod-card" id="mod-deliv-${p.id}"><strong>Modify NV5 Deliverable Due</strong><div style="font-size:10px;color:var(--t3);margin-top:3px">Hover dates in the calendar to preview the timeline as mini Gantt bands.</div><div class="request-grid"><div class="field" style="position:relative"><label>Select new date</label><input type="text" id="mod-deliv-input-${p.id}" value="${fmtInput(hasPendingRequest(p)?p.requestedDelivDate:r.delivDate)}" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-mod-deliv-${p.id}"></div></div></div><div class="request-actions"><button class="btn primary" onclick="event.stopPropagation();requestOneDateChange(${p.id},'deliv')">Submit request</button></div></div>`;
+  h+=`<div class="mod-card" id="mod-design-${p.id}"><strong>Modify Radar Design Due</strong><div style="font-size:10px;color:var(--t3);margin-top:3px">Hover dates in the calendar to preview the timeline as mini Gantt bands.</div><div class="request-grid"><div class="field" style="position:relative"><label>Select new date</label><input type="text" id="mod-design-input-${p.id}" value="${fmtInput(hasPendingRequest(p)?p.requestedDesignDue:r.designDue)}" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-mod-design-${p.id}"></div></div></div><div class="request-actions"><button class="btn primary" onclick="event.stopPropagation();requestOneDateChange(${p.id},'design')">Submit request</button></div></div>`;
   return h;
 }
 function renderApprovals(){
@@ -948,8 +971,8 @@ function renderResult(r,lidar,install,name,container,project=null){
   if(project)h+=renderModifyCards(project,r);
   container.innerHTML=h;
   if(project){
-    setupDateField('mod-deliv-input-'+project.id,'cal-mod-deliv-'+project.id);
-    setupDateField('mod-design-input-'+project.id,'cal-mod-design-'+project.id);
+    setupDateField('mod-deliv-input-'+project.id,'cal-mod-deliv-'+project.id,null,{projectId:project.id,kind:'deliv'});
+    setupDateField('mod-design-input-'+project.id,'cal-mod-design-'+project.id,null,{projectId:project.id,kind:'design'});
   }
 }
 
@@ -1214,11 +1237,56 @@ function renderOOO(){
     </div>`).join('');
 }
 
+
+// ═══════════════════════════════════════
+// Calendar Gantt hover preview
+// ═══════════════════════════════════════
+function sameDay(a,b){return a&&b&&dateKey(a)===dateKey(b)}
+function inRange(d,a,b){return a&&b&&d>=a&&d<=b}
+function clearCalendarGanttPreview(calId){
+  const el=document.getElementById(calId);if(!el)return;
+  el.classList.remove('previewing');
+  el.querySelectorAll('.cal-d').forEach(c=>{
+    c.classList.remove('preview-lidar-deliv','preview-deliv-design','preview-design-install','preview-hover','preview-invalid','preview-ms-lidar','preview-ms-deliv','preview-ms-design','preview-ms-install');
+  });
+  const note=document.getElementById(calId+'-preview-note');
+  if(note){note.classList.remove('invalid');note.textContent='Hover a date to preview the timeline.';}
+}
+function applyCalendarGanttPreview(calId,hoverDate,opts){
+  const el=document.getElementById(calId);if(!el||!opts)return;
+  clearCalendarGanttPreview(calId);
+  const p=getProjectById(opts.projectId);if(!p||!p.install)return;
+  const calc=schedule(p.lidar,p.install);
+  if(!calc.delivDate||!calc.designDue)return;
+  const deliv=opts.kind==='deliv'?hoverDate:(p.requestedDelivDate||p.approvedDelivDate||calc.delivDate);
+  const design=opts.kind==='design'?hoverDate:(p.requestedDesignDue||p.approvedDesignDue||calc.designDue);
+  const invalid=!deliv||!design||deliv<=p.lidar||design<=deliv||design>=p.install;
+  el.classList.add('previewing');
+  el.querySelectorAll('.cal-d:not(.emp)').forEach(cell=>{
+    const d=new Date(+cell.dataset.ts);
+    if(inRange(d,p.lidar,deliv))cell.classList.add('preview-lidar-deliv');
+    else if(inRange(d,deliv,design))cell.classList.add('preview-deliv-design');
+    else if(inRange(d,design,p.install))cell.classList.add('preview-design-install');
+    if(sameDay(d,p.lidar))cell.classList.add('preview-ms-lidar');
+    if(sameDay(d,deliv))cell.classList.add('preview-ms-deliv');
+    if(sameDay(d,design))cell.classList.add('preview-ms-design');
+    if(sameDay(d,p.install))cell.classList.add('preview-ms-install');
+    if(sameDay(d,hoverDate))cell.classList.add('preview-hover');
+  });
+  const hoverCell=[...el.querySelectorAll('.cal-d:not(.emp)')].find(c=>sameDay(new Date(+c.dataset.ts),hoverDate));
+  if(invalid&&hoverCell)hoverCell.classList.add('preview-invalid');
+  const note=document.getElementById(calId+'-preview-note');
+  if(note){
+    if(invalid){note.classList.add('invalid');note.textContent='Invalid preview: deliverable must be after LiDAR, design due after deliverable, and design due before install.';}
+    else{note.classList.remove('invalid');note.textContent=`Preview: Deliverable ${fmtShort(deliv)} · Design ${fmtShort(design)} · Install ${fmtShort(p.install)}`;}
+  }
+}
+
 // ═══════════════════════════════════════
 // Calendar
 // ═══════════════════════════════════════
 function getCS(id){if(!calStates[id]){const t=today();calStates[id]={year:t.getFullYear(),month:t.getMonth()}}return calStates[id]}
-function buildCal(id,selDate,onPick){
+function buildCal(id,selDate,onPick,previewOpts=null){
   const el=document.getElementById(id);if(!el)return;
   const cs=getCS(id),t=today(),y=cs.year,m=cs.month;
   const first=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate();
@@ -1226,16 +1294,26 @@ function buildCal(id,selDate,onPick){
   DNAMES.forEach(d=>{h+=`<div class="cal-dn">${d}</div>`});
   for(let i=0;i<first;i++)h+=`<div class="cal-d emp"></div>`;
   for(let i=1;i<=dim;i++){const d=new Date(y,m,i);d.setHours(0,0,0,0);let c="cal-d";if(selDate&&d.getTime()===selDate.getTime())c+=" sel";if(d.getTime()===t.getTime())c+=" tod";if(isOOO(d))c+=" ooo";h+=`<div class="${c}" data-ts="${d.getTime()}">${i}</div>`;}
-  h+="</div>";el.innerHTML=h;
-  el.querySelector(`#${id}-p`).onclick=e=>{e.stopPropagation();if(--cs.month<0){cs.month=11;cs.year--}buildCal(id,selDate,onPick)};
-  el.querySelector(`#${id}-n`).onclick=e=>{e.stopPropagation();if(++cs.month>11){cs.month=0;cs.year++}buildCal(id,selDate,onPick)};
-  el.querySelectorAll('.cal-d:not(.emp)').forEach(cell=>{cell.onclick=e=>{e.stopPropagation();onPick(new Date(+cell.dataset.ts));el.classList.add('hidden')}});
+  h+="</div>";
+  if(previewOpts){
+    h+=`<div class="cal-preview-legend"><div class="cal-preview-row"><span class="cal-preview-key"><span class="cal-preview-swatch" style="background:var(--green)"></span>LiDAR → Deliverable</span><span class="cal-preview-key"><span class="cal-preview-swatch" style="background:var(--orange)"></span>Deliverable → Design</span><span class="cal-preview-key"><span class="cal-preview-swatch" style="background:var(--bd2)"></span>Design → Install</span></div><div class="cal-preview-note" id="${id}-preview-note">Hover a date to preview the timeline.</div></div>`;
+  }
+  el.innerHTML=h;
+  el.querySelector(`#${id}-p`).onclick=e=>{e.stopPropagation();if(--cs.month<0){cs.month=11;cs.year--}buildCal(id,selDate,onPick,previewOpts)};
+  el.querySelector(`#${id}-n`).onclick=e=>{e.stopPropagation();if(++cs.month>11){cs.month=0;cs.year++}buildCal(id,selDate,onPick,previewOpts)};
+  el.querySelectorAll('.cal-d:not(.emp)').forEach(cell=>{
+    cell.onclick=e=>{e.stopPropagation();onPick(new Date(+cell.dataset.ts));el.classList.add('hidden')};
+    if(previewOpts){
+      cell.onmouseenter=()=>applyCalendarGanttPreview(id,new Date(+cell.dataset.ts),previewOpts);
+      cell.onmouseleave=()=>clearCalendarGanttPreview(id);
+    }
+  });
 }
-function setupDateField(inputId,calId,onChange){
+function setupDateField(inputId,calId,onChange,previewOpts=null){
   const inp=document.getElementById(inputId),pop=document.getElementById(calId);if(!inp||!pop)return;
   inp.addEventListener('input',()=>{const d=parseInput(inp.value);if(d&&onChange)onChange(d)});
   inp.addEventListener('blur',()=>{const d=parseInput(inp.value);if(!d)inp.value=''});
-  inp.addEventListener('click',e=>{e.stopPropagation();document.querySelectorAll('.cal-popup').forEach(p=>p.classList.add('hidden'));const cur=parseInput(inp.value);buildCal(calId,cur,d=>{inp.value=fmtInput(d);if(onChange)onChange(d);pop.classList.add('hidden')});pop.classList.remove('hidden');});
+  inp.addEventListener('click',e=>{e.stopPropagation();document.querySelectorAll('.cal-popup').forEach(p=>p.classList.add('hidden'));const cur=parseInput(inp.value);buildCal(calId,cur,d=>{inp.value=fmtInput(d);if(onChange)onChange(d);pop.classList.add('hidden')},previewOpts);pop.classList.remove('hidden');});
 }
 document.addEventListener('click',()=>document.querySelectorAll('.cal-popup').forEach(p=>p.classList.add('hidden')));
 setupDateField('s-lidar','cal-s-lidar');setupDateField('s-install','cal-s-install');
