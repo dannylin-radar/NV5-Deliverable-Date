@@ -438,6 +438,90 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
   .mod-card.open .cal-popup.preview-docked{width:100%}
 }
 
+
+
+/* Layout refinement v9: align preview with calendar, move submit under Gantt, remove Gantt scrolling */
+.mod-card.open{
+  display:grid;
+  grid-template-columns:minmax(0,35%) minmax(0,65%);
+  gap:10px 16px;
+  align-items:start;
+}
+.mod-card.open>strong,
+.mod-card.open>div:first-of-type{grid-column:1/-1}
+.mod-card.open .request-grid{
+  grid-column:1;
+  grid-row:3;
+}
+.mod-card.open .preview-gantt-card{
+  grid-column:2;
+  grid-row:3;
+  margin-top:62px;
+  position:static;
+  top:auto;
+  overflow:visible;
+}
+.mod-card.open .request-actions{
+  grid-column:2;
+  grid-row:4;
+  margin-top:8px;
+  align-self:start;
+}
+.mod-card.open .request-actions .btn.primary{
+  min-width:160px;
+  justify-content:center;
+}
+.gantt-wrap{
+  overflow:visible;
+}
+.gantt-rows{
+  gap:8px;
+}
+.gantt-track{
+  height:24px;
+}
+.gantt-row{
+  align-items:center;
+}
+.gantt-bar{
+  min-height:24px;
+}
+.preview-gantt-card .gantt-wrap,
+.mod-card.open .preview-gantt-card .gantt-wrap{
+  overflow:visible;
+}
+.preview-gantt-card .gantt,
+.mod-card.open .preview-gantt-card .gantt{
+  min-width:0;
+  width:100%;
+}
+.preview-gantt-card .gantt-rows,
+.mod-card.open .preview-gantt-card .gantt-rows{
+  gap:9px;
+}
+.preview-gantt-card .gantt-track,
+.mod-card.open .preview-gantt-card .gantt-track{
+  height:30px;
+}
+.preview-gantt-card .gantt-bar,
+.mod-card.open .preview-gantt-card .gantt-bar{
+  min-height:30px;
+}
+.mod-card.open .cal-popup.preview-docked .cal-preview-note{
+  display:none!important;
+  min-height:0;
+  margin-top:0;
+}
+.mod-card.open .cal-popup.preview-docked .cal-preview-legend{
+  min-height:0;
+  padding-bottom:0;
+}
+@media(max-width:980px){
+  .mod-card.open{display:block}
+  .mod-card.open .preview-gantt-card{position:static;margin-top:10px}
+  .mod-card.open .request-actions{margin-top:10px}
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
