@@ -376,6 +376,62 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
   .week2-flag{background:#5C3AA0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
 }
+
+
+/* Layout refinement v7: larger side-by-side calendar + Gantt, less dead space */
+.mod-card.open{
+  display:grid;
+  grid-template-columns:minmax(430px,480px) minmax(0,1fr);
+  gap:8px;
+  align-items:start;
+}
+.mod-card.open .request-grid{grid-template-columns:1fr;margin-top:8px}
+.mod-card.open .request-grid .field input{font-size:18px;padding:10px 12px}
+.mod-card.open .request-actions{margin-top:10px}
+.mod-card.open .cal-popup.preview-docked{
+  width:100%;
+  max-width:none;
+  padding:14px;
+  margin-top:10px;
+}
+.mod-card.open .cal-popup.preview-docked .cal-header{margin-bottom:12px}
+.mod-card.open .cal-popup.preview-docked .cal-mlbl{font-size:16px}
+.mod-card.open .cal-popup.preview-docked .cal-nav{font-size:18px;padding:4px 10px}
+.mod-card.open .cal-popup.preview-docked .cal-grid{gap:4px}
+.mod-card.open .cal-popup.preview-docked .cal-dn{font-size:11px;padding:5px 0}
+.mod-card.open .cal-popup.preview-docked .cal-d{
+  font-size:14px;
+  min-height:36px;
+  padding:8px 3px 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.mod-card.open .cal-popup.preview-docked .cal-d.preview-lidar-deliv::after,
+.mod-card.open .cal-popup.preview-docked .cal-d.preview-deliv-design::after,
+.mod-card.open .cal-popup.preview-docked .cal-d.preview-design-install::after{
+  left:5px;
+  right:5px;
+  bottom:3px;
+  height:4px;
+}
+.mod-card.open .cal-preview-legend{font-size:10px;min-height:66px}
+.mod-card.open .cal-preview-note{font-size:11px;line-height:1.5}
+.mod-card.open .preview-gantt-card{
+  padding:16px;
+  min-width:0;
+}
+.mod-card.open .preview-gantt-card .gantt-wrap{overflow-x:hidden}
+.mod-card.open .preview-gantt-card .gantt{min-width:0;width:100%}
+.mod-card.open .preview-gantt-card .gantt-row-lbl{width:130px;font-size:11px}
+.mod-card.open .preview-gantt-card .gantt-track{height:28px}
+.mod-card.open .preview-gantt-card .gantt-bar{font-size:11px}
+@media(max-width:980px){
+  .mod-card.open{display:block}
+  .mod-card.open .preview-gantt-card{position:static;margin-top:10px}
+  .mod-card.open .cal-popup.preview-docked{width:100%}
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
