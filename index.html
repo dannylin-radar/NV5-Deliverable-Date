@@ -761,13 +761,20 @@ function rowToProject(r){return{id:Number(r.id),name:r.name||'Untitled',group:r.
 function oooToRow(b){return{id:b.id,type:b.type,start_date:sqlDate(b.start),end_date:sqlDate(b.end),label:b.label||'',updated_at:new Date().toISOString()}}
 function rowToOOO(r){const start=fromSqlDate(r.start_date),end=fromSqlDate(r.end_date);return{id:Number(r.id),type:r.type||'day',start,end,label:r.label||((r.type==='range')?`${fmtShort(start)} → ${fmtShort(end)}`:fmtShort(start))}}
 function showDataStatus(msg){const el=document.getElementById('data-status');if(el)el.textContent=msg}
+function serializeProjectForLocal(p){return{id:p.id,name:p.name||'Untitled',group:p.group||'',lidar:p.lidar?p.lidar.getTime():null,install:p.install?p.install.getTime():null,requestedDelivDate:p.requestedDelivDate?p.requestedDelivDate.getTime():null,requestedDesignDue:p.requestedDesignDue?p.requestedDesignDue.getTime():null,requestStatus:p.requestStatus||null,requestNote:p.requestNote||'',approvedDelivDate:p.approvedDelivDate?p.approvedDelivDate.getTime():null,approvedDesignDue:p.approvedDesignDue?p.approvedDesignDue.getTime():null}}
+function hydrateProjectFromLocal(r){return{id:Number(r.id)||makeId(),name:r.name||'Untitled',group:r.group||'',lidar:r.lidar?new Date(r.lidar):null,install:r.install?new Date(r.install):null,requestedDelivDate:r.requestedDelivDate?new Date(r.requestedDelivDate):null,requestedDesignDue:r.requestedDesignDue?new Date(r.requestedDesignDue):null,requestStatus:r.requestStatus||null,requestNote:r.requestNote||'',approvedDelivDate:r.approvedDelivDate?new Date(r.approvedDelivDate):null,approvedDesignDue:r.approvedDesignDue?new Date(r.approvedDesignDue):null}}
+function serializeOOOForLocal(b){return{id:b.id,type:b.type,start:b.start?b.start.getTime():null,end:b.end?b.end.getTime():null,label:b.label||''}}
+function hydrateOOOFromLocal(r){const start=r.start?new Date(r.start):null,end=r.end?new Date(r.end):null;return{id:Number(r.id)||makeId(),type:r.type||'day',start,end,label:r.label||((r.type==='range')?`${fmtShort(start)} → ${fmtShort(end)}`:fmtShort(start))}}
+function saveLocalState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(projects.map(serializeProjectForLocal)));localStorage.setItem(OOO_KEY,JSON.stringify(oooBlocks.map(serializeOOOForLocal)));}catch(e){console.warn('Local save failed',e)}}
+function loadLocalState(){try{const ps=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');const os=JSON.parse(localStorage.getItem(OOO_KEY)||'[]');projects=ps.map(hydrateProjectFromLocal).filter(p=>p.lidar&&!isNaN(p.lidar));oooBlocks=os.map(hydrateOOOFromLocal).filter(b=>b.start&&b.end&&!isNaN(b.start)&&!isNaN(b.end));}catch(e){projects=[];oooBlocks=[];console.warn('Local load failed',e)}}
 async function initSupabase(){
   const header=document.querySelector('.header-right');
   if(header&&!document.getElementById('data-status'))header.insertAdjacentHTML('beforeend','<span class="data-status" id="data-status">Connecting…</span>');
   if(!supabaseReady()){
-    showDataStatus('Supabase not configured');
-    showToast('Add your Supabase URL and anon key in the HTML config.');
-    projects=[];oooBlocks=[];renderOOO();renderProjects();return;
+    loadLocalState();
+    showDataStatus('Saved locally');
+    showToast('Supabase is not available, so data is saved in this browser only.');
+    renderOOO();renderProjects();return;
   }
   db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
   const {data:{session}}=await db.auth.getSession();
@@ -786,21 +793,33 @@ async function loadState(){
     db.from('nv5_projects').select('*').order('created_at',{ascending:true}),
     db.from('nv5_ooo_blocks').select('*').order('start_date',{ascending:true})
   ]);
-  if(pRes.error||oRes.error){showDataStatus('Supabase load error');showToast((pRes.error||oRes.error).message);isLoadingRemote=false;return;}
+  if(pRes.error||oRes.error){
+    showDataStatus('Supabase load error — using local copy');
+    showToast((pRes.error||oRes.error).message);
+    loadLocalState();
+    isLoadingRemote=false;
+    renderOOO();renderProjects();renderApprovals();
+    return;
+  }
   projects=(pRes.data||[]).map(rowToProject).filter(p=>p.lidar);
   oooBlocks=(oRes.data||[]).map(rowToOOO).filter(b=>b.start&&b.end);
+  saveLocalState();
   isLoadingRemote=false;
   renderOOO();renderProjects();renderApprovals();showDataStatus(currentUser?`Reviewer: ${currentUser.email}`:'Shared via Supabase');
 }
 async function saveState(){
-  if(isLoadingRemote||!db)return;
+  if(isLoadingRemote)return;
+  saveLocalState();
+  if(!db){showDataStatus('Saved locally');return;}
   const projectRows=projects.map(projectToRow);
   const oooRows=oooBlocks.map(oooToRow);
   const ops=[];
   if(projectRows.length)ops.push(db.from('nv5_projects').upsert(projectRows,{onConflict:'id'}));
   if(oooRows.length)ops.push(db.from('nv5_ooo_blocks').upsert(oooRows,{onConflict:'id'}));
+  if(!ops.length)return;
   const results=await Promise.all(ops);
-  const err=results.find(r=>r.error)?.error;if(err)showToast(err.message);
+  const err=results.find(r=>r.error)?.error;
+  if(err){showDataStatus('Saved locally — Supabase save failed');showToast(err.message);}
 }
 async function deleteRemote(table,ids){if(!db||!ids.length)return;const {error}=await db.from(table).delete().in('id',ids);if(error)showToast(error.message)}
 
@@ -1378,18 +1397,21 @@ function projRow(p){
 function importCSV(input){
   const file=input.files[0];if(!file)return;
   const reader=new FileReader();
-  reader.onload=e=>{
+  reader.onload=async e=>{
     const lines=e.target.result.split(/\r?\n/).filter(l=>l.trim());
     let added=0,skipped=0;
-    lines.forEach(line=>{
+    lines.forEach((line,idx)=>{
       const cols=line.split(',').map(c=>c.replace(/^"|"$/g,'').trim());
+      if(idx===0&&cols.join(',').toLowerCase().includes('lidar'))return;
       if(cols.length<3){skipped++;return}
       const[retailer='',storeNum='',lidarStr='',installStr='']=cols;
       const lidar=parseInput(lidarStr),install=parseInput(installStr);
       if(!lidar||(install&&install<=lidar)){skipped++;return}
       projects.push({id:makeId(),name:storeNum.trim()||'Untitled',lidar,install:install||null,group:retailer.trim()});added++;
     });
-    saveState();renderProjects();showToast(`Imported ${added} project${added!==1?'s':''}${skipped?`, ${skipped} skipped`:''}.`);
+    renderProjects();
+    await saveState();
+    showToast(`Imported ${added} project${added!==1?'s':''}${skipped?`, ${skipped} skipped`:''}. Saved ${db?'to Supabase and local backup':'locally in this browser'}.`);
   };
   reader.readAsText(file);input.value='';
 }
