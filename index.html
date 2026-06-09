@@ -876,6 +876,23 @@ function renderArchivedCard(rows){
   });
 }
 
+function editArchivedInstall(id){
+  const p=projects.find(p=>p.id===id);
+  if(!p)return;
+  // Open edit modal with only install date focused
+  editingId=id;
+  document.getElementById('edit-group').value=p.group||'';
+  document.getElementById('edit-name').value=p.name||'';
+  document.getElementById('edit-lidar').value=fmtInput(p.lidar);
+  document.getElementById('edit-install').value=p.install?fmtInput(p.install):'';
+  document.getElementById('edit-modal').classList.remove('hidden');
+  // Focus the install field
+  setTimeout(()=>{
+    const el=document.getElementById('edit-install');
+    if(el){el.focus();el.select();}
+  },100);
+}
+
 function toggleArchive(){
   archiveExpanded=!archiveExpanded;
   const body=document.getElementById('archive-body');
@@ -895,7 +912,10 @@ function archivedRow(p){
     <td class="hide-mobile"><span class="mono">${fmtShort(p.lidar)}</span></td>
     <td>${delivCell}</td>
     <td class="hide-mobile">${designCell}</td>
-    <td class="hide-mobile" title="Double-click to edit install date"><span class="mono" style="cursor:pointer;border-bottom:1px dashed var(--bd2)" ondblclick="event.stopPropagation();startEdit(${p.id},'install','${fmtInput(p.install)}',this)">${p.install?fmtShort(p.install):'<span style=\'color:var(--t3)\'>Add date</span>'}</span></td>
+    <td class="hide-mobile" onclick="event.stopPropagation()" title="Click pencil to edit install date">
+      <span class="mono">${p.install?fmtShort(p.install):'<span style=\"color:var(--t3)\">—</span>'}</span>
+      <button class="action-dots" style="font-size:12px;margin-left:4px;vertical-align:middle" onclick="event.stopPropagation();editArchivedInstall(${p.id})" title="Edit install date"><i class="ti ti-pencil" style="font-size:11px"></i></button>
+    </td>
     <td><span class="status-pill ${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span></td>
   </tr>`;
   if(isExp)h+=`<tr class="proj-detail"><td colspan="8"><div class="proj-detail-inner" id="archived-detail-${p.id}"></div></td></tr>`;
