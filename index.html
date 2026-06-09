@@ -734,7 +734,7 @@ function renderFilterBtns(rows){
   fr.innerHTML=h;
 }
 
-function isArchived(p){ return p.install < today(); }
+function isArchived(p){ return p.install && p.install < today(); }
 
 function renderProjects(){
   const wrap=document.getElementById('proj-table-wrap');
