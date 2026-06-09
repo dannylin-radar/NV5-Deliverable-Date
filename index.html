@@ -42,18 +42,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 @media(max-width:560px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
 .field{position:relative}
 .field label{font-size:10px;font-weight:600;color:var(--t2);letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:4px}
-.field input[type=text],.field input[type=password],.field select{width:100%;padding:7px 9px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card2);color:var(--t1);border:0.5px solid var(--bd2);border-radius:var(--rad);outline:none;transition:border-color .15s,box-shadow .15s}
-.field input[type=text]:hover,.field input[type=password]:hover,.field select:hover{border-color:var(--t3)}
-.field input[type=text]:focus,.field input[type=password]:focus,.field select:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(26,127,90,.15)}
+.field input[type=text],.field select{width:100%;padding:7px 9px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card2);color:var(--t1);border:0.5px solid var(--bd2);border-radius:var(--rad);outline:none;transition:border-color .15s,box-shadow .15s}
+.field input[type=text]:hover,.field select:hover{border-color:var(--t3)}
+.field input[type=text]:focus,.field select:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(26,127,90,.15)}
 .cal-popup{position:absolute;top:calc(100% + 4px);left:0;z-index:400;background:var(--card);border:0.5px solid var(--bd2);border-radius:var(--rad-lg);padding:10px;width:238px;box-shadow:var(--shadow-lg)}
 .cal-popup.hidden{display:none}
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .cal-nav{background:none;border:none;cursor:pointer;font-size:15px;color:var(--t3);padding:2px 7px;border-radius:var(--rad);transition:background .1s;font-family:'DM Sans',sans-serif}
 .cal-nav:hover{background:var(--bg2)}
 .cal-mlbl{font-size:12px;font-weight:600;color:var(--t1)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
 .cal-dn{font-size:9px;color:var(--t3);text-align:center;padding:3px 0;font-weight:600;letter-spacing:.04em}
-.cal-d{font-size:11px;text-align:center;padding:5px 2px;border-radius:5px;cursor:pointer;color:var(--t1);transition:background .1s;position:relative}
+.cal-d{font-size:11px;text-align:center;padding:5px 2px;border-radius:5px;cursor:pointer;color:var(--t1);transition:background .1s}
 .cal-d:hover{background:var(--bg2)}
 .cal-d.sel{background:var(--t1);color:#fff;font-weight:600}
 .cal-d.tod{color:var(--green);font-weight:700}
@@ -81,7 +81,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .dash-tile.orange{border-color:rgba(179,74,0,.3);background:var(--orange-lt)}.dash-tile.orange .dt-num,.dash-tile.orange .dt-lbl{color:var(--orange-dk)}
 .dash-tile.red{border-color:rgba(155,28,28,.3);background:var(--red-lt)}.dash-tile.red .dt-num,.dash-tile.red .dt-lbl{color:var(--red-dk)}
 .dash-tile.black{border-color:rgba(0,0,0,.2);background:var(--black-lt)}.dash-tile.black .dt-num,.dash-tile.black .dt-lbl{color:var(--black-dk)}
-.dash-tile.pending{border-color:rgba(92,91,82,.25);background:var(--bg2)}.dash-tile.pending .dt-num,.dash-tile.pending .dt-lbl{color:var(--t2)}
 .dash-tile.week{border-color:rgba(26,95,138,.3);background:var(--week-lt)}.dash-tile.week .dt-num,.dash-tile.week .dt-lbl{color:var(--week-dk)}
 .dash-tile.week2{border-color:rgba(92,58,160,.3);background:var(--week2-lt)}.dash-tile.week2 .dt-num,.dash-tile.week2 .dt-lbl{color:var(--week2-dk)}
 .status-card{border-radius:var(--rad-xl);border:0.5px solid var(--bd);padding:1.25rem;margin-bottom:1rem}
@@ -129,7 +128,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .gantt-row{display:flex;align-items:center;gap:8px}
 .gantt-row-lbl{font-size:10px;color:var(--t2);width:140px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gantt-track{flex:1;height:18px;background:var(--bg2);border-radius:3px;position:relative}
-.gantt-bar{position:absolute;height:100%;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;padding:0 4px;min-width:4px;transition:left .22s ease,width .22s ease}
+.gantt-bar{position:absolute;height:100%;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;padding:0 4px;min-width:4px}
 .proj-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;flex-wrap:wrap}
 .sort-row{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t3)}
 .filter-row{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t3);flex-wrap:wrap}
@@ -141,7 +140,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .filter-btn.active.orange{background:var(--orange-lt);color:var(--orange-dk);border-color:rgba(179,74,0,.3)}
 .filter-btn.active.red{background:var(--red-lt);color:var(--red-dk);border-color:rgba(155,28,28,.3)}
 .filter-btn.active.black{background:var(--black-lt);color:var(--black-dk);border-color:rgba(0,0,0,.2)}
-.filter-btn.active.pending{background:var(--bg2);color:var(--t2);border-color:var(--bd2)}
 .filter-btn.active.all{background:var(--t1);color:#fff;border-color:var(--t1)}
 .proj-table{width:100%;border-collapse:collapse}
 .proj-table th{font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;padding:5px 8px;border-bottom:0.5px solid var(--bd);text-align:left;white-space:nowrap}
@@ -160,11 +158,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .status-pill.orange{background:rgba(179,74,0,.12);color:var(--orange-dk)}
 .status-pill.red{background:rgba(155,28,28,.12);color:var(--red-dk)}
 .status-pill.black{background:rgba(0,0,0,.08);color:var(--black-dk)}
-.status-pill.pending{background:var(--week2-lt);color:var(--week2-dk)}
-.dash-tile.pending{border-color:rgba(92,58,160,.3);background:var(--week2-lt)}.dash-tile.pending .dt-num,.dash-tile.pending .dt-lbl{color:var(--week2-dk)}
-.data-status{font-size:11px;color:var(--t3);display:flex;align-items:center;gap:6px}
-.auth-email{font-size:11px;color:var(--green-dk);background:var(--green-lt);border:0.5px solid rgba(26,127,90,.25);padding:4px 8px;border-radius:20px}
-.status-pill.pending{background:var(--bg2);color:var(--t2)}
 .mono{font-family:'DM Mono',monospace;font-size:11px}
 .expand-icon{font-size:10px;color:var(--t3);transition:transform .15s;display:inline-block}
 .expand-icon.open{transform:rotate(90deg)}
@@ -182,33 +175,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .empty-state{font-size:12px;color:var(--t3);text-align:center;padding:2rem;border:0.5px dashed var(--bd);border-radius:var(--rad-xl)}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--t1);color:#fff;font-size:12px;font-weight:500;padding:8px 16px;border-radius:20px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:999}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* Calendar Gantt hover preview */
-.cal-preview-legend{display:block;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--bd);font-size:9px;color:var(--t3);line-height:1.45;min-height:54px}
-.cal-popup.previewing .cal-preview-legend{display:block}
-.cal-popup.preview-floating{position:fixed;left:auto;top:auto;width:312px;max-width:calc(100vw - 24px);z-index:900}
-/* For modify-date calendars, dock the calendar in the page flow so it never covers the live Gantt preview. */
-.cal-popup.preview-docked{position:static;left:auto;top:auto;width:min(460px,100%);max-width:100%;margin-top:8px;box-shadow:var(--shadow);z-index:auto}
-.cal-popup.preview-floating .cal-preview-note,.cal-popup.preview-docked .cal-preview-note{max-width:none}
-.cal-preview-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px}
-.cal-preview-key{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
-.cal-preview-swatch{width:14px;height:4px;border-radius:4px;display:inline-block}
-.cal-preview-note{font-size:10px;color:var(--t2);margin-top:4px;min-height:28px;max-width:216px}
-.cal-preview-note.invalid{color:var(--red-dk);font-weight:600}
-.cal-d{position:relative;overflow:hidden}
-.cal-d.preview-lidar-deliv::after,
-.cal-d.preview-deliv-design::after,
-.cal-d.preview-design-install::after{content:'';position:absolute;left:3px;right:3px;bottom:2px;height:3px;border-radius:6px}
-.cal-d.preview-lidar-deliv::after{background:var(--green)}
-.cal-d.preview-deliv-design::after{background:var(--orange)}
-.cal-d.preview-design-install::after{background:var(--bd2)}
-.cal-d.preview-hover{outline:2px solid var(--t1);outline-offset:-2px;font-weight:700}
-.cal-d.preview-invalid{background:var(--red-lt)!important;color:var(--red-dk)!important}
-.cal-d.preview-ms-lidar,.cal-d.preview-ms-deliv,.cal-d.preview-ms-design,.cal-d.preview-ms-install{font-weight:800}
-.cal-d.preview-ms-lidar::before,.cal-d.preview-ms-deliv::before,.cal-d.preview-ms-design::before,.cal-d.preview-ms-install::before{content:'';position:absolute;top:2px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--t1)}
-.cal-d.preview-ms-deliv::before{background:var(--green)}
-.cal-d.preview-ms-design::before{background:var(--orange)}
-.cal-d.preview-ms-install::before{background:var(--t2)}
 
 /* 3-dot action menu */
 .action-menu-wrap{position:relative;display:inline-block}
@@ -231,62 +197,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end}
 
-/* Timeline change request */
-.request-card{margin-top:.875rem;padding:10px 12px;border:0.5px solid rgba(138,101,0,.3);background:var(--yellow-lt);border-radius:var(--rad-lg);font-size:12px;color:var(--yellow-dk)}
-.request-card strong{font-weight:700}
-.request-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
-.request-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
-.request-grid .field input{background:#fff}
-.request-pill{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--yellow-lt);color:var(--yellow-dk);border:0.5px solid rgba(138,101,0,.25);margin-left:5px}
-.status-card.requested{border-color:rgba(138,101,0,.35);background:var(--yellow-lt)}
-
-
-/* Timeline date modification UI */
-.modify-pill{display:inline-flex;align-items:center;gap:4px;margin-left:8px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:#fff;border:0.5px solid var(--bd2);color:var(--t2);cursor:pointer;font-family:'DM Sans',sans-serif}
-.modify-pill:hover{background:var(--bg2);color:var(--t1)}
-.request-card{margin-top:.875rem;padding:12px 14px;border:0.5px solid rgba(138,101,0,.3);background:var(--yellow-lt);border-radius:var(--rad-lg);font-size:12px;color:var(--yellow-dk)}
-.request-card strong{font-weight:700}
-.request-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
-.request-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
-.request-grid .field input{background:#fff}
-.request-pill{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--yellow-lt);color:var(--yellow-dk);border:0.5px solid rgba(138,101,0,.25);margin-left:5px;white-space:nowrap}
-.request-pill.approved{background:var(--green-lt);color:var(--green-dk);border-color:rgba(26,127,90,.25)}
-.request-pill.rejected{background:var(--red-lt);color:var(--red-dk);border-color:rgba(155,28,28,.25)}
-.mod-card{margin-top:10px;padding:12px;border:0.5px solid var(--bd);background:var(--card);border-radius:var(--rad-lg);display:none}
-.mod-card.open{display:block}
-.approval-card{padding:14px;border:0.5px solid var(--bd);border-radius:var(--rad-xl);background:var(--card);margin-bottom:12px}
-.approval-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:10px}
-.approval-title{font-size:13px;font-weight:700;color:var(--t1)}
-.approval-sub{font-size:11px;color:var(--t3);margin-top:2px}
-
-
-.preview-gantt-card{margin-top:10px;padding:12px;border:0.5px solid var(--bd);border-radius:var(--rad-lg);background:var(--card2)}
-.mod-card.open{display:grid;grid-template-columns:minmax(0,35%) minmax(0,65%);gap:10px;align-items:start}
-.mod-card.open>strong,.mod-card.open>div:first-of-type{grid-column:1/-1}
-.mod-card.open .request-grid,.mod-card.open .request-actions{grid-column:1}
-.mod-card.open .preview-gantt-card{grid-column:2;grid-row:3 / span 3;margin-top:0;position:sticky;top:12px}
-.mod-card.open .cal-popup.preview-docked{grid-column:1}
-@media(max-width:900px){.mod-card.open{display:block}.mod-card.open .preview-gantt-card{position:static;margin-top:10px}}
-.preview-gantt-card.invalid{border-color:rgba(155,28,28,.35);background:var(--red-lt);color:var(--red-dk)}
-.preview-gantt-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:6px}
-.preview-gantt-card.invalid .preview-gantt-title{color:var(--red-dk)}
-.preview-gantt-card .gantt{min-width:540px}
-.preview-gantt-card .gantt-row{gap:6px}
-.preview-gantt-card .gantt-row-lbl{width:132px}
-.preview-gantt-card .gantt-track{height:24px}
-.preview-gantt-card .gantt-bar{font-size:10px}
-.preview-state-pill{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:20px;padding:3px 8px;margin-left:6px;background:var(--green-lt);color:var(--green-dk);border:0.5px solid rgba(26,127,90,.25)}
-.preview-state-pill.hover{background:var(--week-lt);color:var(--week-dk);border-color:rgba(26,95,138,.25)}
-.preview-instruction{font-size:10px;color:var(--t3);margin-top:3px;line-height:1.45}
-
-.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.compare-card{border:0.5px solid var(--bd);border-radius:var(--rad-lg);padding:10px;background:var(--card2)}
-.compare-card.proposed{border-color:rgba(26,127,90,.3);background:var(--green-lt)}
-.compare-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:6px}
-.compare-card.proposed .compare-title{color:var(--green-dk)}
-.compare-delta{font-size:11px;color:var(--t2);margin-top:8px;line-height:1.5}
-@media(max-width:768px){.compare-grid{grid-template-columns:1fr}}
-
+/* Archived card */
+.archive-card{background:var(--card);border-radius:var(--rad-xl);border:0.5px solid var(--bd);box-shadow:var(--shadow);margin-top:1rem;overflow:hidden}
+.archive-header{display:flex;align-items:center;gap:10px;padding:1rem 1.25rem;cursor:pointer;user-select:none}
+.archive-header:hover{background:var(--card2)}
+.archive-title{font-size:13px;font-weight:600;color:var(--t2);flex:1}
+.archive-count{font-size:11px;color:var(--t3);background:var(--bg2);padding:2px 8px;border-radius:20px}
+.archive-chevron{font-size:11px;color:var(--t3);transition:transform .15s}
+.archive-chevron.open{transform:rotate(90deg)}
+.archive-body{border-top:0.5px solid var(--bd);padding:1rem 1.25rem}
+.archive-body.hidden{display:none}
+.proj-table tr.archived-row td{opacity:.7}
+.proj-table tr.archived-row{cursor:pointer}
 /* Bulk toolbar */
 .bulk-bar{display:none;align-items:center;gap:8px;padding:7px 0;margin-bottom:8px;font-size:12px;color:var(--t2)}
 .bulk-bar.visible{display:flex}
@@ -351,13 +273,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 
   /* Cal popup - full width on mobile */
   .cal-popup{width:100%;left:0;right:0}
-  .cal-popup.preview-floating{width:calc(100vw - 24px)!important;left:12px!important;right:auto;top:84px!important;max-height:calc(100vh - 108px);overflow:auto}
-  .cal-popup.preview-docked{width:100%!important;max-height:none;overflow:visible}
 }
 @media print{
   body{background:#fff;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .tabs,.btn-row,.proj-toolbar,.proj-add-section,.header-right,
-  .cal-popup,.toast,.expand-icon,td button,.filter-row,.bulk-bar,.share-bar{display:none!important}
+  .cal-popup,.toast,.expand-icon,td button,.filter-row,.bulk-bar,.share-bar,.no-print{display:none!important}
   .app{max-width:100%}
   .card,.status-card{box-shadow:none;border:0.5px solid #ccc;break-inside:avoid}
   .proj-table tr.proj-detail{display:none}
@@ -376,169 +296,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
   .week2-flag{background:#5C3AA0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
 }
-
-
-/* Layout refinement v8: 35/65 side-by-side calendar + live Gantt */
-.mod-card.open{
-  display:grid;
-  grid-template-columns:minmax(0,35%) minmax(0,65%);
-  gap:12px;
-  align-items:start;
-}
-.mod-card.open .request-grid{grid-template-columns:1fr;margin-top:8px}
-.mod-card.open .request-grid .field input{font-size:14px;padding:8px 10px}
-.mod-card.open .request-actions{margin-top:10px}
-.mod-card.open .cal-popup.preview-docked{
-  width:100%;
-  max-width:none;
-  padding:10px;
-  margin-top:10px;
-}
-.mod-card.open .cal-popup.preview-docked .cal-header{margin-bottom:8px}
-.mod-card.open .cal-popup.preview-docked .cal-mlbl{font-size:14px}
-.mod-card.open .cal-popup.preview-docked .cal-nav{font-size:16px;padding:3px 8px}
-.mod-card.open .cal-popup.preview-docked .cal-grid{gap:3px}
-.mod-card.open .cal-popup.preview-docked .cal-dn{font-size:10px;padding:4px 0}
-.mod-card.open .cal-popup.preview-docked .cal-d{
-  font-size:12px;
-  min-height:30px;
-  padding:6px 2px 8px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.mod-card.open .cal-popup.preview-docked .cal-d.preview-lidar-deliv::after,
-.mod-card.open .cal-popup.preview-docked .cal-d.preview-deliv-design::after,
-.mod-card.open .cal-popup.preview-docked .cal-d.preview-design-install::after{
-  left:4px;
-  right:4px;
-  bottom:3px;
-  height:3px;
-}
-.mod-card.open .cal-preview-legend{font-size:9px;min-height:58px}
-.mod-card.open .cal-preview-note{font-size:10px;line-height:1.45}
-.mod-card.open .preview-gantt-card{
-  padding:12px;
-  min-width:0;
-  width:100%;
-}
-.mod-card.open .preview-gantt-card .gantt-wrap{overflow-x:hidden}
-.mod-card.open .preview-gantt-card .gantt{min-width:0;width:100%}
-.mod-card.open .preview-gantt-card .gantt-row-lbl{width:112px;font-size:10px}
-.mod-card.open .preview-gantt-card .gantt-track{height:24px}
-.mod-card.open .preview-gantt-card .gantt-bar{font-size:10px}
-
-/* Hide selected/hover text under docked modify calendars */
-.mod-card.open .cal-popup.preview-docked .cal-preview-note{display:none!important;min-height:0;margin-top:0}
-.mod-card.open .cal-popup.preview-docked .cal-preview-legend{min-height:0;padding-bottom:0}
-
-@media(max-width:980px){
-  .mod-card.open{display:block}
-  .mod-card.open .preview-gantt-card{position:static;margin-top:10px}
-  .mod-card.open .cal-popup.preview-docked{width:100%}
-}
-
-
-
-/* Layout refinement v10: align preview with calendar, move submit under Gantt, remove preview extra text/scrolling */
-.mod-card.open{
-  display:grid;
-  grid-template-columns:minmax(0,35%) minmax(0,65%);
-  gap:10px 16px;
-  align-items:start;
-}
-.mod-card.open>strong,
-.mod-card.open>div:first-of-type{grid-column:1/-1}
-.mod-card.open .request-grid{
-  grid-column:1;
-  grid-row:3 / span 2;
-  display:grid;
-  grid-template-columns:1fr;
-  gap:10px;
-  margin-top:8px;
-}
-.mod-card.open .preview-gantt-card{
-  grid-column:2;
-  grid-row:3;
-  margin-top:72px; /* lines preview top with the calendar top, below the date input */
-  position:static;
-  top:auto;
-  overflow:visible!important;
-  align-self:start;
-}
-.mod-card.open .request-actions{
-  grid-column:2;
-  grid-row:4;
-  margin-top:8px;
-  align-self:start; /* button starts at the bottom of the left calendar column */
-  justify-content:flex-start;
-}
-.mod-card.open .request-actions .btn.primary{
-  min-width:160px;
-  justify-content:center;
-}
-.mod-card.open .cal-popup.preview-docked{
-  width:100%;
-  max-width:none;
-  padding:12px;
-  margin-top:10px;
-  overflow:visible!important;
-}
-.mod-card.open .cal-popup.preview-docked .cal-preview-note{
-  display:none!important;
-  min-height:0;
-  margin:0;
-  padding:0;
-}
-.mod-card.open .cal-popup.preview-docked .cal-preview-legend{
-  min-height:0;
-  padding-bottom:0;
-}
-.gantt-wrap,
-.gantt,
-.gantt-rows,
-.preview-gantt-card,
-.preview-gantt-card .gantt-wrap,
-.preview-gantt-card .gantt,
-.mod-card.open .preview-gantt-card .gantt-wrap,
-.mod-card.open .preview-gantt-card .gantt{
-  overflow:visible!important;
-}
-.gantt-rows,
-.preview-gantt-card .gantt-rows,
-.mod-card.open .preview-gantt-card .gantt-rows{
-  gap:9px;
-}
-.gantt-track,
-.preview-gantt-card .gantt-track,
-.mod-card.open .preview-gantt-card .gantt-track{
-  height:30px;
-}
-.gantt-bar,
-.preview-gantt-card .gantt-bar,
-.mod-card.open .preview-gantt-card .gantt-bar{
-  min-height:30px;
-  line-height:30px;
-}
-.preview-gantt-card .gantt,
-.mod-card.open .preview-gantt-card .gantt{
-  min-width:0!important;
-  width:100%!important;
-}
-.preview-gantt-card .gantt-row-lbl,
-.mod-card.open .preview-gantt-card .gantt-row-lbl{
-  width:132px;
-  white-space:normal;
-  line-height:1.25;
-}
-@media(max-width:980px){
-  .mod-card.open{display:block}
-  .mod-card.open .preview-gantt-card{position:static;margin-top:10px}
-  .mod-card.open .request-actions{margin-top:10px}
-}
-
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div class="app">
@@ -550,8 +308,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
     <div class="header-right" style="display:flex;gap:6px;flex-wrap:wrap">
       <button class="btn" onclick="printAll()"><i class="ti ti-printer"></i> Print</button>
       <button class="btn" onclick="shareURL()"><i class="ti ti-link"></i> Share link</button>
-      <button class="btn" onclick="reviewerLogin()"><i class="ti ti-lock"></i> Reviewer login</button>
-      <button class="btn" id="logout-btn" onclick="reviewerLogout()" style="display:none"><i class="ti ti-logout"></i> Logout</button>
       <button class="btn danger" onclick="resetAll()"><i class="ti ti-trash"></i> Reset all</button>
     </div>
   </div>
@@ -559,14 +315,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
   <div id="share-banner" style="display:none"></div>
 
   <div class="tabs">
-    <button class="tab active" id="tab-multi" onclick="switchTab('multi')">Multi-Project</button>
-    <button class="tab" id="tab-single" onclick="switchTab('single')">Single Project</button>
+    <button class="tab active" id="tab-single" onclick="switchTab('single')">Single Project</button>
+    <button class="tab" id="tab-multi" onclick="switchTab('multi')">Multi-Project</button>
     <button class="tab" id="tab-ooo" onclick="switchTab('ooo')">OOO Blocks</button>
-    <button class="tab" id="tab-approvals" onclick="switchTab('approvals')" style="display:none">Approval Requests</button>
   </div>
 
   <!-- SINGLE -->
-  <div id="pane-single" style="display:none">
+  <div id="pane-single">
     <div class="card">
       <div class="section-title">Project details</div>
       <div class="grid3" style="margin-bottom:10px">
@@ -584,14 +339,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
   </div>
 
   <!-- MULTI -->
-  <div id="pane-multi">
+  <div id="pane-multi" style="display:none">
     <div class="card proj-add-section">
       <div class="section-title">Add project</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:end">
         <div class="field"><label>Retailer</label><input type="text" id="m-group" placeholder="e.g. AEO, ON" autocomplete="off"></div>
         <div class="field"><label>Store #</label><input type="text" id="m-name" placeholder="e.g. 101, 777" autocomplete="off"></div>
         <div class="field" style="position:relative"><label>LiDAR date</label><input type="text" id="m-lidar" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-m-lidar"></div></div>
-        <div class="field" style="position:relative"><label>Install date <span style="color:var(--t3);font-weight:500">(optional)</span></label><input type="text" id="m-install" placeholder="Add later" autocomplete="off"><div class="cal-popup hidden" id="cal-m-install"></div></div>
+        <div class="field" style="position:relative"><label>Install date</label><input type="text" id="m-install" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-m-install"></div></div>
         <button class="btn primary" onclick="addProject()" style="height:32px"><i class="ti ti-plus"></i> Add</button>
       </div>
       <div class="btn-row" style="margin-top:8px">
@@ -648,15 +403,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
       <div id="ooo-list" class="ooo-list"><div class="ooo-empty">No OOO blocks added yet.</div></div>
     </div>
   </div>
-
-  <!-- APPROVALS -->
-  <div id="pane-approvals" style="display:none">
-    <div class="card">
-      <div class="section-title">Approval requests</div>
-      <p style="font-size:12px;color:var(--t3);margin-bottom:12px">Reviewer-only view of pending timeline change requests.</p>
-      <div id="approval-list"><div class="empty-state">No pending approval requests.</div></div>
-    </div>
-  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -698,32 +444,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 </div>
 <div id="print-expanded" style="display:none"></div>
 
-<!-- Reviewer login modal -->
-<div class="modal-overlay hidden" id="reviewer-login-modal" onclick="closeReviewerLoginModal()">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-title">
-      Reviewer login
-      <button class="modal-close" onclick="closeReviewerLoginModal()">&#10005;</button>
-    </div>
-    <div style="font-size:12px;color:var(--t3);margin-bottom:12px">
-      Log in with a Supabase Auth user that has also been added to the <span class="mono">nv5_reviewers</span> table.
-    </div>
-    <div class="field" style="margin-bottom:10px">
-      <label>Email</label>
-      <input type="text" id="reviewer-email" placeholder="reviewer@company.com" autocomplete="email">
-    </div>
-    <div class="field" style="margin-bottom:1.25rem">
-      <label>Password</label>
-      <input type="password" id="reviewer-password" placeholder="Password" autocomplete="current-password" style="width:100%;padding:7px 9px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card2);color:var(--t1);border:0.5px solid var(--bd2);border-radius:var(--rad);outline:none">
-    </div>
-    <div class="modal-actions">
-      <button class="btn" onclick="closeReviewerLoginModal()">Cancel</button>
-      <button class="btn primary" onclick="submitReviewerLogin()"><i class="ti ti-lock"></i> Login</button>
-    </div>
-  </div>
-</div>
-
-
 <script>
 // ═══════════════════════════════════════
 // Constants
@@ -734,203 +454,33 @@ const STORAGE_KEY='nv5_v4', OOO_KEY='nv5_ooo_v4';
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const MONTHS_S=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const DNAMES=["Su","Mo","Tu","We","Th","Fr","Sa"];
-const STATUS_LABELS={green:"On schedule — no flexibility needed",yellow:"Minor flex — deliverable moved earlier",orange:"Major flex — both dates compressed",red:"Emergency — LiDAR gap critically compressed",black:"No possible schedule",pending:"Install date pending"};
-const STATUS_ICONS={green:"ti-circle-check",yellow:"ti-circle-check",orange:"ti-alert-triangle",red:"ti-alert-triangle",black:"ti-circle-x",pending:"ti-calendar-question"};
-const STATUS_ORDER={green:0,yellow:1,orange:2,red:3,black:4,pending:5};
+const STATUS_LABELS={green:"On schedule — no flexibility needed",yellow:"Minor flex — deliverable moved earlier",orange:"Major flex — both dates compressed",red:"Emergency — LiDAR gap critically compressed",black:"No possible schedule"};
+const STATUS_ICONS={green:"ti-circle-check",yellow:"ti-circle-check",orange:"ti-alert-triangle",red:"ti-alert-triangle",black:"ti-circle-x"};
+const STATUS_ORDER={green:0,yellow:1,orange:2,red:3,black:4};
 
 // ═══════════════════════════════════════
 // State
 // ═══════════════════════════════════════
 let oooBlocks=[], projects=[], expandedRow=null, projSort='deliv', projFilter='all';
-let calStates={}, calPreviewLocks={}, lastResult=null, selectedIds=new Set(), collapsedGroups=new Set();
+let calStates={}, lastResult=null, selectedIds=new Set(), collapsedGroups=new Set();
 
 // ═══════════════════════════════════════
-// Supabase persistence
+// Persistence
 // ═══════════════════════════════════════
-// 1) Create the tables/RLS policies from the SQL block included below in this file.
-// 2) Replace these two values with your Supabase Project URL and public anon key.
-const SUPABASE_URL = 'https://nbsbgsyousrujwymxkfk.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ic2Jnc3lvdXNydWp3eW14a2ZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5MDE1ODYsImV4cCI6MjA5NTQ3NzU4Nn0._3KbYnXiFneRpY4F-FnLhIqdTvJGBxE5_7Tm7SX_Nqo';
-let db=null, currentUser=null, isReviewer=false, realtimeChannel=null, isLoadingRemote=false;
-function makeId(){return Date.now()*1000+Math.floor(Math.random()*1000)}
-function supabaseReady(){return SUPABASE_URL.startsWith('https://')&&SUPABASE_ANON_KEY.length>40&&window.supabase}
-function sqlDate(d){return d?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`:null}
-function fromSqlDate(v){if(!v)return null;const [y,m,d]=String(v).split('-').map(Number);const r=new Date(y,m-1,d);r.setHours(0,0,0,0);return r}
-function projectToRow(p){return{id:p.id,name:p.name||'Untitled',retailer:p.group||'',lidar_date:sqlDate(p.lidar),install_date:sqlDate(p.install),requested_deliv_date:sqlDate(p.requestedDelivDate),requested_design_due:sqlDate(p.requestedDesignDue),request_status:p.requestStatus||null,request_note:p.requestNote||'',approved_deliv_date:sqlDate(p.approvedDelivDate),approved_design_due:sqlDate(p.approvedDesignDue),updated_at:new Date().toISOString()}}
-function rowToProject(r){return{id:Number(r.id),name:r.name||'Untitled',group:r.retailer||'',lidar:fromSqlDate(r.lidar_date),install:fromSqlDate(r.install_date),requestedDelivDate:fromSqlDate(r.requested_deliv_date),requestedDesignDue:fromSqlDate(r.requested_design_due),requestStatus:r.request_status||null,requestNote:r.request_note||'',approvedDelivDate:fromSqlDate(r.approved_deliv_date),approvedDesignDue:fromSqlDate(r.approved_design_due)}}
-function oooToRow(b){return{id:b.id,type:b.type,start_date:sqlDate(b.start),end_date:sqlDate(b.end),label:b.label||'',updated_at:new Date().toISOString()}}
-function rowToOOO(r){const start=fromSqlDate(r.start_date),end=fromSqlDate(r.end_date);return{id:Number(r.id),type:r.type||'day',start,end,label:r.label||((r.type==='range')?`${fmtShort(start)} → ${fmtShort(end)}`:fmtShort(start))}}
-function showDataStatus(msg){const el=document.getElementById('data-status');if(el)el.textContent=msg}
-function serializeProjectForLocal(p){return{id:p.id,name:p.name||'Untitled',group:p.group||'',lidar:p.lidar?p.lidar.getTime():null,install:p.install?p.install.getTime():null,requestedDelivDate:p.requestedDelivDate?p.requestedDelivDate.getTime():null,requestedDesignDue:p.requestedDesignDue?p.requestedDesignDue.getTime():null,requestStatus:p.requestStatus||null,requestNote:p.requestNote||'',approvedDelivDate:p.approvedDelivDate?p.approvedDelivDate.getTime():null,approvedDesignDue:p.approvedDesignDue?p.approvedDesignDue.getTime():null}}
-function hydrateProjectFromLocal(r){return{id:Number(r.id)||makeId(),name:r.name||'Untitled',group:r.group||'',lidar:r.lidar?new Date(r.lidar):null,install:r.install?new Date(r.install):null,requestedDelivDate:r.requestedDelivDate?new Date(r.requestedDelivDate):null,requestedDesignDue:r.requestedDesignDue?new Date(r.requestedDesignDue):null,requestStatus:r.requestStatus||null,requestNote:r.requestNote||'',approvedDelivDate:r.approvedDelivDate?new Date(r.approvedDelivDate):null,approvedDesignDue:r.approvedDesignDue?new Date(r.approvedDesignDue):null}}
-function serializeOOOForLocal(b){return{id:b.id,type:b.type,start:b.start?b.start.getTime():null,end:b.end?b.end.getTime():null,label:b.label||''}}
-function hydrateOOOFromLocal(r){const start=r.start?new Date(r.start):null,end=r.end?new Date(r.end):null;return{id:Number(r.id)||makeId(),type:r.type||'day',start,end,label:r.label||((r.type==='range')?`${fmtShort(start)} → ${fmtShort(end)}`:fmtShort(start))}}
-function saveLocalState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(projects.map(serializeProjectForLocal)));localStorage.setItem(OOO_KEY,JSON.stringify(oooBlocks.map(serializeOOOForLocal)));}catch(e){console.warn('Local save failed',e)}}
-function loadLocalState(){try{const ps=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');const os=JSON.parse(localStorage.getItem(OOO_KEY)||'[]');projects=ps.map(hydrateProjectFromLocal).filter(p=>p.lidar&&!isNaN(p.lidar));oooBlocks=os.map(hydrateOOOFromLocal).filter(b=>b.start&&b.end&&!isNaN(b.start)&&!isNaN(b.end));}catch(e){projects=[];oooBlocks=[];console.warn('Local load failed',e)}}
-async function initSupabase(){
-  const header=document.querySelector('.header-right');
-  if(header&&!document.getElementById('data-status'))header.insertAdjacentHTML('beforeend','<span class="data-status" id="data-status">Connecting…</span>');
-  if(!supabaseReady()){
-    loadLocalState();
-    showDataStatus('Saved locally');
-    showToast('Supabase is not available, so data is saved in this browser only.');
-    renderOOO();renderProjects();return;
-  }
-  db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-  const {data:{session}}=await db.auth.getSession();
-  currentUser=session?.user||null;await checkReviewer();
-  await loadState();
-  db.auth.onAuthStateChange(async (_event, session)=>{currentUser=session?.user||null;await checkReviewer();renderProjects();});
-  realtimeChannel=db.channel('nv5-shared-data')
-    .on('postgres_changes',{event:'*',schema:'public',table:'nv5_projects'},()=>loadState())
-    .on('postgres_changes',{event:'*',schema:'public',table:'nv5_ooo_blocks'},()=>loadState())
-    .subscribe();
+function saveState(){
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(projects.map(p=>({...p,lidar:p.lidar.getTime(),install:p.install.getTime()}))));
+    localStorage.setItem(OOO_KEY,JSON.stringify(oooBlocks.map(b=>({...b,start:b.start.getTime(),end:b.end.getTime()}))));
+  }catch(e){}
 }
-async function loadState(){
-  if(!db)return;
-  isLoadingRemote=true;
-  const [pRes,oRes]=await Promise.all([
-    db.from('nv5_projects').select('*').order('created_at',{ascending:true}),
-    db.from('nv5_ooo_blocks').select('*').order('start_date',{ascending:true})
-  ]);
-  if(pRes.error||oRes.error){
-    showDataStatus('Supabase load error — using local copy');
-    showToast((pRes.error||oRes.error).message);
-    loadLocalState();
-    isLoadingRemote=false;
-    renderOOO();renderProjects();renderApprovals();
-    return;
-  }
-  projects=(pRes.data||[]).map(rowToProject).filter(p=>p.lidar);
-  oooBlocks=(oRes.data||[]).map(rowToOOO).filter(b=>b.start&&b.end);
-  saveLocalState();
-  isLoadingRemote=false;
-  renderOOO();renderProjects();renderApprovals();showDataStatus(currentUser?`Reviewer: ${currentUser.email}`:'Shared via Supabase');
+function loadState(){
+  try{
+    const ps=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+    projects=ps.map(p=>({...p,lidar:new Date(p.lidar),install:new Date(p.install)}));
+    const os=JSON.parse(localStorage.getItem(OOO_KEY)||'[]');
+    oooBlocks=os.map(b=>({...b,start:new Date(b.start),end:new Date(b.end)}));
+  }catch(e){projects=[];oooBlocks=[];}
 }
-async function saveState(){
-  if(isLoadingRemote)return;
-  saveLocalState();
-  if(!db){showDataStatus('Saved locally');return;}
-  const projectRows=projects.map(projectToRow);
-  const oooRows=oooBlocks.map(oooToRow);
-  const ops=[];
-  if(projectRows.length)ops.push(db.from('nv5_projects').upsert(projectRows,{onConflict:'id'}));
-  if(oooRows.length)ops.push(db.from('nv5_ooo_blocks').upsert(oooRows,{onConflict:'id'}));
-  if(!ops.length)return;
-  const results=await Promise.all(ops);
-  const err=results.find(r=>r.error)?.error;
-  if(err){showDataStatus('Saved locally — Supabase save failed');showToast(err.message);}
-}
-async function deleteRemote(table,ids){if(!db||!ids.length)return;const {error}=await db.from(table).delete().in('id',ids);if(error)showToast(error.message)}
-
-async function checkReviewer(){
-  isReviewer=false;
-  if(!db||!currentUser){updateAuthUI();return false;}
-  const {data,error}=await db.from('nv5_reviewers').select('email').eq('email',currentUser.email).maybeSingle();
-  isReviewer=!!data&&!error;
-  updateAuthUI();
-  return isReviewer;
-}
-
-function updateAuthUI(){
-  const logout=document.getElementById('logout-btn');if(logout)logout.style.display=currentUser?'inline-flex':'none';
-  const approvals=document.getElementById('tab-approvals');if(approvals)approvals.style.display=isReviewer?'inline-flex':'none';
-  showDataStatus(currentUser?(isReviewer?`Reviewer: ${currentUser.email}`:`Logged in, not reviewer: ${currentUser.email}`):(db?'Shared via Supabase':'Supabase not configured'));
-  renderApprovals();
-}
-function reviewerLogin(){
-  if(!db){showToast('Supabase is not configured yet.');return;}
-  const modal=document.getElementById('reviewer-login-modal');
-  if(modal)modal.classList.remove('hidden');
-  setTimeout(()=>document.getElementById('reviewer-email')?.focus(),50);
-}
-function closeReviewerLoginModal(){
-  const modal=document.getElementById('reviewer-login-modal');
-  if(modal)modal.classList.add('hidden');
-}
-async function submitReviewerLogin(){
-  if(!db){showToast('Supabase is not configured yet.');return;}
-  const email=document.getElementById('reviewer-email')?.value.trim();
-  const password=document.getElementById('reviewer-password')?.value;
-  if(!email||!password){showToast('Enter reviewer email and password.');return;}
-  const {data,error}=await db.auth.signInWithPassword({email,password});
-  if(error){showToast(error.message);return;}
-  currentUser=data.user||null;
-  await checkReviewer();
-  closeReviewerLoginModal();
-  if(isReviewer)showToast('Reviewer logged in.');
-  else showToast('Logged in, but this email is not in the reviewer list.');
-}
-async function reviewerLogout(){if(!db)return;await db.auth.signOut();currentUser=null;isReviewer=false;updateAuthUI();showToast('Logged out.');}
-
-/*
-Supabase setup SQL:
-
-create table if not exists public.nv5_projects (
-  id bigint primary key,
-  retailer text default '',
-  name text not null default 'Untitled',
-  lidar_date date not null,
-  install_date date,
-  approved_override jsonb,
-  requested_changes jsonb,
-  requested_deliv_date date,
-  requested_design_due date,
-  request_status text,
-  request_note text,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
-create table if not exists public.nv5_ooo_blocks (
-  id bigint primary key,
-  type text not null check (type in ('day','range')),
-  start_date date not null,
-  end_date date not null,
-  label text default '',
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
-alter table public.nv5_projects enable row level security;
-alter table public.nv5_ooo_blocks enable row level security;
-
-drop policy if exists "Public read projects" on public.nv5_projects;
-drop policy if exists "Public insert projects" on public.nv5_projects;
-drop policy if exists "Public update projects" on public.nv5_projects;
-drop policy if exists "Public delete projects" on public.nv5_projects;
-create policy "Public read projects" on public.nv5_projects for select using (true);
-create policy "Public insert projects" on public.nv5_projects for insert with check (true);
-create policy "Public update projects" on public.nv5_projects for update using (true) with check (true);
-create policy "Public delete projects" on public.nv5_projects for delete using (true);
-
-drop policy if exists "Public read ooo" on public.nv5_ooo_blocks;
-drop policy if exists "Public insert ooo" on public.nv5_ooo_blocks;
-drop policy if exists "Public update ooo" on public.nv5_ooo_blocks;
-drop policy if exists "Public delete ooo" on public.nv5_ooo_blocks;
-create policy "Public read ooo" on public.nv5_ooo_blocks for select using (true);
-create policy "Public insert ooo" on public.nv5_ooo_blocks for insert with check (true);
-create policy "Public update ooo" on public.nv5_ooo_blocks for update using (true) with check (true);
-create policy "Public delete ooo" on public.nv5_ooo_blocks for delete using (true);
-
--- Optional approval hardening:
--- Keep public add/edit enabled, but move approval to a security-definer RPC that checks the logged-in reviewer email.
--- Add reviewer emails to this table and call the RPC from approve buttons.
-create table if not exists public.nv5_reviewers (email text primary key);
-alter table public.nv5_reviewers enable row level security;
-create policy "Reviewers can read themselves" on public.nv5_reviewers for select using (email = auth.email());
-
-Additional migration for timeline change requests:
-
-alter table public.nv5_projects
-  add column if not exists requested_deliv_date date,
-  add column if not exists requested_design_due date,
-  add column if not exists request_status text,
-  add column if not exists request_note text;
-
-notify pgrst, 'reload schema';
-
-*/
 
 // ═══════════════════════════════════════
 // Date helpers
@@ -1056,127 +606,10 @@ function schedule(lidar,install){
   return result;
 }
 
-
-
-function getProjectById(id){return projects.find(p=>Number(p.id)===Number(id))}
-function hasPendingRequest(p){return p&&p.requestStatus==='pending'&&p.requestedDelivDate&&p.requestedDesignDue}
-function hasApprovedRequest(p){return p&&p.requestStatus==='approved'&&p.approvedDelivDate&&p.approvedDesignDue}
-function requestBadge(p){
-  if(hasPendingRequest(p))return '<span class="request-pill">Pending approval</span>';
-  if(hasApprovedRequest(p))return '<span class="request-pill approved">Request Approved</span>';
-  if(p&&p.requestStatus==='rejected')return '<span class="request-pill rejected">Request Rejected</span>';
-  return '';
-}
-function activeScheduleForProject(p){
-  if(!p.install)return {status:'pending',delivDate:null,designDue:null,callouts:[],oooWarning:null};
-  const r=schedule(p.lidar,p.install);
-  if(hasApprovedRequest(p)){
-    r.delivDate=p.approvedDelivDate;
-    r.designDue=p.approvedDesignDue;
-    r.callouts=[`Approved custom timeline. Calculated deliverable was ${fmtShort(schedule(p.lidar,p.install).delivDate)} and calculated design due was ${fmtShort(schedule(p.lidar,p.install).designDue)}.`];
-    r.oooWarning=null;
-  }
-  return r;
-}
-function toggleModifyCard(projectId,kind){
-  const id=`mod-${kind}-${projectId}`;
-  document.querySelectorAll('.mod-card.open').forEach(el=>{
-    if(el.id!==id){
-      el.classList.remove('open');
-      el.querySelectorAll('.cal-popup').forEach(p=>hideCalendarPopup(p));
-    }
-  });
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.classList.toggle('open');
-  if(el.classList.contains('open')){
-    openPreviewCalendar(projectId,kind);
-  } else {
-    el.querySelectorAll('.cal-popup').forEach(p=>hideCalendarPopup(p));
-  }
-}
-function requestOneDateChange(projectId,kind){
-  const p=getProjectById(projectId);if(!p||!p.install){showToast('Install date is required before requesting timeline changes.');return;}
-  const calc=schedule(p.lidar,p.install);
-  const delivInput=document.getElementById('mod-deliv-input-'+projectId);
-  const designInput=document.getElementById('mod-design-input-'+projectId);
-  const newDeliv=kind==='deliv'?parseInput(delivInput.value):(p.requestedDelivDate||calc.delivDate);
-  const newDesign=kind==='design'?parseInput(designInput.value):(p.requestedDesignDue||calc.designDue);
-  if(!newDeliv||!newDesign){showToast('Select a valid date.');return;}
-  if(newDesign<=newDeliv){showToast('Radar Design Due must be after NV5 Deliverable Due.');return;}
-  if(p.install&&newDesign>=p.install){showToast('Radar Design Due must be before install.');return;}
-  p.requestedDelivDate=newDeliv;
-  p.requestedDesignDue=newDesign;
-  p.requestStatus='pending';
-  p.requestNote=`Requested change from calculated dates: Deliverable ${fmtShort(calc.delivDate)} → ${fmtShort(newDeliv)}, Design ${fmtShort(calc.designDue)} → ${fmtShort(newDesign)}`;
-  saveState();renderProjects();renderApprovals();showToast('Timeline change requested — pending approval.');
-}
-function approveTimelineRequest(projectId){
-  if(!isReviewer){showToast('Reviewer login required.');return;}
-  const p=getProjectById(projectId);if(!p||!hasPendingRequest(p))return;
-  p.approvedDelivDate=p.requestedDelivDate;
-  p.approvedDesignDue=p.requestedDesignDue;
-  p.requestStatus='approved';
-  p.requestNote='Timeline request approved.';
-  saveState();renderProjects();renderApprovals();showToast('Requested timeline approved.');
-}
-function rejectTimelineRequest(projectId){
-  if(!isReviewer){showToast('Reviewer login required.');return;}
-  const p=getProjectById(projectId);if(!p||!hasPendingRequest(p))return;
-  p.requestStatus='rejected';
-  p.requestNote='Requested timeline was rejected.';
-  saveState();renderProjects();renderApprovals();showToast('Requested timeline rejected.');
-}
-function renderModifyCards(p,r){
-  if(!p||!p.install||!r||r.status==='black')return '';
-  const delivVal=sqlDate(hasPendingRequest(p)?p.requestedDelivDate:r.delivDate);
-  const designVal=sqlDate(hasPendingRequest(p)?p.requestedDesignDue:r.designDue);
-  let h='';
-  if(hasPendingRequest(p)){
-    h+=`<div class="request-card"><strong>⚠️ New dates requested — pending approval</strong><div style="margin-top:6px">Requested NV5 Deliverable Due: <strong>${fmtShort(p.requestedDelivDate)}</strong><br>Requested Radar Design Due: <strong>${fmtShort(p.requestedDesignDue)}</strong></div><div style="margin-top:6px">${p.requestNote||'These dates are not approved yet.'}</div>`;
-    if(isReviewer){
-      h+=`<div class="request-actions"><button class="btn primary" onclick="event.stopPropagation();approveTimelineRequest(${p.id})"><i class="ti ti-check"></i> Approve</button><button class="btn danger" onclick="event.stopPropagation();rejectTimelineRequest(${p.id})"><i class="ti ti-ban"></i> Reject</button></div>`;
-    }
-    h+=`</div>`;
-  }
-  if(hasApprovedRequest(p)){
-    h+=`<div class="request-card" style="background:var(--green-lt);border-color:rgba(26,127,90,.3);color:var(--green-dk)"><strong>Request Approved</strong><div style="margin-top:6px">Approved NV5 Deliverable Due: <strong>${fmtShort(p.approvedDelivDate)}</strong><br>Approved Radar Design Due: <strong>${fmtShort(p.approvedDesignDue)}</strong></div></div>`;
-  }
-  h+=`<div class="mod-card" id="mod-deliv-${p.id}"><strong>Modify NV5 Deliverable Due</strong><div style="font-size:10px;color:var(--t3);margin-top:3px">Hover to explore dates. Click a date to lock the proposal before submitting.</div><div class="request-grid"><div class="field" style="position:relative"><label>Select new date</label><input type="text" id="mod-deliv-input-${p.id}" value="${fmtInput(hasPendingRequest(p)?p.requestedDelivDate:r.delivDate)}" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-mod-deliv-${p.id}"></div></div></div><div class="request-actions"><button class="btn primary" onclick="event.stopPropagation();requestOneDateChange(${p.id},'deliv')">Submit request</button></div><div class="preview-gantt-card" id="mod-preview-deliv-${p.id}"><div class="preview-gantt-title">Live proposed Gantt preview</div><div style="font-size:11px;color:var(--t3)">Click a date to lock the proposal. Hover only explores alternatives.</div></div></div>`;
-  h+=`<div class="mod-card" id="mod-design-${p.id}"><strong>Modify Radar Design Due</strong><div style="font-size:10px;color:var(--t3);margin-top:3px">Hover to explore dates. Click a date to lock the proposal before submitting.</div><div class="request-grid"><div class="field" style="position:relative"><label>Select new date</label><input type="text" id="mod-design-input-${p.id}" value="${fmtInput(hasPendingRequest(p)?p.requestedDesignDue:r.designDue)}" placeholder="MM/DD/YYYY" autocomplete="off"><div class="cal-popup hidden" id="cal-mod-design-${p.id}"></div></div></div><div class="request-actions"><button class="btn primary" onclick="event.stopPropagation();requestOneDateChange(${p.id},'design')">Submit request</button></div><div class="preview-gantt-card" id="mod-preview-design-${p.id}"><div class="preview-gantt-title">Live proposed Gantt preview</div><div style="font-size:11px;color:var(--t3)">Click a date to lock the proposal. Hover only explores alternatives.</div></div></div>`;
-  return h;
-}
-function customTimelineResult(p,deliv,design,label='Proposed'){
-  const calc=schedule(p.lidar,p.install);
-  const invalid=!deliv||!design||deliv<=p.lidar||design<=deliv||design>=p.install;
-  if(invalid)return {status:'black',delivDate:null,designDue:null,callouts:['Invalid proposed custom timeline.'],oooWarning:null};
-  return {status:calc.status,delivDate:deliv,designDue:design,callouts:[`${label} custom timeline. Original calculated dates were Deliverable ${fmtShort(calc.delivDate)} and Design ${fmtShort(calc.designDue)}.`],oooWarning:null};
-}
-function renderApprovalComparison(p,target){
-  const calc=schedule(p.lidar,p.install);
-  const proposed=customTimelineResult(p,p.requestedDelivDate,p.requestedDesignDue,'Requested');
-  const dd=diff(calc.delivDate,p.requestedDelivDate);
-  const rd=diff(calc.designDue,p.requestedDesignDue);
-  target.innerHTML=`<div class="compare-grid"><div class="compare-card"><div class="compare-title">Current calculated Gantt</div>${renderGantt(p.lidar,calc.delivDate,calc.designDue,p.install,calc.status)}<div class="compare-delta">Deliverable: ${fmtShort(calc.delivDate)}<br>Radar Design Due: ${fmtShort(calc.designDue)}</div></div><div class="compare-card proposed"><div class="compare-title">Proposed Gantt for approval</div>${renderGantt(p.lidar,p.requestedDelivDate,p.requestedDesignDue,p.install,calc.status)}<div class="compare-delta">Deliverable: <strong>${fmtShort(p.requestedDelivDate)}</strong> (${dd===0?'unchanged':dd>0?`${dd}d later`:`${Math.abs(dd)}d earlier`})<br>Radar Design Due: <strong>${fmtShort(p.requestedDesignDue)}</strong> (${rd===0?'unchanged':rd>0?`${rd}d later`:`${Math.abs(rd)}d earlier`})</div></div></div>`;
-}
-function renderApprovals(){
-  const el=document.getElementById('approval-list');if(!el)return;
-  if(!isReviewer){el.innerHTML='<div class="empty-state">Reviewer login required.</div>';return;}
-  const pending=projects.filter(hasPendingRequest);
-  if(!pending.length){el.innerHTML='<div class="empty-state">No pending approval requests.</div>';return;}
-  let h='';
-  pending.forEach(p=>{
-    const r=activeScheduleForProject(p);
-    h+=`<div class="approval-card"><div class="approval-head"><div><div class="approval-title">${p.name||'Untitled'}${p.group?` · ${p.group}`:''}</div><div class="approval-sub">${p.requestNote||''}</div></div><div class="request-actions"><button class="btn primary" onclick="approveTimelineRequest(${p.id})">Approve</button><button class="btn danger" onclick="rejectTimelineRequest(${p.id})">Reject</button></div></div><div id="approval-detail-${p.id}"></div></div>`;
-  });
-  el.innerHTML=h;
-  pending.forEach(p=>{const detail=document.getElementById(`approval-detail-${p.id}`);if(detail)renderApprovalComparison(p,detail);});
-}
-
 // ═══════════════════════════════════════
 // Render result
 // ═══════════════════════════════════════
-function renderResult(r,lidar,install,name,container,project=null){
+function renderResult(r,lidar,install,name,container){
   if(!r){container.innerHTML='<div class="empty-state">Enter dates and click Calculate.</div>';return}
   const s=r.status,cd=r.delivDate?countdown(r.delivDate):{text:"",cls:"normal"};
   let h=`<div class="status-card ${s}"><div class="s-top"><div>`;
@@ -1199,22 +632,12 @@ function renderResult(r,lidar,install,name,container,project=null){
     tl.forEach((row,i)=>{
       let g='';
       if(i>0){const cal=diff(tl[i-1].date,row.date),biz=bizDiff(tl[i-1].date,row.date);g=`<span class="tl-gap">${cal}cd / ${biz}bd</span>`;}
-      let mod='';
-      if(project&&row.lbl==='NV5 Deliverable Due')mod=`<button class="modify-pill" onclick="event.stopPropagation();toggleModifyCard(${project.id},'deliv')">Modify Date</button>`;
-      if(project&&row.lbl==='Radar Design Due')mod=`<button class="modify-pill" onclick="event.stopPropagation();toggleModifyCard(${project.id},'design')">Modify Date</button>`;
-      h+=`<div class="tl-row"><div class="tl-dot ${row.col}"></div><i class="ti ${row.ico} tl-ico"></i><span class="tl-lbl">${row.lbl}</span><span class="tl-dt">${fmtLong(row.date)}${mod}</span>${g}</div>`;
+      h+=`<div class="tl-row"><div class="tl-dot ${row.col}"></div><i class="ti ${row.ico} tl-ico"></i><span class="tl-lbl">${row.lbl}</span><span class="tl-dt">${fmtLong(row.date)}</span>${g}</div>`;
     });
     h+=`</div>`;
     h+=renderGantt(lidar,r.delivDate,r.designDue,install,s);
   }
-  if(project)h+=renderModifyCards(project,r);
   container.innerHTML=h;
-  if(project){
-    setupDateField('mod-deliv-input-'+project.id,'cal-mod-deliv-'+project.id,null,{projectId:project.id,kind:'deliv'});
-    setupDateField('mod-design-input-'+project.id,'cal-mod-design-'+project.id,null,{projectId:project.id,kind:'design'});
-    updateProposalPreview(project.id,'deliv');
-    updateProposalPreview(project.id,'design');
-  }
 }
 
 function renderGantt(lidar,delivDate,designDue,install,status){
@@ -1266,15 +689,14 @@ function addProject(){
   const lidar=parseInput(document.getElementById('m-lidar').value);
   const install=parseInput(document.getElementById('m-install').value);
   const group=document.getElementById('m-group').value.trim()||'';
-  if(!lidar){showToast('Please enter a valid LiDAR date.');return}
-  if(install&&install<=lidar){showToast('Install must be after LiDAR.');return}
-  projects.push({id:makeId(),name,lidar,install:install||null,group});
+  if(!lidar||!install){showToast('Please enter valid dates.');return}
+  if(install<=lidar){showToast('Install must be after LiDAR.');return}
+  projects.push({id:Date.now(),name,lidar,install,group});
   document.getElementById('m-name').value='';document.getElementById('m-lidar').value='';
   document.getElementById('m-install').value='';document.getElementById('m-group').value='';
   saveState();renderProjects();
-  showToast(install?'Project added.':'Project added — install date can be added later.');
 }
-async function removeProject(id){projects=projects.filter(p=>p.id!==id);if(expandedRow===id)expandedRow=null;selectedIds.delete(id);await deleteRemote('nv5_projects',[id]);saveState();renderProjects();}
+function removeProject(id){projects=projects.filter(p=>p.id!==id);if(expandedRow===id)expandedRow=null;selectedIds.delete(id);saveState();renderProjects();}
 function sortProjects(key){projSort=key;document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));document.getElementById('sort-'+key).classList.add('active');renderProjects();}
 function filterProjects(key){projFilter=key;renderProjects();}
 function toggleRow(id,e){if(e&&(e.target.type==='checkbox'||e.target.closest('button')))return;expandedRow=expandedRow===id?null:id;renderProjects();}
@@ -1282,10 +704,10 @@ function toggleGroup(g){collapsedGroups.has(g)?collapsedGroups.delete(g):collaps
 
 // Bulk select
 function toggleSelect(id,e){e.stopPropagation();if(selectedIds.has(id))selectedIds.delete(id);else selectedIds.add(id);updateBulkBar();renderProjects();}
-function toggleSelectAll(checked){const wrap=document.getElementById('proj-table-wrap');const visible=wrap.querySelectorAll('.proj-row-cb');visible.forEach(cb=>{const id=Number(cb.dataset.id);checked?selectedIds.add(id):selectedIds.delete(id);});updateBulkBar();renderProjects();}
+function toggleSelectAll(checked){const wrap=document.getElementById('proj-table-wrap');const visible=wrap.querySelectorAll('.proj-row-cb');visible.forEach(cb=>{const id=+cb.dataset.id;checked?selectedIds.add(id):selectedIds.delete(id);});updateBulkBar();renderProjects();}
 function clearSelection(){selectedIds.clear();updateBulkBar();renderProjects();}
 function updateBulkBar(){const bar=document.getElementById('bulk-bar');const cnt=selectedIds.size;bar.classList.toggle('visible',cnt>0);const el=document.getElementById('bulk-count');if(el)el.textContent=`${cnt} selected`;}
-async function bulkDelete(){if(!selectedIds.size)return;if(!confirm(`Delete ${selectedIds.size} project${selectedIds.size!==1?'s':''}?`))return;const ids=[...selectedIds];projects=projects.filter(p=>!selectedIds.has(p.id));selectedIds.clear();updateBulkBar();await deleteRemote('nv5_projects',ids);renderProjects();}
+function bulkDelete(){if(!selectedIds.size)return;if(!confirm(`Delete ${selectedIds.size} project${selectedIds.size!==1?'s':''}?`))return;projects=projects.filter(p=>!selectedIds.has(p.id));selectedIds.clear();updateBulkBar();saveState();renderProjects();}
 
 function startEdit(id,field,currentVal,displayEl){
   displayEl.style.display='none';
@@ -1298,75 +720,88 @@ function startEdit(id,field,currentVal,displayEl){
 
 function renderDashboard(rows){
   const el=document.getElementById('multi-dashboard');if(!rows.length){el.style.display='none';return}el.style.display='block';
-  const counts={green:0,yellow:0,orange:0,red:0,black:0,pending:0,week:0,week2:0};
+  const counts={green:0,yellow:0,orange:0,red:0,black:0,week:0,week2:0};
   rows.forEach(p=>{counts[p.r.status]++;if(isDueThisWeek(p.r.delivDate))counts.week++;if(isDueThisWeek(p.r.designDue))counts.week2++;});
-  const labels={green:'On Schedule',yellow:'Minor Flex',orange:'Major Flex',red:'Emergency',black:'Impossible',pending:'Install Pending',week:'Deliverable Due This Week',week2:'Design Due This Week'};
-  el.innerHTML='<div class="dashboard">'+['week','week2','pending','green','yellow','orange','red','black'].filter(k=>counts[k]>0).map(k=>`<div class="dash-tile ${k}"><div class="dt-num">${counts[k]}</div><div class="dt-lbl">${labels[k]}</div></div>`).join('')+'</div>';
+  const labels={green:'On Schedule',yellow:'Minor Flex',orange:'Major Flex',red:'Emergency',black:'Impossible',week:'Deliverable Due This Week',week2:'Design Due This Week'};
+  el.innerHTML='<div class="dashboard">'+['week','week2','green','yellow','orange','red','black'].filter(k=>counts[k]>0).map(k=>`<div class="dash-tile ${k}"><div class="dt-num">${counts[k]}</div><div class="dt-lbl">${labels[k]}</div></div>`).join('')+'</div>';
 }
 
 function renderFilterBtns(rows){
   const present=new Set(rows.map(p=>p.r.status));
   const fr=document.getElementById('filter-row');
   let h=`Filter: <button class="filter-btn${projFilter==='all'?' active all':''}" onclick="filterProjects('all')">All (${rows.length})</button>`;
-  ['pending','green','yellow','orange','red','black'].forEach(s=>{if(present.has(s)){const cnt=rows.filter(p=>p.r.status===s).length;h+=` <button class="filter-btn${projFilter===s?' active '+s:''}" onclick="filterProjects('${s}')">${s.charAt(0).toUpperCase()+s.slice(1)} (${cnt})</button>`;}});
+  ['green','yellow','orange','red','black'].forEach(s=>{if(present.has(s)){const cnt=rows.filter(p=>p.r.status===s).length;h+=` <button class="filter-btn${projFilter===s?' active '+s:''}" onclick="filterProjects('${s}')">${s.charAt(0).toUpperCase()+s.slice(1)} (${cnt})</button>`;}});
   fr.innerHTML=h;
 }
 
+function isArchived(p){ return p.install < today(); }
+
 function renderProjects(){
   const wrap=document.getElementById('proj-table-wrap');
-  if(!projects.length){document.getElementById('multi-dashboard').style.display='none';wrap.innerHTML='<div class="empty-state">No projects yet. Add one above.</div>';document.getElementById('filter-row').innerHTML='Filter: <button class="filter-btn active all" onclick="filterProjects(\'all\')">All (0)</button>';updateBulkBar();return;}
-  const allRows=projects.map(p=>({...p,r:activeScheduleForProject(p)}));
-  renderDashboard(allRows);renderFilterBtns(allRows);
-  let rows=[...allRows];
+  if(!projects.length){
+    document.getElementById('multi-dashboard').style.display='none';
+    wrap.innerHTML='<div class="empty-state">No projects yet. Add one above.</div>';
+    document.getElementById('filter-row').innerHTML='Filter: <button class="filter-btn active all" onclick="filterProjects(\'all\')">All (0)</button>';
+    updateBulkBar();renderArchivedCard([]);return;
+  }
+  const allComputed=projects.map(p=>({...p,r:schedule(p.lidar,p.install)}));
+  const activeRows=allComputed.filter(p=>!isArchived(p));
+  const archivedRows=allComputed.filter(p=>isArchived(p));
+
+  renderDashboard(activeRows);
+  renderFilterBtns(activeRows);
+
+  let rows=[...activeRows];
   if(projFilter!=='all')rows=rows.filter(p=>p.r.status===projFilter);
   if(projSort==='deliv')rows.sort((a,b)=>(a.r.delivDate||new Date(9999,0))-(b.r.delivDate||new Date(9999,0)));
   else if(projSort==='status')rows.sort((a,b)=>STATUS_ORDER[a.r.status]-STATUS_ORDER[b.r.status]);
   else if(projSort==='group')rows.sort((a,b)=>(a.group||'').localeCompare(b.group||'')||a.name.localeCompare(b.name));
   else rows.sort((a,b)=>a.name.localeCompare(b.name));
-  if(!rows.length){wrap.innerHTML='<div class="empty-state">No projects match this filter.</div>';return}
 
   const hasWeekDeliv=rows.some(p=>isDueThisWeek(p.r.delivDate));
   const hasWeekDesign=rows.some(p=>isDueThisWeek(p.r.designDue));
   const allChecked=rows.length>0&&rows.every(p=>selectedIds.has(p.id));
 
   let h='';
-  if(hasWeekDeliv||hasWeekDesign){
-    h+=`<div style="display:flex;gap:12px;margin-bottom:8px;font-size:11px;color:var(--t2);flex-wrap:wrap">`;
-    if(hasWeekDeliv)h+=`<span style="display:flex;align-items:center;gap:4px"><span class="week-flag"></span> Deliverable due this week</span>`;
-    if(hasWeekDesign)h+=`<span style="display:flex;align-items:center;gap:4px"><span class="week2-flag"></span> Design due this week</span>`;
-    h+=`</div>`;
-  }
-
-  h+=`<table class="proj-table"><thead><tr>
-    <th class="cb-col"><input type="checkbox" ${allChecked?'checked':''} onchange="toggleSelectAll(this.checked)" style="cursor:pointer"></th>
-    <th style="width:22px"></th>
-    <th>Retailer</th><th>Store #</th><th class="hide-mobile">LiDAR</th><th>Deliverable Due</th><th class="hide-mobile">Design Due</th><th class="hide-mobile">Install</th><th>Status</th><th style="width:40px"></th>
-    <th style="width:28px"></th>
-  </tr></thead><tbody>`;
-
-  if(projSort==='group'){
-    const groups=[...new Set(rows.map(p=>p.group||''))];
-    groups.forEach(g=>{
-      const gRows=rows.filter(p=>(p.group||'')===(g));
-      const isCollapsed=collapsedGroups.has(g);
-      h+=`<tr class="group-header" onclick="toggleGroup('${g.replace(/'/g,"\\'")}')"><td colspan="10"><span class="group-chevron${isCollapsed?'':' open'}">&#9658;</span>${g||'Ungrouped'} <span style="font-size:10px;color:var(--t3);font-weight:400">(${gRows.length})</span></td></tr>`;
-      if(!isCollapsed)gRows.forEach(p=>h+=projRow(p));
-    });
+  if(!rows.length){
+    h='<div class="empty-state">No active projects match this filter.</div>';
   } else {
-    rows.forEach(p=>h+=projRow(p));
+    if(hasWeekDeliv||hasWeekDesign){
+      h+=`<div style="display:flex;gap:12px;margin-bottom:8px;font-size:11px;color:var(--t2);flex-wrap:wrap">`;
+      if(hasWeekDeliv)h+=`<span style="display:flex;align-items:center;gap:4px"><span class="week-flag"></span> Deliverable due this week</span>`;
+      if(hasWeekDesign)h+=`<span style="display:flex;align-items:center;gap:4px"><span class="week2-flag"></span> Design due this week</span>`;
+      h+=`</div>`;
+    }
+    h+=`<table class="proj-table"><thead><tr>
+      <th class="cb-col"><input type="checkbox" ${allChecked?'checked':''} onchange="toggleSelectAll(this.checked)" style="cursor:pointer"></th>
+      <th style="width:22px"></th>
+      <th>Retailer</th><th>Store #</th><th class="hide-mobile">LiDAR</th><th>Deliverable Due</th><th class="hide-mobile">Design Due</th><th class="hide-mobile">Install</th><th>Status</th><th style="width:40px"></th>
+    </tr></thead><tbody>`;
+    if(projSort==='group'){
+      const groups=[...new Set(rows.map(p=>p.group||''))];
+      groups.forEach(g=>{
+        const gRows=rows.filter(p=>(p.group||'')===(g));
+        const isCollapsed=collapsedGroups.has(g);
+        h+=`<tr class="group-header" onclick="toggleGroup('${g.replace(/'/g,"\'")}')"><td colspan="9"><span class="group-chevron${isCollapsed?'':' open'}">&#9658;</span>${g||'Ungrouped'} <span style="font-size:10px;color:var(--t3);font-weight:400">(${gRows.length})</span></td></tr>`;
+        if(!isCollapsed)gRows.forEach(p=>h+=projRow(p));
+      });
+    } else {
+      rows.forEach(p=>h+=projRow(p));
+    }
+    h+=`</tbody></table>`;
   }
-  h+=`</tbody></table>`;
   wrap.innerHTML=h;
-  rows.forEach(p=>{if(expandedRow===p.id){const el=document.getElementById(`detail-${p.id}`);if(el){if(p.install)renderResult(p.r,p.lidar,p.install,p.name,el,p);else el.innerHTML='<div class="empty-state">Install date pending. Use Edit to add it later and generate the schedule.</div>';}}});
+  rows.forEach(p=>{if(expandedRow===p.id){const el=document.getElementById(`detail-${p.id}`);if(el)renderResult(p.r,p.lidar,p.install,p.name,el);}});
   updateBulkBar();
+  renderArchivedCard(archivedRows);
 }
+
 
 function projRow(p){
   const s=p.r.status,isExp=expandedRow===p.id,isSel=selectedIds.has(p.id);
   const dtwDeliv=isDueThisWeek(p.r.delivDate),dtwDesign=isDueThisWeek(p.r.designDue);
-  const delivCell=p.r.delivDate?`<span class="mono" style="color:var(--${s==='black'?'t1':s})">${fmtShort(p.r.delivDate)}</span>${dtwDeliv?'<span class="week-flag" title="Deliverable due this week"></span>':''}`:'<span style="color:var(--t3)">Pending install</span>';
+  const delivCell=p.r.delivDate?`<span class="mono" style="color:var(--${s==='black'?'t1':s})">${fmtShort(p.r.delivDate)}</span>${dtwDeliv?'<span class="week-flag" title="Deliverable due this week"></span>':''}`:'<span style="color:var(--t3)">—</span>';
   const designCell=p.r.designDue?`<span class="mono">${fmtShort(p.r.designDue)}</span>${dtwDesign?'<span class="week2-flag" title="Design due this week"></span>':''}`:'<span style="color:var(--t3)">—</span>';
-  const installCell=p.install?`<span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'install','${fmtInput(p.install)}',this)">${fmtShort(p.install)}</span>`:`<button class="btn" onclick="event.stopPropagation();openEditModal(${p.id})" style="padding:3px 8px;font-size:10px">Add date</button>`;
   let h=`<tr class="proj-row${isExp?' expanded':''}${isSel?' selected':''}" onclick="toggleRow(${p.id},event)">
     <td><input type="checkbox" class="proj-row-cb" data-id="${p.id}" ${isSel?'checked':''} onchange="toggleSelect(${p.id},event)" style="cursor:pointer"></td>
     <td><span class="expand-icon${isExp?' open':''}">&#9658;</span></td>
@@ -1375,8 +810,8 @@ function projRow(p){
     <td class="hide-mobile"><span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'lidar','${fmtInput(p.lidar)}',this)">${fmtShort(p.lidar)}</span></td>
     <td>${delivCell}</td>
     <td class="hide-mobile">${designCell}</td>
-    <td class="hide-mobile">${installCell}</td>
-    <td><span class="status-pill ${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span>${requestBadge(p)}</td>
+    <td class="hide-mobile"><span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'install','${fmtInput(p.install)}',this)">${fmtShort(p.install)}</span></td>
+    <td><span class="status-pill ${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span></td>
     <td style="position:relative">
       <div class="action-menu-wrap">
         <button class="action-dots" onclick="event.stopPropagation();toggleMenu(${p.id})" title="Actions">&#8942;</button>
@@ -1387,7 +822,82 @@ function projRow(p){
       </div>
     </td>
   </tr>`;
-  if(isExp)h+=`<tr class="proj-detail"><td colspan="10"><div class="proj-detail-inner" id="detail-${p.id}"></div></td></tr>`;
+  if(isExp)h+=`<tr class="proj-detail"><td colspan="9"><div class="proj-detail-inner" id="detail-${p.id}"></div></td></tr>`;
+  return h;
+}
+
+// ═══════════════════════════════════════
+// Archived card
+// ═══════════════════════════════════════
+let archiveExpanded = false;
+
+function renderArchivedCard(rows){
+  // Remove existing archive card if present
+  const existing=document.getElementById('archive-card');
+  if(existing)existing.remove();
+  if(!rows.length)return;
+
+  rows.sort((a,b)=>b.install-a.install); // most recent first
+
+  const card=document.createElement('div');
+  card.id='archive-card';
+  card.className='archive-card no-print';
+
+  let tableH=`<table class="proj-table"><thead><tr>
+    <th style="width:22px"></th>
+    <th>Retailer</th><th>Store #</th><th class="hide-mobile">LiDAR</th><th>Deliverable Due</th><th class="hide-mobile">Design Due</th><th class="hide-mobile">Install</th><th>Status</th>
+  </tr></thead><tbody>`;
+  rows.forEach(p=>{ tableH+=archivedRow(p); });
+  tableH+=`</tbody></table>`;
+
+  card.innerHTML=`
+    <div class="archive-header" onclick="toggleArchive()">
+      <i class="ti ti-archive" style="font-size:14px;color:var(--t3)"></i>
+      <span class="archive-title">Completed Installs</span>
+      <span class="archive-count">${rows.length} project${rows.length!==1?'s':''}</span>
+      <span class="archive-chevron${archiveExpanded?' open':''}" id="archive-chev">&#9658;</span>
+    </div>
+    <div class="archive-body${archiveExpanded?'':' hidden'}" id="archive-body">
+      <p style="font-size:11px;color:var(--t3);margin-bottom:10px">Install date has passed. These projects are read-only.</p>
+      ${tableH}
+    </div>`;
+
+  // Append after the active projects card
+  const multiPane=document.getElementById('pane-multi');
+  multiPane.appendChild(card);
+
+  // Re-attach expand listeners for archived rows
+  rows.forEach(p=>{
+    if(expandedRow===p.id){
+      const el=document.getElementById(`archived-detail-${p.id}`);
+      if(el)renderResult(p.r,p.lidar,p.install,p.name,el);
+    }
+  });
+}
+
+function toggleArchive(){
+  archiveExpanded=!archiveExpanded;
+  const body=document.getElementById('archive-body');
+  const chev=document.getElementById('archive-chev');
+  if(body)body.classList.toggle('hidden',!archiveExpanded);
+  if(chev)chev.classList.toggle('open',archiveExpanded);
+}
+
+function archivedRow(p){
+  const s=p.r.status,isExp=expandedRow===p.id;
+  const delivCell=p.r.delivDate?`<span class="mono" style="color:var(--${s==='black'?'t1':s})">${fmtShort(p.r.delivDate)}</span>`:'<span style="color:var(--t3)">—</span>';
+  const designCell=p.r.designDue?`<span class="mono">${fmtShort(p.r.designDue)}</span>`:'<span style="color:var(--t3)">—</span>';
+  let h=`<tr class="proj-row archived-row${isExp?' expanded':''}" onclick="toggleRow(${p.id},event)">
+    <td><span class="expand-icon${isExp?' open':''}">&#9658;</span></td>
+    <td style="font-size:11px;color:var(--t2)">${p.group||'—'}</td>
+    <td><span class="proj-name-cell">${p.name}</span></td>
+    <td class="hide-mobile"><span class="mono">${fmtShort(p.lidar)}</span></td>
+    <td>${delivCell}</td>
+    <td class="hide-mobile">${designCell}</td>
+    <td class="hide-mobile"><span class="mono">${fmtShort(p.install)}</span></td>
+    <td><span class="status-pill ${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span></td>
+  </tr>`;
+  if(isExp)h+=`<tr class="proj-detail"><td colspan="8"><div class="proj-detail-inner" id="archived-detail-${p.id}"></div></td></tr>`;
   return h;
 }
 
@@ -1397,29 +907,27 @@ function projRow(p){
 function importCSV(input){
   const file=input.files[0];if(!file)return;
   const reader=new FileReader();
-  reader.onload=async e=>{
+  reader.onload=e=>{
     const lines=e.target.result.split(/\r?\n/).filter(l=>l.trim());
     let added=0,skipped=0;
-    lines.forEach((line,idx)=>{
+    lines.forEach(line=>{
       const cols=line.split(',').map(c=>c.replace(/^"|"$/g,'').trim());
-      if(idx===0&&cols.join(',').toLowerCase().includes('lidar'))return;
       if(cols.length<3){skipped++;return}
       const[retailer='',storeNum='',lidarStr='',installStr='']=cols;
       const lidar=parseInput(lidarStr),install=parseInput(installStr);
-      if(!lidar||(install&&install<=lidar)){skipped++;return}
-      projects.push({id:makeId(),name:storeNum.trim()||'Untitled',lidar,install:install||null,group:retailer.trim()});added++;
+      if(!lidar||!install||install<=lidar){skipped++;return}
+      projects.push({id:Date.now()+Math.random(),name:storeNum.trim()||'Untitled',lidar,install,group:retailer.trim()});added++;
     });
-    renderProjects();
-    await saveState();
-    showToast(`Imported ${added} project${added!==1?'s':''}${skipped?`, ${skipped} skipped`:''}. Saved ${db?'to Supabase and local backup':'locally in this browser'}.`);
+    saveState();renderProjects();showToast(`Imported ${added} project${added!==1?'s':''}${skipped?`, ${skipped} skipped`:''}.`);
   };
   reader.readAsText(file);input.value='';
 }
 function exportCSV(){
-  if(!projects.length){showToast('No projects to export.');return}
-  const rows=projects.map(p=>({...p,r:p.install?schedule(p.lidar,p.install):{status:'pending',delivDate:null,designDue:null}}));
+  const active=projects.filter(p=>!isArchived(p));
+  if(!active.length){showToast('No active projects to export.');return}
+  const rows=active.map(p=>({...p,r:schedule(p.lidar,p.install)}));
   let csv='Retailer,Store #,LiDAR Date,Install Date,Deliverable Due,Design Due,Status\n';
-  rows.forEach(p=>{csv+=`"${p.group||''}","${p.name}","${fmtShort(p.lidar)}","${p.install?fmtShort(p.install):''}","${p.r.delivDate?fmtShort(p.r.delivDate):''}","${p.r.designDue?fmtShort(p.r.designDue):''}","${p.r.status}"\n`;});
+  rows.forEach(p=>{csv+=`"${p.group||''}","${p.name}","${fmtShort(p.lidar)}","${fmtShort(p.install)}","${p.r.delivDate?fmtShort(p.r.delivDate):''}","${p.r.designDue?fmtShort(p.r.designDue):''}","${p.r.status}"\n`;});
   const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='nv5-schedule.csv';a.click();URL.revokeObjectURL(url);
 }
 
@@ -1428,7 +936,7 @@ function exportCSV(){
 // ═══════════════════════════════════════
 function shareURL(){
   if(!projects.length){showToast('No projects to share.');return}
-  const data=projects.map(p=>({n:p.name,l:p.lidar?p.lidar.getTime():null,i:p.install?p.install.getTime():null,g:p.group||''}));
+  const data=projects.map(p=>({n:p.name,l:p.lidar.getTime(),i:p.install.getTime(),g:p.group||''}));
   const encoded=btoa(encodeURIComponent(JSON.stringify(data)));
   const url=`${location.href.split('?')[0]}?d=${encoded}`;
   navigator.clipboard.writeText(url).then(()=>{
@@ -1443,14 +951,16 @@ function loadFromURL(){
   const d=params.get('d');
   if(!d)return;
   try{
+    // Replace projects entirely with the shared set — don't merge with localStorage
     const data=JSON.parse(decodeURIComponent(atob(d)));
     projects=[];
     data.forEach(p=>{
-      const lidar=p.l?new Date(p.l):null,install=p.i?new Date(p.i):null;
-      if(lidar&&!isNaN(lidar)&&(!install||(install&&!isNaN(install)&&install>lidar)))
-        projects.push({id:makeId(),name:p.n||'Untitled',lidar,install:install||null,group:p.g||''});
+      const lidar=new Date(p.l),install=new Date(p.i);
+      if(!isNaN(lidar)&&!isNaN(install)&&install>lidar)
+        projects.push({id:Date.now()+Math.random(),name:p.n||'Untitled',lidar,install,group:p.g||''});
     });
     saveState();
+    // Remove ?d= from URL so refreshing doesn't re-load and overwrite edits
     history.replaceState(null,'',location.pathname);
     showToast(`Loaded ${projects.length} project${projects.length!==1?'s':''} from shared link.`);
     switchTab('multi');
@@ -1460,9 +970,9 @@ function loadFromURL(){
 // ═══════════════════════════════════════
 // OOO
 // ═══════════════════════════════════════
-function addOOORange(){const s=parseInput(document.getElementById('ooo-start').value),e=parseInput(document.getElementById('ooo-end').value);if(!s||!e){showToast('Enter valid dates.');return}if(e<s){showToast('End must be on or after start.');return}oooBlocks.push({type:'range',start:s,end:e,label:`${fmtShort(s)} → ${fmtShort(e)}`,id:makeId()});document.getElementById('ooo-start').value='';document.getElementById('ooo-end').value='';saveState();renderOOO();renderProjects();}
-function addOOODay(){const d=parseInput(document.getElementById('ooo-day').value);if(!d){showToast('Enter a valid date.');return}oooBlocks.push({type:'day',start:d,end:d,label:fmtShort(d),id:makeId()});document.getElementById('ooo-day').value='';saveState();renderOOO();renderProjects();}
-async function removeOOO(id){oooBlocks=oooBlocks.filter(b=>b.id!==id);await deleteRemote('nv5_ooo_blocks',[id]);saveState();renderOOO();renderProjects();}
+function addOOORange(){const s=parseInput(document.getElementById('ooo-start').value),e=parseInput(document.getElementById('ooo-end').value);if(!s||!e){showToast('Enter valid dates.');return}if(e<s){showToast('End must be on or after start.');return}oooBlocks.push({type:'range',start:s,end:e,label:`${fmtShort(s)} → ${fmtShort(e)}`,id:Date.now()});document.getElementById('ooo-start').value='';document.getElementById('ooo-end').value='';saveState();renderOOO();renderProjects();}
+function addOOODay(){const d=parseInput(document.getElementById('ooo-day').value);if(!d){showToast('Enter a valid date.');return}oooBlocks.push({type:'day',start:d,end:d,label:fmtShort(d),id:Date.now()});document.getElementById('ooo-day').value='';saveState();renderOOO();renderProjects();}
+function removeOOO(id){oooBlocks=oooBlocks.filter(b=>b.id!==id);saveState();renderOOO();renderProjects();}
 function renderOOO(){
   const el=document.getElementById('ooo-list');
   if(!oooBlocks.length){el.innerHTML='<div class="ooo-empty">No OOO blocks added yet.</div>';return}
@@ -1481,99 +991,11 @@ function renderOOO(){
     </div>`).join('');
 }
 
-
-// ═══════════════════════════════════════
-// Calendar Gantt hover preview
-// ═══════════════════════════════════════
-function sameDay(a,b){return a&&b&&dateKey(a)===dateKey(b)}
-function inRange(d,a,b){return a&&b&&d>=a&&d<=b}
-function clearCalendarGanttPreview(calId,resetNote=true){
-  const el=document.getElementById(calId);if(!el)return;
-  el.querySelectorAll('.cal-d').forEach(c=>{
-    c.classList.remove('preview-lidar-deliv','preview-deliv-design','preview-design-install','preview-hover','preview-invalid','preview-ms-lidar','preview-ms-deliv','preview-ms-design','preview-ms-install');
-  });
-  if(resetNote){
-    const note=document.getElementById(calId+'-preview-note');
-    if(note){note.classList.remove('invalid');note.textContent='Hover to explore alternatives. Click a date to update the selected proposal.';}
-  }
-}
-function proposalDates(projectId,kind,hoverDate=null){
-  const p=getProjectById(projectId);if(!p||!p.install)return null;
-  const calc=schedule(p.lidar,p.install);if(!calc.delivDate||!calc.designDue)return null;
-  const delivInput=document.getElementById('mod-deliv-input-'+projectId);
-  const designInput=document.getElementById('mod-design-input-'+projectId);
-  let deliv=parseInput(delivInput?.value||'')||p.requestedDelivDate||p.approvedDelivDate||calc.delivDate;
-  let design=parseInput(designInput?.value||'')||p.requestedDesignDue||p.approvedDesignDue||calc.designDue;
-  if(kind==='deliv'&&hoverDate)deliv=hoverDate;
-  if(kind==='design'&&hoverDate)design=hoverDate;
-  const invalid=!deliv||!design||deliv<=p.lidar||design<=deliv||design>=p.install;
-  return {p,calc,deliv,design,invalid};
-}
-function renderPreviewGantt(projectId,kind,deliv,design,invalid,source='selected'){
-  const p=getProjectById(projectId);if(!p||!p.install)return;
-  const targets=[document.getElementById(`mod-preview-${kind}-${projectId}`)].filter(Boolean);
-  targets.forEach(target=>{
-    if(invalid){
-      target.className='preview-gantt-card invalid';
-      target.innerHTML=`<div class="preview-gantt-title">Invalid proposed timeline</div><div style="font-size:11px;line-height:1.5">NV5 Deliverable Due must be after LiDAR, Radar Design Due must be after NV5 Deliverable Due, and Radar Design Due must be before Install.</div>`;
-      return;
-    }
-    target.className='preview-gantt-card';
-    const calc=schedule(p.lidar,p.install);
-    const pill=source==='hover'?'<span class="preview-state-pill hover">Hover preview</span>':'<span class="preview-state-pill">Selected proposal</span>';
-    const help=source==='hover'?'Click the hovered date to lock it as the request.':'Hover to explore alternatives. The chart stays locked until you click another date or edit the input.';
-    target.innerHTML=`<div class="preview-gantt-title">Proposed Gantt preview ${pill}</div><div class="preview-instruction">${help}</div>${renderGantt(p.lidar,deliv,design,p.install,calc.status)}`;
-  });
-}
-function updateProposalPreview(projectId,kind,proposalDate=null,calId=null,source='selected'){
-  const data=proposalDates(projectId,kind,proposalDate);if(!data)return;
-  renderPreviewGantt(projectId,kind,data.deliv,data.design,data.invalid,source);
-  if(calId)paintCalendarGanttPreview(calId,proposalDate||data[kind],data,source);
-}
-function paintCalendarGanttPreview(calId,hoverDate,data,source='selected'){
-  const el=document.getElementById(calId);if(!el||!data)return;
-  clearCalendarGanttPreview(calId,false);
-  const {p,deliv,design,invalid}=data;
-  el.querySelectorAll('.cal-d:not(.emp)').forEach(cell=>{
-    const d=new Date(+cell.dataset.ts);
-    if(inRange(d,p.lidar,deliv))cell.classList.add('preview-lidar-deliv');
-    else if(inRange(d,deliv,design))cell.classList.add('preview-deliv-design');
-    else if(inRange(d,design,p.install))cell.classList.add('preview-design-install');
-    if(sameDay(d,p.lidar))cell.classList.add('preview-ms-lidar');
-    if(sameDay(d,deliv))cell.classList.add('preview-ms-deliv');
-    if(sameDay(d,design))cell.classList.add('preview-ms-design');
-    if(sameDay(d,p.install))cell.classList.add('preview-ms-install');
-    if(hoverDate&&sameDay(d,hoverDate))cell.classList.add('preview-hover');
-  });
-  const hoverCell=hoverDate?[...el.querySelectorAll('.cal-d:not(.emp)')].find(c=>sameDay(new Date(+c.dataset.ts),hoverDate)):null;
-  if(invalid&&hoverCell)hoverCell.classList.add('preview-invalid');
-  const note=document.getElementById(calId+'-preview-note');
-  if(note){
-    if(invalid){note.classList.add('invalid');note.textContent='Invalid preview. Check the proposed Deliverable / Design / Install order.';}
-    else{note.classList.remove('invalid');note.textContent=`${source==='hover'?'Hover preview':'Selected'}: Deliverable ${fmtShort(deliv)} · Design ${fmtShort(design)} · Install ${fmtShort(p.install)} (${diff(p.lidar,deliv)}cd / ${diff(deliv,design)}cd / ${diff(design,p.install)}cd)`;}
-  }
-}
-function applyCalendarGanttPreview(calId,hoverDate,opts,updateMain=true){
-  if(!opts)return;
-  const data=proposalDates(opts.projectId,opts.kind,hoverDate);if(!data)return;
-  paintCalendarGanttPreview(calId,hoverDate,data,updateMain?'hover':'hover');
-  if(updateMain)renderPreviewGantt(opts.projectId,opts.kind,data.deliv,data.design,data.invalid,'hover');
-}
-function selectedDateForPreview(projectId,kind){
-  const input=document.getElementById(`mod-${kind}-input-${projectId}`);
-  return parseInput(input?.value||'');
-}
-function restoreSelectedPreview(calId,opts){
-  if(!opts)return;
-  const selected=selectedDateForPreview(opts.projectId,opts.kind);
-  if(selected)updateProposalPreview(opts.projectId,opts.kind,selected,calId,'selected');
-}
-
 // ═══════════════════════════════════════
 // Calendar
 // ═══════════════════════════════════════
 function getCS(id){if(!calStates[id]){const t=today();calStates[id]={year:t.getFullYear(),month:t.getMonth()}}return calStates[id]}
-function buildCal(id,selDate,onPick,previewOpts=null){
+function buildCal(id,selDate,onPick){
   const el=document.getElementById(id);if(!el)return;
   const cs=getCS(id),t=today(),y=cs.year,m=cs.month;
   const first=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate();
@@ -1581,105 +1003,18 @@ function buildCal(id,selDate,onPick,previewOpts=null){
   DNAMES.forEach(d=>{h+=`<div class="cal-dn">${d}</div>`});
   for(let i=0;i<first;i++)h+=`<div class="cal-d emp"></div>`;
   for(let i=1;i<=dim;i++){const d=new Date(y,m,i);d.setHours(0,0,0,0);let c="cal-d";if(selDate&&d.getTime()===selDate.getTime())c+=" sel";if(d.getTime()===t.getTime())c+=" tod";if(isOOO(d))c+=" ooo";h+=`<div class="${c}" data-ts="${d.getTime()}">${i}</div>`;}
-  h+="</div>";
-  if(previewOpts){
-    h+=`<div class="cal-preview-legend"><div class="cal-preview-row"><span class="cal-preview-key"><span class="cal-preview-swatch" style="background:var(--green)"></span>LiDAR → Deliverable</span><span class="cal-preview-key"><span class="cal-preview-swatch" style="background:var(--orange)"></span>Deliverable → Design</span><span class="cal-preview-key"><span class="cal-preview-swatch" style="background:var(--bd2)"></span>Design → Install</span></div><div class="cal-preview-note" id="${id}-preview-note">Hover to explore alternatives. Click a date to update the selected proposal.</div></div>`;
-  }
-  el.innerHTML=h;
-  el.querySelector(`#${id}-p`).onclick=e=>{e.stopPropagation();if(--cs.month<0){cs.month=11;cs.year--}buildCal(id,selDate,onPick,previewOpts)};
-  el.querySelector(`#${id}-n`).onclick=e=>{e.stopPropagation();if(++cs.month>11){cs.month=0;cs.year++}buildCal(id,selDate,onPick,previewOpts)};
-  el.querySelectorAll('.cal-d:not(.emp)').forEach(cell=>{
-    cell.onclick=e=>{
-      e.stopPropagation();
-      const picked=new Date(+cell.dataset.ts);
-      onPick(picked);
-      if(!previewOpts)el.classList.add('hidden');
-      else{
-        calPreviewLocks[id]=true;
-        buildCal(id,picked,onPick,previewOpts);
-        updateProposalPreview(previewOpts.projectId,previewOpts.kind,picked,id,'selected');
-        el.classList.remove('hidden');
-        el.classList.add('preview-docked');
-      }
-    };
-    if(previewOpts){
-      cell.onmouseenter=()=>{
-        const d=new Date(+cell.dataset.ts);
-        applyCalendarGanttPreview(id,d,previewOpts,!calPreviewLocks[id]);
-      };
-      cell.onmouseleave=()=>{};
-    }
-  });
-  if(previewOpts){
-    el.onmouseleave=()=>restoreSelectedPreview(id,previewOpts);
-  }
+  h+="</div>";el.innerHTML=h;
+  el.querySelector(`#${id}-p`).onclick=e=>{e.stopPropagation();if(--cs.month<0){cs.month=11;cs.year--}buildCal(id,selDate,onPick)};
+  el.querySelector(`#${id}-n`).onclick=e=>{e.stopPropagation();if(++cs.month>11){cs.month=0;cs.year++}buildCal(id,selDate,onPick)};
+  el.querySelectorAll('.cal-d:not(.emp)').forEach(cell=>{cell.onclick=e=>{e.stopPropagation();onPick(new Date(+cell.dataset.ts));el.classList.add('hidden')}});
 }
-function positionCalendarPopup(inp,pop,previewOpts=null){
-  if(!inp||!pop)return;
-  if(!previewOpts){
-    pop.classList.remove('preview-floating','preview-docked');
-    pop.style.left='';pop.style.top='';pop.style.width='';
-    return;
-  }
-  // Dock modify-date calendars in the layout instead of floating them over the live Gantt.
-  // This removes the visual blocking/bouncing while hover previews still update instantly.
-  pop.classList.remove('preview-floating');
-  pop.classList.add('preview-docked');
-  pop.style.left='';pop.style.top='';pop.style.width='';
-}
-function hideCalendarPopup(pop){
-  if(!pop)return;
-  pop.classList.add('hidden');pop.classList.remove('preview-floating','preview-docked');pop.style.left='';pop.style.top='';pop.style.width='';
-}
-function openPreviewCalendar(projectId,kind){
-  const inputId=`mod-${kind}-input-${projectId}`;
-  const calId=`cal-mod-${kind}-${projectId}`;
-  const inp=document.getElementById(inputId),pop=document.getElementById(calId);
-  if(!inp||!pop)return;
-  const cur=parseInput(inp.value);
-  const previewOpts={projectId,kind};
-  calPreviewLocks[calId]=!!cur;
-  buildCal(calId,cur,d=>{
-    inp.value=fmtInput(d);
-    calPreviewLocks[calId]=true;
-    updateProposalPreview(projectId,kind,d,calId,'selected');
-  },previewOpts);
-  pop.classList.remove('hidden');
-  positionCalendarPopup(inp,pop,previewOpts);
-  updateProposalPreview(projectId,kind,cur,calId,'selected');
-}
-function setupDateField(inputId,calId,onChange,previewOpts=null){
+function setupDateField(inputId,calId,onChange){
   const inp=document.getElementById(inputId),pop=document.getElementById(calId);if(!inp||!pop)return;
-  inp.addEventListener('input',()=>{const d=parseInput(inp.value);if(d&&onChange)onChange(d);if(previewOpts){calPreviewLocks[calId]=!!d;updateProposalPreview(previewOpts.projectId,previewOpts.kind,d,null,'selected')}});
+  inp.addEventListener('input',()=>{const d=parseInput(inp.value);if(d&&onChange)onChange(d)});
   inp.addEventListener('blur',()=>{const d=parseInput(inp.value);if(!d)inp.value=''});
-  inp.addEventListener('click',e=>{
-    e.stopPropagation();
-    document.querySelectorAll('.cal-popup').forEach(p=>{
-      if(!previewOpts || !p.closest('.mod-card.open'))hideCalendarPopup(p);
-    });
-    const cur=parseInput(inp.value);
-    calPreviewLocks[calId]=!!cur;
-    buildCal(calId,cur,d=>{
-      inp.value=fmtInput(d);
-      if(onChange)onChange(d);
-      if(previewOpts){calPreviewLocks[calId]=true;updateProposalPreview(previewOpts.projectId,previewOpts.kind,d,calId,'selected');}
-      else hideCalendarPopup(pop);
-    },previewOpts);
-    pop.classList.remove('hidden');
-    if(previewOpts)updateProposalPreview(previewOpts.projectId,previewOpts.kind,cur,calId,'selected');
-    requestAnimationFrame(()=>positionCalendarPopup(inp,pop,previewOpts));
-  });
+  inp.addEventListener('click',e=>{e.stopPropagation();document.querySelectorAll('.cal-popup').forEach(p=>p.classList.add('hidden'));const cur=parseInput(inp.value);buildCal(calId,cur,d=>{inp.value=fmtInput(d);if(onChange)onChange(d);pop.classList.add('hidden')});pop.classList.remove('hidden');});
 }
-document.addEventListener('click',()=>document.querySelectorAll('.cal-popup').forEach(p=>{
-  // Keep modify-date preview calendars docked while users scroll/click the live Gantt.
-  if(p.classList.contains('preview-docked'))return;
-  hideCalendarPopup(p);
-}));
-window.addEventListener('resize',()=>document.querySelectorAll('.cal-popup.preview-floating:not(.hidden)').forEach(pop=>{
-  const inputId=pop.id.replace('cal-','');
-  const inp=document.getElementById(inputId);
-  positionCalendarPopup(inp,pop,null);
-}));
+document.addEventListener('click',()=>document.querySelectorAll('.cal-popup').forEach(p=>p.classList.add('hidden')));
 setupDateField('s-lidar','cal-s-lidar');setupDateField('s-install','cal-s-install');
 setupDateField('m-lidar','cal-m-lidar');setupDateField('m-install','cal-m-install');
 setupDateField('ooo-start','cal-ooo-start');setupDateField('ooo-end','cal-ooo-end');setupDateField('ooo-day','cal-ooo-day');
@@ -1691,7 +1026,7 @@ setupDateField('ooo-start','cal-ooo-start');setupDateField('ooo-end','cal-ooo-en
 function printAll(){
   const pe=document.getElementById('print-expanded');
   if(!projects.length){document.body.classList.add('print-single');window.print();setTimeout(()=>document.body.classList.remove('print-single'),500);return}
-  const allRows=projects.map(p=>({...p,r:activeScheduleForProject(p)}));
+  const allRows=projects.filter(p=>!isArchived(p)).map(p=>({...p,r:schedule(p.lidar,p.install)}));
   let rows=[...allRows];
   if(projSort==='deliv')rows.sort((a,b)=>(a.r.delivDate||new Date(9999,0))-(b.r.delivDate||new Date(9999,0)));
   else if(projSort==='status')rows.sort((a,b)=>STATUS_ORDER[a.r.status]-STATUS_ORDER[b.r.status]);
@@ -1700,7 +1035,7 @@ function printAll(){
   let h='<h2 style="font-size:15px;font-weight:600;margin-bottom:.75rem">Full schedules</h2>';
   rows.forEach(p=>{h+=`<div class="pe-project"><div class="pe-name">${p.name}${p.group?` <span style="font-size:11px;font-weight:400;color:#888">· ${p.group}</span>`:''}</div><div id="pe-detail-${p.id}"></div></div>`;});
   pe.innerHTML=h;pe.style.display='block';
-  rows.forEach(p=>{const el=document.getElementById(`pe-detail-${p.id}`);if(el){if(p.install)renderResult(p.r,p.lidar,p.install,p.name,el,p);else el.innerHTML='<div class="empty-state">Install date pending.</div>';}});
+  rows.forEach(p=>{const el=document.getElementById(`pe-detail-${p.id}`);if(el)renderResult(p.r,p.lidar,p.install,p.name,el);});
   document.body.classList.remove('print-single');
   setTimeout(()=>{window.print();setTimeout(()=>{pe.style.display='none';pe.innerHTML='';},500);},100);
 }
@@ -1708,17 +1043,8 @@ function printAll(){
 // ═══════════════════════════════════════
 // Tabs + Reset all
 // ═══════════════════════════════════════
-function switchTab(t){
-  ['multi','single','ooo','approvals'].forEach(p=>{
-    const pane=document.getElementById('pane-'+p);
-    const tab=document.getElementById('tab-'+p);
-    if(pane)pane.style.display=p===t?'block':'none';
-    if(tab)tab.classList.toggle('active',p===t);
-  });
-  if(t==='multi')renderProjects();
-  if(t==='approvals')renderApprovals();
-}
-async function resetAll(){if(!confirm('Reset all projects and OOO blocks?'))return;const pids=projects.map(p=>p.id),oids=oooBlocks.map(b=>b.id);projects=[];oooBlocks=[];expandedRow=null;lastResult=null;selectedIds.clear();await Promise.all([deleteRemote('nv5_projects',pids),deleteRemote('nv5_ooo_blocks',oids)]);resetSingle();renderProjects();renderOOO();showToast('All shared data cleared.');}
+function switchTab(t){['single','multi','ooo'].forEach(p=>{document.getElementById('pane-'+p).style.display=p===t?'block':'none';document.getElementById('tab-'+p).classList.toggle('active',p===t);});if(t==='multi')renderProjects();}
+function resetAll(){if(!confirm('Reset all projects and OOO blocks?'))return;projects=[];oooBlocks=[];expandedRow=null;lastResult=null;selectedIds.clear();try{localStorage.removeItem(STORAGE_KEY);localStorage.removeItem(OOO_KEY);}catch(e){}resetSingle();renderProjects();renderOOO();showToast('All data cleared.');}
 
 // ═══════════════════════════════════════
 // 3-dot menu
@@ -1749,8 +1075,9 @@ function openEditModal(id){
   document.getElementById('edit-group').value = p.group || '';
   document.getElementById('edit-name').value = p.name || '';
   document.getElementById('edit-lidar').value = fmtInput(p.lidar);
-  document.getElementById('edit-install').value = p.install?fmtInput(p.install):'';
+  document.getElementById('edit-install').value = fmtInput(p.install);
   document.getElementById('edit-modal').classList.remove('hidden');
+  // Close any open menus
   document.querySelectorAll('.action-dropdown.open').forEach(m=>m.classList.remove('open'));
 }
 function closeEditModal(){
@@ -1762,16 +1089,16 @@ function saveEdit(){
   if(!p){ closeEditModal(); return; }
   const lidar   = parseInput(document.getElementById('edit-lidar').value);
   const install = parseInput(document.getElementById('edit-install').value);
-  if(!lidar){ showToast('Please enter a valid LiDAR date.'); return; }
-  if(install&&install<=lidar){ showToast('Install must be after LiDAR.'); return; }
+  if(!lidar||!install){ showToast('Please enter valid LiDAR and install dates.'); return; }
+  if(install<=lidar){ showToast('Install must be after LiDAR.'); return; }
   p.group   = document.getElementById('edit-group').value.trim();
   p.name    = document.getElementById('edit-name').value.trim() || p.name;
   p.lidar   = lidar;
-  p.install = install||null;
+  p.install = install;
   saveState();
   renderProjects();
   closeEditModal();
-  showToast(p.install?'Project updated.':'Project updated — install date pending.');
+  showToast('Project updated.');
 }
 // Wire up edit modal calendar fields
 setupDateField('edit-lidar','cal-edit-lidar');
@@ -1849,19 +1176,13 @@ function deleteOOOFromModal(){
 // ═══════════════════════════════════════
 function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500)}
 
-
-['reviewer-email','reviewer-password'].forEach(id=>{
-  const el=document.getElementById(id);
-  if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')submitReviewerLogin();if(e.key==='Escape')closeReviewerLoginModal();});
-});
-
 // ═══════════════════════════════════════
 // Init
 // ═══════════════════════════════════════
-initSupabase();
+loadState();
 loadFromURL();
 renderOOO();
-renderProjects();
+if(projects.length){switchTab('multi');}else{renderProjects();}
 </script>
 </body>
 </html>
