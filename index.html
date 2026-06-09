@@ -183,6 +183,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--t1);color:#fff;font-size:12px;font-weight:500;padding:8px 16px;border-radius:20px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:999}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+/* Archive card */
+.archive-card{background:var(--card);border-radius:var(--rad-xl);border:0.5px solid var(--bd);box-shadow:var(--shadow);margin-top:1rem;overflow:hidden}
+.archive-header{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;user-select:none;transition:background .1s}
+.archive-header:hover{background:var(--bg2)}
+.archive-chevron{font-size:11px;color:var(--t3);transition:transform .2s;display:inline-block;flex-shrink:0}
+.archive-chevron.open{transform:rotate(90deg)}
+.archive-title{font-size:11px;font-weight:700;color:var(--t3);letter-spacing:.05em;text-transform:uppercase;flex:1}
+.archive-count{font-size:10px;font-weight:600;color:var(--t3);background:var(--bg2);border:0.5px solid var(--bd);padding:2px 8px;border-radius:20px}
+.archive-body{border-top:0.5px solid var(--bd);padding:0}
+.archive-body.hidden{display:none}
+/* Status color dot for archive rows */
+.arch-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;display:inline-block}
+.arch-dot.green{background:var(--green)}.arch-dot.yellow{background:var(--yellow)}.arch-dot.orange{background:var(--orange)}.arch-dot.red{background:var(--red)}.arch-dot.black{background:var(--black)}.arch-dot.pending{background:var(--t3)}
+@media print{.archive-card{display:none!important}}
+
 /* Calendar Gantt hover preview */
 .cal-preview-legend{display:block;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--bd);font-size:9px;color:var(--t3);line-height:1.45;min-height:54px}
 .cal-popup.previewing .cal-preview-legend{display:block}
@@ -621,6 +636,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
       <div id="proj-table-wrap"><div class="empty-state">No projects yet. Add one above.</div></div>
     </div>
   </div>
+
+  <!-- ARCHIVE -->
+  <div id="archive-section" style="display:none"></div>
 
   <!-- OOO -->
   <div id="pane-ooo" style="display:none">
@@ -1312,18 +1330,28 @@ function renderFilterBtns(rows){
   fr.innerHTML=h;
 }
 
+function isArchived(p){
+  if(!p.install)return false;
+  const t=today();
+  return p.install<t;
+}
+
 function renderProjects(){
   const wrap=document.getElementById('proj-table-wrap');
-  if(!projects.length){document.getElementById('multi-dashboard').style.display='none';wrap.innerHTML='<div class="empty-state">No projects yet. Add one above.</div>';document.getElementById('filter-row').innerHTML='Filter: <button class="filter-btn active all" onclick="filterProjects(\'all\')">All (0)</button>';updateBulkBar();return;}
+  if(!projects.length){document.getElementById('multi-dashboard').style.display='none';wrap.innerHTML='<div class="empty-state">No projects yet. Add one above.</div>';document.getElementById('filter-row').innerHTML='Filter: <button class="filter-btn active all" onclick="filterProjects(\'all\')">All (0)</button>';updateBulkBar();renderArchive([]);return;}
+
   const allRows=projects.map(p=>({...p,r:activeScheduleForProject(p)}));
-  renderDashboard(allRows);renderFilterBtns(allRows);
-  let rows=[...allRows];
+  const activeRows=allRows.filter(p=>!isArchived(p));
+  const archivedRows=allRows.filter(p=>isArchived(p));
+
+  renderDashboard(activeRows);renderFilterBtns(activeRows);
+  let rows=[...activeRows];
   if(projFilter!=='all')rows=rows.filter(p=>p.r.status===projFilter);
   if(projSort==='deliv')rows.sort((a,b)=>(a.r.delivDate||new Date(9999,0))-(b.r.delivDate||new Date(9999,0)));
   else if(projSort==='status')rows.sort((a,b)=>STATUS_ORDER[a.r.status]-STATUS_ORDER[b.r.status]);
   else if(projSort==='group')rows.sort((a,b)=>(a.group||'').localeCompare(b.group||'')||a.name.localeCompare(b.name));
   else rows.sort((a,b)=>a.name.localeCompare(b.name));
-  if(!rows.length){wrap.innerHTML='<div class="empty-state">No projects match this filter.</div>';return}
+  if(!rows.length){wrap.innerHTML='<div class="empty-state">No active projects match this filter.</div>';renderArchive(archivedRows);return;}
 
   const hasWeekDeliv=rows.some(p=>isDueThisWeek(p.r.delivDate));
   const hasWeekDesign=rows.some(p=>isDueThisWeek(p.r.designDue));
@@ -1359,6 +1387,73 @@ function renderProjects(){
   wrap.innerHTML=h;
   rows.forEach(p=>{if(expandedRow===p.id){const el=document.getElementById(`detail-${p.id}`);if(el){if(p.install)renderResult(p.r,p.lidar,p.install,p.name,el,p);else el.innerHTML='<div class="empty-state">Install date pending. Use Edit to add it later and generate the schedule.</div>';}}});
   updateBulkBar();
+  renderArchive(archivedRows);
+}
+
+let archiveOpen=false;
+function toggleArchive(){archiveOpen=!archiveOpen;const body=document.getElementById('archive-body');const chev=document.getElementById('archive-chev');if(body)body.classList.toggle('hidden',!archiveOpen);if(chev)chev.classList.toggle('open',archiveOpen);}
+
+function renderArchive(archivedRows){
+  const section=document.getElementById('archive-section');
+  if(!section)return;
+  if(!archivedRows.length){section.style.display='none';return;}
+  section.style.display='block';
+
+  // Sort archived by install date descending (most recently installed first)
+  const sorted=[...archivedRows].sort((a,b)=>b.install-a.install);
+
+  let h=`<div class="archive-card">
+    <div class="archive-header" onclick="toggleArchive()">
+      <span class="archive-chevron" id="archive-chev">&#9658;</span>
+      <span class="archive-title"><i class="ti ti-archive" style="margin-right:5px;font-size:11px"></i>Archived Projects</span>
+      <span class="archive-count">${sorted.length}</span>
+    </div>
+    <div class="archive-body hidden" id="archive-body">
+      <table class="proj-table"><thead><tr>
+        <th style="width:22px"></th>
+        <th>Retailer</th><th>Store #</th><th class="hide-mobile">LiDAR</th>
+        <th>Deliverable Due</th><th class="hide-mobile">Design Due</th>
+        <th class="hide-mobile">Install</th><th>Status</th><th style="width:40px"></th>
+      </tr></thead><tbody>`;
+
+  sorted.forEach(p=>{
+    const s=p.r.status;
+    const isExp=expandedRow===p.id;
+    const delivCell=p.r.delivDate?`<span class="mono" style="color:var(--t2)">${fmtShort(p.r.delivDate)}</span>`:'<span style="color:var(--t3)">—</span>';
+    const designCell=p.r.designDue?`<span class="mono" style="color:var(--t2)">${fmtShort(p.r.designDue)}</span>`:'<span style="color:var(--t3)">—</span>';
+    const installCell=`<span class="mono" style="color:var(--t2)">${fmtShort(p.install)}</span>`;
+    h+=`<tr class="proj-row${isExp?' expanded':''}" onclick="toggleRow(${p.id},event)" style="opacity:.75">
+      <td><span class="expand-icon${isExp?' open':''}">&#9658;</span></td>
+      <td style="font-size:11px;color:var(--t3)">${p.group||'—'}</td>
+      <td><span class="proj-name-cell" style="color:var(--t2)">${p.name}</span></td>
+      <td class="hide-mobile"><span class="mono" style="color:var(--t3)">${fmtShort(p.lidar)}</span></td>
+      <td>${delivCell}</td>
+      <td class="hide-mobile">${designCell}</td>
+      <td class="hide-mobile">${installCell}</td>
+      <td><span class="status-pill ${s}" style="opacity:.7">${s.charAt(0).toUpperCase()+s.slice(1)}</span></td>
+      <td style="position:relative">
+        <div class="action-menu-wrap">
+          <button class="action-dots" onclick="event.stopPropagation();toggleMenu(${p.id})" title="Actions">&#8942;</button>
+          <div class="action-dropdown" id="menu-${p.id}">
+            <button class="action-item" onclick="event.stopPropagation();openEditModal(${p.id})"><i class="ti ti-pencil" style="font-size:13px"></i> Edit</button>
+            <button class="action-item danger" onclick="event.stopPropagation();removeProject(${p.id})"><i class="ti ti-trash" style="font-size:13px"></i> Delete</button>
+          </div>
+        </div>
+      </td>
+    </tr>`;
+    if(isExp)h+=`<tr class="proj-detail"><td colspan="9"><div class="proj-detail-inner" id="detail-${p.id}"></div></td></tr>`;
+  });
+
+  h+=`</tbody></table></div></div>`;
+  section.innerHTML=h;
+
+  // Restore open state
+  const body=document.getElementById('archive-body');
+  const chev=document.getElementById('archive-chev');
+  if(archiveOpen){if(body)body.classList.remove('hidden');if(chev)chev.classList.add('open');}
+
+  // Render expanded rows in archive
+  sorted.forEach(p=>{if(expandedRow===p.id){const el=document.getElementById(`detail-${p.id}`);if(el){if(p.install)renderResult(p.r,p.lidar,p.install,p.name,el,p);else el.innerHTML='<div class="empty-state">Install date pending.</div>';}}});
 }
 
 function projRow(p){
@@ -1416,8 +1511,9 @@ function importCSV(input){
   reader.readAsText(file);input.value='';
 }
 function exportCSV(){
-  if(!projects.length){showToast('No projects to export.');return}
-  const rows=projects.map(p=>({...p,r:p.install?schedule(p.lidar,p.install):{status:'pending',delivDate:null,designDue:null}}));
+  const active=projects.filter(p=>!isArchived(p));
+  if(!active.length){showToast('No active projects to export.');return}
+  const rows=active.map(p=>({...p,r:p.install?schedule(p.lidar,p.install):{status:'pending',delivDate:null,designDue:null}}));
   let csv='Retailer,Store #,LiDAR Date,Install Date,Deliverable Due,Design Due,Status\n';
   rows.forEach(p=>{csv+=`"${p.group||''}","${p.name}","${fmtShort(p.lidar)}","${p.install?fmtShort(p.install):''}","${p.r.delivDate?fmtShort(p.r.delivDate):''}","${p.r.designDue?fmtShort(p.r.designDue):''}","${p.r.status}"\n`;});
   const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='nv5-schedule.csv';a.click();URL.revokeObjectURL(url);
@@ -1715,6 +1811,8 @@ function switchTab(t){
     if(pane)pane.style.display=p===t?'block':'none';
     if(tab)tab.classList.toggle('active',p===t);
   });
+  const arch=document.getElementById('archive-section');
+  if(arch)arch.style.display=t==='multi'?'':'none';
   if(t==='multi')renderProjects();
   if(t==='approvals')renderApprovals();
 }
