@@ -546,6 +546,7 @@ function countdown(d){
 // ═══════════════════════════════════════
 function schedule(lidar,install){
   const result={status:null,delivDate:null,designDue:null,callouts:[],oooWarning:null};
+  if(!install){result.status='black';result.callouts.push('No install date set — enter an install date to calculate the schedule.');return result;}
   const stdDesignDue=prevWD(addD(install,-STD_DD_TO_I));
   const stdDelivDeadline=prevWD(addD(stdDesignDue,-STD_DELIV_LAG));
   const stdDeliv=nextWD(addD(lidar,STD_LD));
@@ -689,9 +690,9 @@ function addProject(){
   const lidar=parseInput(document.getElementById('m-lidar').value);
   const install=parseInput(document.getElementById('m-install').value);
   const group=document.getElementById('m-group').value.trim()||'';
-  if(!lidar||!install){showToast('Please enter valid dates.');return}
-  if(install<=lidar){showToast('Install must be after LiDAR.');return}
-  projects.push({id:Date.now(),name,lidar,install,group});
+  if(!lidar){showToast('Please enter a valid LiDAR date.');return}
+  if(install&&install<=lidar){showToast('Install must be after LiDAR.');return}
+  projects.push({id:Date.now(),name,lidar,install:install||null,group});
   document.getElementById('m-name').value='';document.getElementById('m-lidar').value='';
   document.getElementById('m-install').value='';document.getElementById('m-group').value='';
   saveState();renderProjects();
@@ -734,7 +735,7 @@ function renderFilterBtns(rows){
   fr.innerHTML=h;
 }
 
-function isArchived(p){ return p.install && p.install < today(); }
+function isArchived(p){ return p.install && !isNaN(p.install) && p.install < today(); }
 
 function renderProjects(){
   const wrap=document.getElementById('proj-table-wrap');
@@ -810,7 +811,7 @@ function projRow(p){
     <td class="hide-mobile"><span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'lidar','${fmtInput(p.lidar)}',this)">${fmtShort(p.lidar)}</span></td>
     <td>${delivCell}</td>
     <td class="hide-mobile">${designCell}</td>
-    <td class="hide-mobile"><span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'install','${fmtInput(p.install)}',this)">${fmtShort(p.install)}</span></td>
+    <td class="hide-mobile"><span class="mono" ondblclick="event.stopPropagation();startEdit(${p.id},'install','${fmtInput(p.install)}',this)">${p.install?fmtShort(p.install):'<span style="color:var(--t3)">—</span>'}</span></td>
     <td><span class="status-pill ${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span></td>
     <td style="position:relative">
       <div class="action-menu-wrap">
@@ -894,7 +895,7 @@ function archivedRow(p){
     <td class="hide-mobile"><span class="mono">${fmtShort(p.lidar)}</span></td>
     <td>${delivCell}</td>
     <td class="hide-mobile">${designCell}</td>
-    <td class="hide-mobile"><span class="mono">${fmtShort(p.install)}</span></td>
+    <td class="hide-mobile" title="Double-click to edit install date"><span class="mono" style="cursor:pointer;border-bottom:1px dashed var(--bd2)" ondblclick="event.stopPropagation();startEdit(${p.id},'install','${fmtInput(p.install)}',this)">${p.install?fmtShort(p.install):'<span style=\'color:var(--t3)\'>Add date</span>'}</span></td>
     <td><span class="status-pill ${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span></td>
   </tr>`;
   if(isExp)h+=`<tr class="proj-detail"><td colspan="8"><div class="proj-detail-inner" id="archived-detail-${p.id}"></div></td></tr>`;
@@ -915,8 +916,9 @@ function importCSV(input){
       if(cols.length<3){skipped++;return}
       const[retailer='',storeNum='',lidarStr='',installStr='']=cols;
       const lidar=parseInput(lidarStr),install=parseInput(installStr);
-      if(!lidar||!install||install<=lidar){skipped++;return}
-      projects.push({id:Date.now()+Math.random(),name:storeNum.trim()||'Untitled',lidar,install,group:retailer.trim()});added++;
+      if(!lidar){skipped++;return}
+      if(install&&install<=lidar){skipped++;return}
+      projects.push({id:Date.now()+Math.random(),name:storeNum.trim()||'Untitled',lidar,install:install||null,group:retailer.trim()});added++;
     });
     saveState();renderProjects();showToast(`Imported ${added} project${added!==1?'s':''}${skipped?`, ${skipped} skipped`:''}.`);
   };
@@ -1089,12 +1091,12 @@ function saveEdit(){
   if(!p){ closeEditModal(); return; }
   const lidar   = parseInput(document.getElementById('edit-lidar').value);
   const install = parseInput(document.getElementById('edit-install').value);
-  if(!lidar||!install){ showToast('Please enter valid LiDAR and install dates.'); return; }
-  if(install<=lidar){ showToast('Install must be after LiDAR.'); return; }
+  if(!lidar){ showToast('Please enter a valid LiDAR date.'); return; }
+  if(install&&install<=lidar){ showToast('Install must be after LiDAR.'); return; }
   p.group   = document.getElementById('edit-group').value.trim();
   p.name    = document.getElementById('edit-name').value.trim() || p.name;
   p.lidar   = lidar;
-  p.install = install;
+  p.install = install||null;
   saveState();
   renderProjects();
   closeEditModal();
